@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Тест M-CHAT — Проверка развития ребёнка</title>
+    <meta name="description" content="Бесплатный онлайн-тест M-CHAT для раннего выявления признаков аутизма у детей от 16 до 30 месяцев. Быстро, анонимно, без регистрации.">
+    <link rel="stylesheet" href="style.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body data-theme="dark">
+
+    <header class="header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Рядом с вами" height="40">
+            </a>
+            <nav class="nav">
+                <a href="index.html#diagnoses" class="nav-link">Наши дети</a>
+                <a href="index.html#about" class="nav-link">О нас</a>
+                <a href="test.html" class="nav-test-btn">🧩 Тест</a>
+                <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="btn-primary header-btn">Сообщество</a>
+                <div class="theme-toggle" id="themeToggle" title="Переключить тему">☀️</div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Прогресс-бар -->
+    <div class="test-progress-bar">
+        <div class="test-progress-fill" id="progressFill"></div>
+    </div>
+
+    <main class="test-page">
+        <div class="container">
+
+            <!-- ===== ЭКРАН ПРИВЕТСТВИЯ ===== -->
+            <div class="test-screen active" id="screenWelcome">
+                <div class="vx-card">
+                    <div class="vx-meta">
+                        <span>16–30 МЕСЯЦЕВ</span>
+                        <span>•</span>
+                        <span>5 МИНУТ</span>
+                        <span>•</span>
+                        <span>АНОНИМНО</span>
+                    </div>
+                    <div class="vx-hero">
+                        <img src="img/icon_test.png" alt="Тест" class="vx-icon">
+                        <span class="vx-title" style="white-space: nowrap;">Проверка развития</span>
+                    </div>
+                    <p class="vx-subtitle">Международный скрининговый опросник (M-CHAT-R) для оценки риска нарушений аутистического спектра.</p>
+
+                    <div class="vx-divider"></div>
+
+                    <div class="vx-features">
+                        <div class="vx-feature">
+                            <span class="vx-feature-label">Вопросов</span>
+                            <span class="vx-feature-value">20</span>
+                        </div>
+                        <div class="vx-feature-sep"></div>
+                        <div class="vx-feature">
+                            <span class="vx-feature-label">Возраст</span>
+                            <span class="vx-feature-value">16-30 мес</span>
+                        </div>
+                    </div>
+
+                    <div class="vx-divider"></div>
+
+                    <p class="vx-disclaimer">Тест — не диагноз. Это ориентир, который подскажет, стоит ли обратиться к специалисту.</p>
+
+                    <button class="vx-btn" onclick="startTest()">Начать тест →</button>
+                </div>
+            </div>
+
+            <!-- ===== ЭКРАН ВОПРОСОВ ===== -->
+            <div class="test-screen" id="screenQuestions">
+                <div class="vx-card vx-question-card" id="questionCard">
+                    <div class="vx-meta">
+                        <span id="questionNum">1</span>
+                        <span>из</span>
+                        <span>20</span>
+                    </div>
+                    <div class="vx-progress-dots" id="progressDots"></div>
+                    <p class="vx-question-text" id="questionText"></p>
+                    <div class="vx-answers">
+                        <button class="vx-answer vx-answer-yes" onclick="answer(true)">
+                            <span class="vx-answer-mark">✓</span>
+                            <span>Да</span>
+                        </button>
+                        <button class="vx-answer vx-answer-no" onclick="answer(false)">
+                            <span class="vx-answer-mark">✕</span>
+                            <span>Нет</span>
+                        </button>
+                    </div>
+                    <button class="vx-back-btn" id="backBtn" onclick="goBack()">← Назад</button>
+                </div>
+            </div>
+
+            <!-- ===== ЭКРАН РЕЗУЛЬТАТОВ ===== -->
+            <div class="test-screen" id="screenResult">
+                <div class="vx-card vx-result-card" id="resultCard">
+                    <div class="vx-meta">
+                        <span>РЕЗУЛЬТАТ ТЕСТА</span>
+                        <span>•</span>
+                        <span>M-CHAT-R</span>
+                    </div>
+                    <div class="vx-result-image-box">
+                        <img src="img/icon_test.png" alt="Результат" class="vx-icon" id="resultImage">
+                    </div>
+                    <h2 class="vx-result-title" id="resultTitle"></h2>
+                    <p class="vx-result-text" id="resultText"></p>
+                    <div class="vx-result-details" id="resultDetails"></div>
+                    <div class="vx-result-actions">
+                        <!-- Круглый красивый блок для врача -->
+                        <button class="vx-doctor-card" onclick="showDoctorResults()">
+                            <div class="vx-doctor-card-left">
+                                <span class="vx-doctor-card-title">Показать ответы специалисту</span>
+                                <span class="vx-doctor-card-sub">Скачайте готовую карту результатов</span>
+                            </div>
+                            <div class="vx-doctor-card-icon">📝</div>
+                        </button>
+                        
+                        <!-- Маленькая кнопка сообщества -->
+                        <div style="margin-top: 12px; margin-bottom: 24px; text-align: center;">
+                            <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="vx-btn-link">Присоединиться к сообществу →</a>
+                        </div>
+                        
+                        <button class="vx-btn-ghost" onclick="restartTest()">Пройти заново</button>
+                        <a href="index.html" class="vx-btn-ghost">← На главную</a>
+                    </div>
+                    <p class="vx-footer-note" style="margin-top: 16px;">Данные не сохраняются и не передаются третьим лицам</p>
+                </div>
+            </div>
+
+            <!-- ===== ДЛЯ ВРАЧА ===== -->
+            <div class="test-screen" id="screenDoctor">
+                <div class="vx-card" style="max-width: 520px; padding: 46px 32px; text-align: center;">
+                    <div class="vx-meta" style="justify-content: center;">
+                        <span>M-CHAT-R</span>
+                        <span>•</span>
+                        <span>ДЛЯ СПЕЦИАЛИСТА</span>
+                    </div>
+                    <div style="font-size: 56px; margin: 20px 0; display: inline-block; filter: drop-shadow(0 4px 12px rgba(208,174,139,0.3));">
+                        📝
+                    </div>
+                    <h2 class="vx-result-title" style="margin-bottom: 16px;">Карта ответов</h2>
+                    <p class="vx-result-text" style="font-size: 13px; line-height: 1.6; margin-bottom: 32px; text-align: center;">
+                        Развёрнутые ответы пациента скрыты в целях безопасности.<br><br>
+                        Сгенерируйте красивый и профессиональный отчёт со списком всех ответов в виде изображения для консультации с лечащим врачом.
+                    </p>
+
+                    <button class="vx-btn" onclick="downloadResults()" style="margin-top: 0; margin-bottom: 12px; width: 100%;">⬇ Скачать в виде картинки</button>
+                    <button class="vx-btn-ghost" onclick="showScreen('screenResult')" style="width: 100%;">← Назад</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo.png" alt="Рядом с вами" class="footer-logo">
+                    <p class="footer-slogan">Сообщество семей, которые растят уникальных детей</p>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Разделы</h4>
+                    <a href="index.html">Главная</a>
+                    <a href="index.html#diagnoses">Наши дети</a>
+                    <a href="index.html#about">О нас</a>
+                    <a href="https://t.me/+PFfgr3RmK_dmMGRi">Сообщество</a>
+                </div>
+                <div class="footer-contact">
+                    <h4>Телефон доверия</h4>
+                    <a href="tel:88002000122" class="phone">8-800-2000-122</a>
+                    <p class="small-text">Бесплатно · Круглосуточно · Анонимно</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="small-text">Информация на сайте носит справочный характер и не заменяет консультацию врача.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // =========================================
+        // M-CHAT-R ВОПРОСЫ (20 вопросов)
+        // =========================================
+        const questions = [
+            { text: "Если вы покажете пальцем на что-то в комнате, ваш ребёнок посмотрит на этот предмет?", riskAnswer: false },
+            { text: "Вы когда-нибудь думали, что ваш ребёнок может быть глухим?", riskAnswer: true },
+            { text: "Ваш ребёнок играет в «понарошку»? Например, делает вид, что пьёт из пустой чашки или кормит куклу?", riskAnswer: false },
+            { text: "Ваш ребёнок любит забираться на предметы (диван, стулья, горки)?", riskAnswer: false },
+            { text: "Ваш ребёнок делает необычные движения пальцами возле своих глаз?", riskAnswer: true },
+            { text: "Ваш ребёнок показывает пальцем, когда хочет что-то попросить или получить помощь?", riskAnswer: false },
+            { text: "Ваш ребёнок показывает пальцем, чтобы обратить ваше внимание на что-то интересное?", riskAnswer: false },
+            { text: "Ваш ребёнок интересуется другими детьми?", riskAnswer: false },
+            { text: "Ваш ребёнок приносит вам предметы или поднимает их, чтобы показать?", riskAnswer: false },
+            { text: "Ваш ребёнок отзывается на своё имя, когда вы его зовёте?", riskAnswer: false },
+            { text: "Когда вы улыбаетесь ребёнку, он улыбается в ответ?", riskAnswer: false },
+            { text: "Ваш ребёнок расстраивается от обычных бытовых звуков (пылесос, фен, блендер)?", riskAnswer: true },
+            { text: "Ваш ребёнок уже ходит самостоятельно?", riskAnswer: false },
+            { text: "Ваш ребёнок смотрит вам в глаза, когда вы с ним разговариваете, играете или одеваете его?", riskAnswer: false },
+            { text: "Ваш ребёнок пытается повторять ваши действия (помешать ложкой, подмести, причесаться)?", riskAnswer: false },
+            { text: "Если вы поворачиваете голову и смотрите на что-то, ваш ребёнок тоже смотрит в эту сторону?", riskAnswer: false },
+            { text: "Ваш ребёнок пытается привлечь ваше внимание к себе?", riskAnswer: false },
+            { text: "Ваш ребёнок понимает, когда вы просите его что-то сделать (принести игрушку, сесть)?", riskAnswer: false },
+            { text: "Когда происходит что-то новое, ваш ребёнок смотрит на ваше лицо, чтобы понять вашу реакцию?", riskAnswer: false },
+            { text: "Ваш ребёнок любит подвижные игры (качели, кружиться, подбрасывание)?", riskAnswer: false }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+
+        // =========================================
+        // УПРАВЛЕНИЕ ЭКРАНАМИ
+        // =========================================
+        function showScreen(screenId) {
+            document.querySelectorAll('.test-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const percent = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = percent + '%';
+            // Update dots
+            const container = document.getElementById('progressDots');
+            if (container) {
+                container.innerHTML = '';
+                for (let i = 0; i < questions.length; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'vx-dot';
+                    if (i < currentQuestion) dot.classList.add('answered');
+                    else if (i === currentQuestion) dot.classList.add('current');
+                    container.appendChild(dot);
+                }
+            }
+        }
+
+        // =========================================
+        // ЛОГИКА ТЕСТА
+        // =========================================
+        function startTest() {
+            currentQuestion = 0;
+            answers = [];
+            showScreen('screenQuestions');
+            showQuestion();
+            updateProgress();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionNum').textContent = currentQuestion + 1;
+            document.getElementById('questionText').textContent = q.text;
+            
+            // Анимация появления
+            const card = document.getElementById('questionCard');
+            card.classList.remove('animate-in');
+            void card.offsetWidth;
+            card.classList.add('animate-in');
+
+            document.getElementById('backBtn').style.display = currentQuestion > 0 ? 'inline-block' : 'none';
+        }
+
+        function answer(userAnswer) {
+            if (document.activeElement) document.activeElement.blur(); // Fix sticky hover
+            answers[currentQuestion] = userAnswer;
+            currentQuestion++;
+            
+            if (currentQuestion >= questions.length) {
+                showResults();
+            } else {
+                showQuestion();
+                updateProgress();
+            }
+        }
+
+        function goBack() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+                updateProgress();
+            }
+        }
+
+        // =========================================
+        // ПОДСЧЁТ РЕЗУЛЬТАТОВ
+        // =========================================
+        function showResults() {
+            updateProgress();
+            document.getElementById('progressFill').style.width = '100%';
+
+            let riskScore = 0;
+            for (let i = 0; i < questions.length; i++) {
+                const q = questions[i];
+                if (answers[i] === q.riskAnswer) {
+                    riskScore++;
+                }
+            }
+
+            const resultCard = document.getElementById('resultCard');
+            const resultImg = document.getElementById('resultImage');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultText = document.getElementById('resultText');
+            const resultDetails = document.getElementById('resultDetails');
+
+            resultCard.className = 'vx-card vx-result-card';
+            resultImg.className = 'vx-icon'; // Reset class
+
+            if (riskScore <= 2) {
+                resultCard.classList.add('result-low');
+                resultImg.classList.add('img-low');
+                resultTitle.textContent = 'Низкий уровень риска';
+                resultText.textContent = 'По результатам теста признаков для беспокойства не обнаружено. Ваш ребёнок развивается в рамках нормы.';
+                resultDetails.innerHTML = `
+                    <div class="result-tip">
+                        <strong>Рекомендация:</strong> Продолжайте наблюдать за развитием. Если появятся вопросы — обратитесь к педиатру.
+                    </div>
+                `;
+            } else if (riskScore <= 7) {
+                resultCard.classList.add('result-medium');
+                resultImg.classList.add('img-medium');
+                resultTitle.textContent = 'Средний уровень риска';
+                resultText.textContent = 'Тест показал некоторые особенности, которые стоит обсудить со специалистом.';
+                resultDetails.innerHTML = `
+                    <div class="result-tip">
+                        <strong>Что делать:</strong>
+                        <ul>
+                            <li>Запишитесь к <strong>детскому неврологу</strong> или <strong>психиатру</strong></li>
+                            <li>Покажите результаты теста врачу</li>
+                            <li>Не ставьте диагноз самостоятельно</li>
+                        </ul>
+                    </div>
+                    <div class="result-tip">
+                        <strong>Помните:</strong> Раннее обращение — это мудрость, а не страх. Чем раньше — тем больше возможностей.
+                    </div>
+                `;
+            } else {
+                resultCard.classList.add('result-high');
+                resultImg.classList.add('img-high');
+                resultTitle.textContent = 'Рекомендуется консультация';
+                resultText.textContent = 'Тест выявил несколько особенностей развития. Пожалуйста, не откладывайте визит к специалисту.';
+                resultDetails.innerHTML = `
+                    <div class="result-tip">
+                        <strong>Ваши следующие шаги:</strong>
+                        <ul>
+                            <li>Запишитесь к <strong>детскому психиатру</strong> или в <strong>центр раннего развития</strong></li>
+                            <li>Попросите направление на комплексную диагностику</li>
+                        </ul>
+                    </div>
+                    <div class="result-tip">
+                        <strong>Вы — прекрасный родитель.</strong> Ранняя помощь даёт невероятные результаты. Вы не одни.
+                    </div>
+                `;
+            }
+
+            showScreen('screenResult');
+        }
+
+        function showDoctorResults() {
+            // Ответы здесь больше не отображаются, только кнопка скачивания картинки (по запросу)
+            showScreen('screenDoctor');
+        }
+
+        // =========================================
+        // КРАСИВАЯ КАРТОЧКА ДЛЯ ВРАЧА (PNG)
+        // =========================================
+        function downloadResults() {
+            let riskScore = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (answers[i] === questions[i].riskAnswer) riskScore++;
+            }
+
+            let level, levelColor, levelMsg;
+            if (riskScore <= 2) {
+                level = 'Низкий риск';
+                levelColor = '#61be82';
+                levelMsg = 'Развитие соответствует норме';
+            } else if (riskScore <= 7) {
+                level = 'Средний риск';
+                levelColor = '#f59e0b';
+                levelMsg = 'Рекомендуется консультация специалиста';
+            } else {
+                level = 'Высокий риск';
+                levelColor = '#ef6464';
+                levelMsg = 'Необходима консультация специалиста';
+            }
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const W = 700;
+            const headerH = 300;
+            const footerH = 90;
+            const maxTextW = W - 190;
+            
+            // Вспомогательная функция для переноса текста
+            const wrapText = (text, maxWidth) => {
+                ctx.font = '400 12px Inter, Arial, sans-serif';
+                const words = text.split(' ');
+                const lines = [];
+                let currentLine = words[0];
+                for (let i = 1; i < words.length; i++) {
+                    const width = ctx.measureText(currentLine + ' ' + words[i]).width;
+                    if (width < maxWidth) {
+                        currentLine += ' ' + words[i];
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            };
+
+            const wrappedQuestions = [];
+            const rowHeights = [];
+            let totalRowsH = 0;
+            
+            for (let i = 0; i < questions.length; i++) {
+                const lines = wrapText(questions[i].text, maxTextW);
+                wrappedQuestions.push(lines);
+                // Базовая высота 54px, увеличивается если строк больше
+                const rH = Math.max(54, lines.length * 18 + 26);
+                rowHeights.push(rH);
+                totalRowsH += rH;
+            }
+
+            const H = headerH + totalRowsH + footerH - 40;
+            canvas.width = W;
+            canvas.height = H;
+
+            // ─── Фон ───
+            const bg = ctx.createLinearGradient(0, 0, 0, H);
+            bg.addColorStop(0,   '#0d1820');
+            bg.addColorStop(0.4, '#142232');
+            bg.addColorStop(1,   '#0a1520');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, W, H);
+
+            // Свечение сверху
+            const glow = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, 280);
+            glow.addColorStop(0, 'rgba(208, 174, 139, 0.10)');
+            glow.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow;
+            ctx.fillRect(0, 0, W, 280);
+
+            // Рамка
+            ctx.strokeStyle = 'rgba(208, 174, 139, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.roundRect(14, 14, W - 28, H - 28, 20);
+            ctx.stroke();
+
+            // Верхняя золотая линия
+            const topG = ctx.createLinearGradient(80, 0, W - 80, 0);
+            topG.addColorStop(0, 'transparent');
+            topG.addColorStop(0.5, 'rgba(208, 174, 139, 0.6)');
+            topG.addColorStop(1, 'transparent');
+            ctx.strokeStyle = topG;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(80, 14);
+            ctx.lineTo(W - 80, 14);
+            ctx.stroke();
+
+            // ─── Мета ───
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(208, 174, 139, 0.4)';
+            ctx.font = '500 10px Inter, Arial, sans-serif';
+            ctx.fillText('M-CHAT-R  ·  КАРТА ОТВЕТОВ ДЛЯ СПЕЦИАЛИСТА', W / 2, 48);
+
+            // ─── Компактный блок: кольцо + текст ───
+            const ringR = 48;
+            const ringCx = 120, ringCy = 140;
+
+            // Фон кольца
+            ctx.beginPath();
+            ctx.arc(ringCx, ringCy, ringR, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            // Дуга
+            const pct = riskScore / questions.length;
+            ctx.beginPath();
+            ctx.arc(ringCx, ringCy, ringR, -Math.PI/2, -Math.PI/2 + pct * Math.PI * 2);
+            ctx.strokeStyle = levelColor;
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.shadowColor = levelColor;
+            ctx.shadowBlur = 12;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            // Балл в кольце
+            ctx.fillStyle = 'rgba(255,255,255,0.92)';
+            ctx.font = '700 28px Inter, Arial, sans-serif';
+            ctx.fillText(riskScore, ringCx, ringCy + 8);
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.font = '400 10px Inter, Arial, sans-serif';
+            ctx.fillText('из 20', ringCx, ringCy + 24);
+
+            // Текст справа от кольца
+            ctx.textAlign = 'left';
+            // Бейдж
+            const bW = 170, bH = 26, bX = 200, bY = 108;
+            ctx.fillStyle = levelColor + '20';
+            ctx.beginPath();
+            ctx.roundRect(bX, bY, bW, bH, 13);
+            ctx.fill();
+            ctx.strokeStyle = levelColor + '50';
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.roundRect(bX, bY, bW, bH, 13);
+            ctx.stroke();
+            ctx.fillStyle = levelColor;
+            ctx.font = '600 12px Inter, Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(level, bX + bW/2, bY + 17);
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+            ctx.font = '400 11px Inter, Arial, sans-serif';
+            ctx.fillText(levelMsg, 200, 160);
+
+            // Дата
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.font = '400 10px Inter, Arial, sans-serif';
+            ctx.fillText(dateStr, 200, 178);
+
+            // ─── Разделитель перед таблицей ───
+            const sepY = 210;
+            const sepG = ctx.createLinearGradient(40, 0, W - 40, 0);
+            sepG.addColorStop(0, 'transparent');
+            sepG.addColorStop(0.5, 'rgba(208, 174, 139, 0.25)');
+            sepG.addColorStop(1, 'transparent');
+            ctx.strokeStyle = sepG;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(40, sepY);
+            ctx.lineTo(W - 40, sepY);
+            ctx.stroke();
+
+            // ─── Заголовки колонок ───
+            const colNumX = 42;
+            const colQX = 72;
+            const colAX = W - 60;
+            ctx.textAlign = 'left';
+            ctx.fillStyle = 'rgba(208, 174, 139, 0.35)';
+            ctx.font = '600 9px Inter, Arial, sans-serif';
+            ctx.fillText('№', colNumX, 232);
+            ctx.fillText('ВОПРОС', colQX, 232);
+            ctx.textAlign = 'right';
+            ctx.fillText('ОТВЕТ', colAX, 232);
+
+            // Тонкая линия под шапкой
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.beginPath();
+            ctx.moveTo(40, 242);
+            ctx.lineTo(W - 40, 242);
+            ctx.stroke();
+
+            // ─── Вопросы и ответы ───
+            let currentY = headerH - 50;
+
+            for (let i = 0; i < questions.length; i++) {
+                const rH = rowHeights[i];
+                const y = currentY;
+                const q = questions[i];
+                const ans = answers[i];
+                const risk = (ans === q.riskAnswer);
+
+                // Чередование фона
+                if (i % 2 === 0) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.015)';
+                    ctx.fillRect(30, y, W - 60, rH);
+                }
+
+                // Подсветка рисковых
+                if (risk) {
+                    ctx.fillStyle = 'rgba(239, 100, 100, 0.05)';
+                    ctx.fillRect(30, y, W - 60, rH);
+                    ctx.fillStyle = 'rgba(239, 100, 100, 0.4)';
+                    ctx.fillRect(30, y, 3, rH);
+                }
+
+                // Номер
+                ctx.textAlign = 'left';
+                ctx.fillStyle = risk ? 'rgba(239,100,100,0.5)' : 'rgba(255,255,255,0.25)';
+                ctx.font = '600 11px Inter, Arial, sans-serif';
+                ctx.fillText((i + 1), colNumX, y + 22 + (rH - 54)/2);
+
+                // Текст вопроса (полный, с переносом)
+                ctx.fillStyle = risk ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.6)';
+                ctx.font = '400 12px Inter, Arial, sans-serif';
+                
+                const lines = wrappedQuestions[i];
+                const textStartY = y + 24; 
+                for (let j = 0; j < lines.length; j++) {
+                    ctx.fillText(lines[j], colQX, textStartY + (j * 18));
+                }
+
+                // Ответ — маленький бейдж справа
+                const ansText = ans ? 'Да' : 'Нет';
+                const ansColor = ans ? '#61be82' : (risk ? '#ef6464' : '#d0ae8b');
+                const abW = 44, abH = 22;
+                const abX = W - 60 - abW/2;
+                const abY = y + (rH - abH) / 2; // Вертикальное центрирование
+                
+                ctx.fillStyle = ansColor + '18';
+                ctx.beginPath();
+                ctx.roundRect(abX, abY, abW, abH, 6);
+                ctx.fill();
+                ctx.strokeStyle = ansColor + '40';
+                ctx.lineWidth = 0.6;
+                ctx.beginPath();
+                ctx.roundRect(abX, abY, abW, abH, 6);
+                ctx.stroke();
+                ctx.fillStyle = ansColor;
+                ctx.font = '700 11px Inter, Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(ansText, abX + abW/2, abY + 15);
+
+                // Флаг риска
+                if (risk) {
+                    ctx.fillStyle = 'rgba(239, 100, 100, 0.45)';
+                    ctx.font = '400 8px Inter, Arial, sans-serif';
+                    ctx.fillText('⚠', abX + abW/2, abY + abH + 9);
+                }
+
+                currentY += rH;
+            }
+
+
+            // ─── Футер ───
+            const fy = H - footerH + 12;
+
+            // Кривая фраза
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(255,255,255,0.14)';
+            ctx.font = 'italic 400 11px Georgia, serif';
+            ctx.fillText('Вы заботитесь о своём ребёнке — это главное', W/2, fy);
+
+            // Разделитель
+            const fG = ctx.createLinearGradient(100, 0, W - 100, 0);
+            fG.addColorStop(0, 'transparent');
+            fG.addColorStop(0.5, 'rgba(208, 174, 139, 0.18)');
+            fG.addColorStop(1, 'transparent');
+            ctx.strokeStyle = fG;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(100, fy + 14);
+            ctx.lineTo(W - 100, fy + 14);
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(255,255,255,0.18)';
+            ctx.font = '400 9px Inter, Arial, sans-serif';
+            ctx.fillText(dateStr + '  ·  Результат носит рекомендательный характер', W/2, fy + 34);
+            ctx.fillStyle = 'rgba(208, 174, 139, 0.35)';
+            ctx.font = '500 10px Inter, Arial, sans-serif';
+            ctx.fillText('ryadom-svami.ru', W/2, fy + 52);
+
+            // ─── Скачивание ───
+            const link = document.createElement('a');
+            link.download = 'M-CHAT-R_' + dateStr.replace(/ /g, '_') + '.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+        }
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('progressFill').style.width = '0%';
+            showScreen('screenWelcome');
+        }
+
+        // =========================================
+        // ТЁМНАЯ ТЕМА
+        // =========================================
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.removeAttribute('data-theme');
+            themeToggle.textContent = '🌙';
+        }
+        themeToggle.addEventListener('click', () => {
+            if (document.body.getAttribute('data-theme') === 'dark') {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
