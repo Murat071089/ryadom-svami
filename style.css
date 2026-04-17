@@ -626,97 +626,236 @@ section h2 {
     color: #fff;
 }
 
-/* Подвал */
-.footer {
-    padding: 80px 0 40px;
-    background: var(--footer-bg);
+/* Подвал — Премиум редизайн */
+.footer-premium {
+    padding: 100px 0 40px;
+    background: linear-gradient(180deg, var(--bg-main) 0%, #0d1520 100%);
     border-top: none;
     position: relative;
     z-index: 10;
+    overflow: hidden;
     transition: background 0.4s;
 }
 
-.footer-top {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 40px;
-    margin-bottom: 40px;
+[data-theme="dark"] .footer-premium {
+    background: linear-gradient(180deg, #1A2A3A 0%, #0a1018 100%);
 }
 
-.footer-brand {
-    flex: 1;
-    min-width: 250px;
+/* Декоративные свечения */
+.footer-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    opacity: 0.3;
 }
 
-.footer-logo {
-    height: 45px;
-    margin-bottom: 15px;
+.footer-glow-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(208, 174, 139, 0.4), transparent 70%);
+    top: -100px;
+    left: -100px;
 }
 
-.footer-slogan {
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--footer-text);
-    max-width: 320px;
+.footer-glow-2 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(97, 130, 150, 0.35), transparent 70%);
+    bottom: -80px;
+    right: -80px;
 }
 
-.footer-links-col h4,
-.footer-contact h4 {
-    font-size: 18px;
+/* Главный блок-заголовок */
+.footer-hero-block {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+.footer-eyebrow {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(208, 174, 139, 0.7);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.footer-main-title {
+    font-size: 48px;
+    font-family: 'Philosopher', serif;
     font-weight: 700;
-    margin-bottom: 15px;
-    color: var(--footer-title);
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.footer-links-col {
+.footer-main-sub {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+/* Три стеклянных карточки */
+.footer-cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+.footer-glass-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 28px 24px;
+    transition: all 0.4s ease;
+}
+
+.footer-glass-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(208, 174, 139, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.footer-card-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+}
+
+.footer-glass-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+}
+
+/* Ссылки в карточке */
+.footer-card-links {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    flex: 1;
-    min-width: 150px;
+    gap: 10px;
 }
 
-.footer-links-col a {
+.footer-card-links a {
     text-decoration: none;
-    color: var(--footer-text);
-    font-size: 16px;
-    transition: opacity 0.2s;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    transition: all 0.3s ease;
+    padding: 2px 0;
 }
 
-.footer-links-col a:hover {
-    opacity: 0.7;
-    text-decoration: underline;
+.footer-card-links a:hover {
+    color: #d0ae8b;
+    padding-left: 6px;
 }
 
-.footer-contact {
-    flex: 1;
-    min-width: 200px;
-}
-
-.footer-contact .phone {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--footer-title);
+/* Карточка телефона */
+.footer-phone-number {
+    font-size: 26px;
+    font-weight: 700;
+    font-family: 'Philosopher', serif;
+    color: #d0ae8b;
     text-decoration: none;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
 }
 
-.footer .small-text {
+.footer-phone-number:hover {
+    color: #e8c9a8;
+    text-shadow: 0 0 20px rgba(208, 174, 139, 0.4);
+}
+
+/* Бейджи */
+.footer-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.footer-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.3px;
+}
+
+/* Описание и кнопка Telegram */
+.footer-card-desc {
     font-size: 14px;
-    color: var(--text-muted);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 18px;
 }
 
-.footer-bottom {
-    padding-top: 25px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center;
+.footer-tg-btn {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 50px;
+    background: rgba(208, 174, 139, 0.12);
+    border: 1px solid rgba(208, 174, 139, 0.3);
+    color: #d0ae8b;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
 }
 
-.footer-bottom .small-text {
-    color: var(--footer-text);
-    opacity: 0.8;
+.footer-tg-btn:hover {
+    background: rgba(208, 174, 139, 0.2);
+    border-color: rgba(208, 174, 139, 0.5);
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(208, 174, 139, 0.15);
+}
+
+/* Нижняя полоска */
+.footer-bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    z-index: 2;
+}
+
+.footer-bottom-logo {
+    height: 24px;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+}
+
+.footer-bottom-logo:hover {
+    opacity: 0.7;
+}
+
+.footer-disclaimer {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 0.2px;
 }
 
 /* =========================================
@@ -917,27 +1056,44 @@ section h2 {
         text-align: center;
     }
 
-    .footer {
-        padding: 40px 0 30px;
+    .footer-premium {
+        padding: 60px 0 30px;
     }
 
-    .footer-top {
+    .footer-hero-block {
+        margin-bottom: 40px;
+    }
+
+    .footer-eyebrow {
+        font-size: 11px;
+        letter-spacing: 1.5px;
+    }
+
+    .footer-main-title {
+        font-size: 28px;
+    }
+
+    .footer-main-sub {
+        font-size: 14px;
+    }
+
+    .footer-cards-row {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 40px;
+    }
+
+    .footer-glass-card {
+        padding: 22px 20px;
+    }
+
+    .footer-phone-number {
+        font-size: 22px;
+    }
+
+    .footer-bottom-bar {
         flex-direction: column;
-        gap: 30px;
-        margin-bottom: 30px;
-    }
-
-    .footer-brand,
-    .footer-links-col,
-    .footer-contact {
-        text-align: left;
-    }
-
-    .footer-logo {
-        height: 35px;
-    }
-
-    .footer-bottom {
+        gap: 10px;
         text-align: center;
     }
 }
