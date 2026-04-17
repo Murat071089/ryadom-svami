@@ -325,8 +325,8 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
-                // 3. Отправляем запрос через НАШ БЕЗОПАСНЫЙ МОСТ (Cloudflare на СВОЕМ домене)
-                const response = await fetch('https://api.ryadom-svami.ru', {
+                // 3. Отправляем запрос через НАШ БЕЗОПАСНЫЙ МОСТ (Используем порт 8443 для обхода DPI блокировок ECH в РФ!)
+                const response = await fetch('https://api.ryadom-svami.ru:8443', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -384,7 +384,7 @@
         // =========================================
         async function loadDynamicContent() {
             try {
-                const res = await fetch('https://api.ryadom-svami.ru/api/content');
+                const res = await fetch('https://api.ryadom-svami.ru:8443/api/content');
                 if (!res.ok) return;
                 const data = await res.json();
 
