@@ -341,18 +341,21 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
-                // ПРЯМОЙ ДОСТУП В ОБХОД CLOUDFLARE ДЛЯ БОТА
-                // Режем ключ, чтобы его не утащили поисковики ключей на GitHub
+                // ПРЯМОЙ ДОСТУП К GOOGLE GEMINI API
+                // Новый формат ключей Google (AQ.) требует Bearer авторизацию
                 const part1 = "AQ.Ab8RN6Kq69";
                 const part2 = "MNYfHCI-rz2Z9w";
                 const part3 = "JUfyJW_2aMdxXuP";
                 const part4 = "NzROapTGSAQ";
                 const finalKey = part1 + part2 + part3 + part4;
-                const directUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + finalKey;
+                const directUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
                 const response = await fetch(directUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + finalKey
+                    },
                     body: JSON.stringify({
                         systemInstruction: {
                             parts: [{ text: "Ты эмпатичный, вежливый и профессиональный помощник на сайте 'Рядом с вами' для родителей особенных детей (аутизм, ДЦП, синдром Дауна и др.). Твоя цель: поддерживать родителей, отвечать коротко, понятно, тепло. Ты не врач, поэтому не давай медицинских диагнозов, а советуй обратиться к специалистам. Общайся бережно." }]
