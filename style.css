@@ -628,7 +628,7 @@ section h2 {
 
 /* Подвал — Премиум редизайн */
 .footer-premium {
-    padding: 100px 0 40px;
+    padding: 50px 0 28px;
     background: linear-gradient(180deg, var(--bg-main) 0%, #0d1520 100%);
     border-top: none;
     position: relative;
@@ -651,183 +651,159 @@ section h2 {
 }
 
 .footer-glow-1 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(208, 174, 139, 0.4), transparent 70%);
-    top: -100px;
-    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(208, 174, 139, 0.3), transparent 70%);
+    top: -80px;
+    left: -80px;
 }
 
 .footer-glow-2 {
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(97, 130, 150, 0.35), transparent 70%);
-    bottom: -80px;
-    right: -80px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(97, 130, 150, 0.25), transparent 70%);
+    bottom: -60px;
+    right: -60px;
 }
 
 /* Главный блок-заголовок */
 .footer-hero-block {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
     position: relative;
     z-index: 2;
 }
 
 .footer-eyebrow {
-    font-size: 13px;
-    letter-spacing: 2px;
+    font-size: 11px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: rgba(208, 174, 139, 0.7);
-    margin-bottom: 20px;
+    color: rgba(208, 174, 139, 0.5);
+    margin-bottom: 10px;
     font-weight: 500;
 }
 
 .footer-main-title {
-    font-size: 48px;
+    font-size: 32px;
     font-family: 'Philosopher', serif;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.2;
     color: #fff;
-    margin-bottom: 20px;
-    letter-spacing: -0.5px;
-    background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.6) 100%);
+    margin-bottom: 0;
+    letter-spacing: -0.3px;
+    background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.55) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .footer-main-sub {
-    font-size: 17px;
-    color: rgba(255, 255, 255, 0.45);
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.35);
     font-weight: 400;
     letter-spacing: 0.3px;
 }
 
-/* Три стеклянных карточки */
-.footer-cards-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 60px;
+/* Три компактные плашки (в стиле Trex.ai) */
+.footer-cards-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
     position: relative;
     z-index: 2;
+    margin-bottom: 24px;
 }
 
-.footer-glass-card {
+.footer-compact-card {
+    display: flex;
+    align-items: center;
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 28px 24px;
+    border-radius: 100px;
+    padding: 8px 20px 8px 8px;
+    gap: 12px;
     transition: all 0.4s ease;
+    width: fit-content;
+    max-width: 100%;
+    text-align: left;
+    text-decoration: none;
 }
 
-.footer-glass-card:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(208, 174, 139, 0.25);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+.footer-compact-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(208, 174, 139, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.footer-card-icon {
-    font-size: 28px;
-    margin-bottom: 14px;
+.footer-compact-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(208, 174, 139, 0.15);
+    background: rgba(255, 255, 255, 0.02);
 }
 
-.footer-glass-card h4 {
-    font-size: 16px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 16px;
-    letter-spacing: 0.3px;
-}
-
-/* Ссылки в карточке */
-.footer-card-links {
+.footer-compact-text {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    justify-content: center;
 }
 
-.footer-card-links a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.5);
+.footer-compact-text h4 {
+    color: rgba(255, 255, 255, 0.9);
     font-size: 14px;
-    transition: all 0.3s ease;
-    padding: 2px 0;
+    font-weight: 600;
+    margin-bottom: 2px;
+    letter-spacing: 0.2px;
 }
 
-.footer-card-links a:hover {
-    color: #d0ae8b;
-    padding-left: 6px;
-}
-
-/* Карточка телефона */
-.footer-phone-number {
-    font-size: 26px;
-    font-weight: 700;
-    font-family: 'Philosopher', serif;
-    color: #d0ae8b;
-    text-decoration: none;
-    display: block;
-    margin-bottom: 16px;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
-}
-
-.footer-phone-number:hover {
-    color: #e8c9a8;
-    text-shadow: 0 0 20px rgba(208, 174, 139, 0.4);
-}
-
-/* Бейджи */
-.footer-badges {
+.footer-compact-links {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
     display: flex;
-    gap: 8px;
+    align-items: center;
     flex-wrap: wrap;
+    gap: 5px;
 }
 
-.footer-badge {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    letter-spacing: 0.3px;
-}
-
-/* Описание и кнопка Telegram */
-.footer-card-desc {
-    font-size: 14px;
-    line-height: 1.6;
+.footer-compact-links a {
     color: rgba(255, 255, 255, 0.45);
-    margin-bottom: 18px;
-}
-
-.footer-tg-btn {
-    display: inline-block;
-    padding: 10px 22px;
-    border-radius: 50px;
-    background: rgba(208, 174, 139, 0.12);
-    border: 1px solid rgba(208, 174, 139, 0.3);
-    color: #d0ae8b;
     text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    letter-spacing: 0.3px;
+    transition: color 0.3s;
 }
 
-.footer-tg-btn:hover {
-    background: rgba(208, 174, 139, 0.2);
-    border-color: rgba(208, 174, 139, 0.5);
-    transform: translateX(4px);
-    box-shadow: 0 4px 20px rgba(208, 174, 139, 0.15);
+.footer-compact-links a:hover {
+    color: #d0ae8b;
+}
+
+.phone-gold {
+    color: #d0ae8b !important;
+    font-weight: 600;
+}
+
+.dot-sep {
+    opacity: 0.25;
+}
+
+a.footer-compact-link {
+    cursor: pointer;
+}
+a.footer-compact-link:hover .footer-compact-links {
+    color: #d0ae8b;
+}
+
+.footer-copy {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.18);
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 2;
 }
 
 /* Нижняя полоска */
@@ -1057,44 +1033,43 @@ section h2 {
     }
 
     .footer-premium {
-        padding: 60px 0 30px;
+        padding: 36px 0 20px;
     }
 
     .footer-hero-block {
-        margin-bottom: 40px;
+        margin-bottom: 20px;
     }
 
     .footer-eyebrow {
-        font-size: 11px;
+        font-size: 10px;
         letter-spacing: 1.5px;
     }
 
     .footer-main-title {
-        font-size: 28px;
+        font-size: 24px;
     }
 
-    .footer-main-sub {
-        font-size: 14px;
+    .footer-cards-column {
+        gap: 8px;
+        margin-bottom: 18px;
     }
 
-    .footer-cards-row {
-        grid-template-columns: 1fr;
-        gap: 14px;
-        margin-bottom: 40px;
-    }
-
-    .footer-glass-card {
-        padding: 22px 20px;
-    }
-
-    .footer-phone-number {
-        font-size: 22px;
-    }
-
-    .footer-bottom-bar {
-        flex-direction: column;
+    .footer-compact-card {
+        padding: 6px 16px 6px 6px;
         gap: 10px;
-        text-align: center;
+    }
+
+    .footer-compact-img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .footer-compact-text h4 {
+        font-size: 13px;
+    }
+
+    .footer-compact-links {
+        font-size: 11px;
     }
 }
 
