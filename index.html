@@ -384,7 +384,7 @@
         // =========================================
         async function loadDynamicContent() {
             try {
-                const res = await fetch('/api/content');
+                const res = await fetch('https://api.ryadom-svami.ru/api/content');
                 if (!res.ok) return;
                 const data = await res.json();
 

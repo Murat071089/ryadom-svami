@@ -8,3 +8,7 @@ cloudflare-worker-secure.js
 copy_images.ps1
 copy_test.bat
 copy_test.py
+wrangler.toml
+_routes.json
+cp.js
+добавить_картинку.bat
