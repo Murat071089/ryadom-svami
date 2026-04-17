@@ -407,7 +407,8 @@
         // =========================================
         async function loadDynamicContent() {
             try {
-                const res = await fetch('https://api.ryadom-svami.ru:8443/api/content');
+                // Загружаем контент через тот же домен, без указания порта (CORS будет работать)
+                const res = await fetch('/api/content');
                 if (!res.ok) return;
                 const data = await res.json();
 
