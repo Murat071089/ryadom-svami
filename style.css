@@ -48,9 +48,19 @@
     --story-tip-border: rgba(208, 174, 139, 0.5);
     --story-tip-h4: #618296;
     --story-tip-p: rgba(0, 0, 0, 0.65);
+    --footer-premium-bg: linear-gradient(180deg, #f0ebe3 0%, #e8e0d5 100%);
     --story-tip-shadow: rgba(0, 0, 0, 0.06);
     --story-final: #1a1a1a;
     --story-divider: rgba(0, 0, 0, 0.06);
+    --footer-compact-title: #1a1a1a;
+    --footer-compact-sub: #666;
+    --footer-compact-bg: rgba(0, 0, 0, 0.04);
+    --footer-compact-border: rgba(0, 0, 0, 0.07);
+    --footer-eyebrow-color: rgba(97, 130, 150, 0.6);
+    --footer-title-from: #1a1a1a;
+    --footer-title-to: rgba(26, 26, 26, 0.65);
+    --footer-copy-color: rgba(0, 0, 0, 0.25);
+    --footer-dot-sep: rgba(0, 0, 0, 0.25);
 }
 
 [data-theme="dark"] {
@@ -99,9 +109,19 @@
     --story-tip-border: rgba(208, 174, 139, 0.4);
     --story-tip-h4: #d0ae8b;
     --story-tip-p: rgba(255, 255, 255, 0.8);
+    --footer-premium-bg: linear-gradient(180deg, var(--bg-main) 0%, #0d1520 100%);
     --story-tip-shadow: rgba(0, 0, 0, 0.2);
     --story-final: #fff;
     --story-divider: rgba(255, 255, 255, 0.05);
+    --footer-compact-title: rgba(255, 255, 255, 0.9);
+    --footer-compact-sub: rgba(255, 255, 255, 0.4);
+    --footer-compact-bg: rgba(255, 255, 255, 0.04);
+    --footer-compact-border: rgba(255, 255, 255, 0.08);
+    --footer-eyebrow-color: rgba(208, 174, 139, 0.5);
+    --footer-title-from: #ffffff;
+    --footer-title-to: rgba(255, 255, 255, 0.55);
+    --footer-copy-color: rgba(255, 255, 255, 0.18);
+    --footer-dot-sep: rgba(255, 255, 255, 0.25);
 }
 
 /* =========================================
@@ -414,7 +434,7 @@ body {
 .story-body p {
     font-size: 12.5px;
     line-height: 1.7;
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--text-muted);
     margin-bottom: 10px;
     font-weight: 400;
     letter-spacing: 0.2px;
@@ -422,16 +442,17 @@ body {
 }
 
 .story-body p:first-child {
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--text-main);
     font-weight: 500;
     font-size: 13px;
 }
 
 .story-body p:last-child {
     margin-bottom: 0;
-    color: rgba(255, 255, 255, 0.38);
+    color: var(--text-muted);
     font-size: 12px;
     font-style: italic;
+    opacity: 0.7;
 }
 
 /* Разделы на главной */
@@ -629,7 +650,7 @@ section h2 {
 /* Подвал — Премиум редизайн */
 .footer-premium {
     padding: 50px 0 28px;
-    background: linear-gradient(180deg, var(--bg-main) 0%, #0d1520 100%);
+    background: var(--footer-premium-bg);
     border-top: none;
     position: relative;
     z-index: 10;
@@ -678,7 +699,7 @@ section h2 {
     font-size: 11px;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: rgba(208, 174, 139, 0.5);
+    color: var(--footer-eyebrow-color);
     margin-bottom: 10px;
     font-weight: 500;
 }
@@ -688,10 +709,10 @@ section h2 {
     font-family: 'Philosopher', serif;
     font-weight: 700;
     line-height: 1.2;
-    color: #fff;
+    color: var(--footer-title-from);
     margin-bottom: 0;
     letter-spacing: -0.3px;
-    background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.55) 100%);
+    background: linear-gradient(180deg, var(--footer-title-from) 0%, var(--footer-title-to) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -699,7 +720,7 @@ section h2 {
 
 .footer-main-sub {
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.35);
+    color: var(--footer-compact-sub);
     font-weight: 400;
     letter-spacing: 0.3px;
 }
@@ -718,15 +739,15 @@ section h2 {
 .footer-compact-card {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--footer-compact-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--footer-compact-border);
     border-radius: 100px;
     padding: 12px 24px 12px 12px;
     gap: 16px;
     transition: all 0.4s ease;
-    width: 380px; /* Фиксированная одинаковая ширина */
+    width: 380px;
     max-width: 100%;
     text-align: left;
     text-decoration: none;
@@ -757,7 +778,7 @@ section h2 {
 }
 
 .footer-compact-text h4 {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--footer-compact-title);
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 2px;
@@ -765,7 +786,7 @@ section h2 {
 }
 
 .footer-compact-links {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--footer-compact-sub);
     font-size: 12px;
     display: flex;
     align-items: center;
@@ -774,7 +795,7 @@ section h2 {
 }
 
 .footer-compact-links a {
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--footer-compact-sub);
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -789,7 +810,8 @@ section h2 {
 }
 
 .dot-sep {
-    opacity: 0.25;
+    opacity: 0.35;
+    color: var(--footer-dot-sep);
 }
 
 a.footer-compact-link {
@@ -802,7 +824,7 @@ a.footer-compact-link:hover .footer-compact-links {
 .footer-copy {
     text-align: center;
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.18);
+    color: var(--footer-copy-color);
     letter-spacing: 0.3px;
     position: relative;
     z-index: 2;
