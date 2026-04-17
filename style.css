@@ -723,13 +723,14 @@ section h2 {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 100px;
-    padding: 8px 20px 8px 8px;
-    gap: 12px;
+    padding: 12px 24px 12px 12px;
+    gap: 16px;
     transition: all 0.4s ease;
-    width: fit-content;
+    width: 380px; /* Фиксированная одинаковая ширина */
     max-width: 100%;
     text-align: left;
     text-decoration: none;
+    box-sizing: border-box;
 }
 
 .footer-compact-card:hover {
@@ -740,8 +741,9 @@ section h2 {
 }
 
 .footer-compact-img {
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid rgba(208, 174, 139, 0.15);
@@ -1050,18 +1052,20 @@ a.footer-compact-link:hover .footer-compact-links {
     }
 
     .footer-cards-column {
-        gap: 8px;
-        margin-bottom: 18px;
+        gap: 10px;
+        margin-bottom: 20px;
     }
 
     .footer-compact-card {
-        padding: 6px 16px 6px 6px;
-        gap: 10px;
+        padding: 10px 16px 10px 10px;
+        gap: 12px;
+        width: 100%; /* На телефоне на всю ширину родителя */
+        max-width: 340px;
     }
 
     .footer-compact-img {
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
     }
 
     .footer-compact-text h4 {
