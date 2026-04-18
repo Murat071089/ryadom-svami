@@ -226,8 +226,8 @@
         // =========================================
         async function loadDynamicContent() {
             try {
-                // Загружаем контент через тот же домен, без указания порта (CORS будет работать)
-                const res = await fetch('/api/content');
+                // Загружаем контент с обходом кэша браузера, чтобы обновления появлялись сразу
+                const res = await fetch('/api/content?_=' + new Date().getTime(), { cache: 'no-store' });
                 if (!res.ok) return;
                 const data = await res.json();
 
