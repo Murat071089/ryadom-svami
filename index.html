@@ -217,44 +217,6 @@
                 localStorage.setItem('theme', 'dark');
             }
         });
-
-
-
-
-        // =========================================
-        // ДИНАМИЧЕСКИЙ КОНТЕНТ ИЗ АДМИНКИ
-        // =========================================
-        async function loadDynamicContent() {
-            try {
-                // Загружаем контент с обходом кэша браузера, чтобы обновления появлялись сразу
-                const res = await fetch('/api/content?_=' + new Date().getTime(), { cache: 'no-store' });
-                if (!res.ok) return;
-                const data = await res.json();
-
-                if (data.hero_title) document.getElementById('dynamic-hero-title').innerHTML = data.hero_title.replace(/\n/g, '<br>');
-                if (data.subtitle) document.getElementById('dynamic-subtitle').innerHTML = data.subtitle;
-                if (data.welcome_text) {
-                    const paragraphs = data.welcome_text.split('\n').filter(p => p.trim());
-                    document.getElementById('dynamic-welcome').innerHTML = paragraphs.map(p => '<p>' + p.trim() + '</p>').join('');
-                }
-                if (data.phone) {
-                    const phoneEl = document.getElementById('dynamic-phone');
-                    phoneEl.innerText = data.phone;
-                    phoneEl.href = 'tel:' + data.phone.replace(/[^0-9+]/g, '');
-                }
-                if (data.telegram_url) {
-                    document.querySelectorAll('a[href*="t.me"]').forEach(link => {
-                        link.href = data.telegram_url;
-                    });
-                }
-                if (data.img1) document.getElementById('dynamic-img1').src = data.img1;
-                if (data.img2) document.getElementById('dynamic-img2').src = data.img2;
-                if (data.img3) document.getElementById('dynamic-img3').src = data.img3;
-            } catch (e) {
-                console.error('Ошибка загрузки контента:', e);
-            }
-        }
-        loadDynamicContent();
     </script>
 </body>
 
