@@ -219,29 +219,41 @@
             box-shadow: 0 8px 30px rgba(208, 174, 139, 0.5);
         }
 
+        .btn-save:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 10px rgba(208, 174, 139, 0.3);
+        }
+
         .btn-save:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .btn-hard-day {
             padding: 16px 24px;
-            background: transparent;
-            border: 2px solid var(--card-border);
+            background: rgba(147, 130, 180, 0.08);
+            border: 2px solid rgba(147, 130, 180, 0.25);
             border-radius: 50px;
             font-size: 14px;
             font-weight: 500;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
-            color: var(--text-muted);
+            color: #8b7fad;
             transition: all 0.3s ease;
             white-space: nowrap;
         }
 
         .btn-hard-day:hover {
-            border-color: rgba(208, 174, 139, 0.5);
-            color: var(--text-main);
+            background: rgba(147, 130, 180, 0.14);
+            border-color: rgba(147, 130, 180, 0.4);
+            color: #7a6fa0;
+            transform: translateY(-1px);
+        }
+
+        .btn-hard-day:active {
+            transform: scale(0.98);
         }
 
         /* Уведомление об успехе */
@@ -317,9 +329,9 @@
 
         .btn-export {
             padding: 12px 22px;
-            background: var(--heading-color);
-            color: #fff;
-            border: none;
+            background: transparent;
+            color: var(--heading-color);
+            border: 2px solid var(--heading-color);
             border-radius: 50px;
             font-size: 14px;
             font-weight: 600;
@@ -330,8 +342,14 @@
         }
 
         .btn-export:hover {
+            background: var(--heading-color);
+            color: #fff;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(97, 130, 150, 0.3);
+        }
+
+        .btn-export:active {
+            transform: scale(0.97);
         }
 
         /* Карточки записей */
