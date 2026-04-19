@@ -1366,58 +1366,25 @@
             const pdfDoc = pdfMake.createPdf(docDefinition);
             pdfDoc.getBlob(blob => {
                 pdfToast.classList.remove('show');
-                window._pdfBlob = blob;
-                window._pdfFilename = filename;
-                showPdfModal();
+
+                // 1. Скачиваем файл на устройство
+                const dlUrl = URL.createObjectURL(blob);
+                const dlLink = document.createElement('a');
+                dlLink.href = dlUrl;
+                dlLink.download = filename;
+                dlLink.click();
+
+                // 2. Нативное меню «Поделиться» (мобильные)
+                setTimeout(() => {
+                    const file = new File([blob], filename, { type: 'application/pdf' });
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Дневник побед — Отчёт'
+                        }).catch(() => {});
+                    }
+                }, 600);
             });
-        }
-
-        function showPdfModal() {
-            // Показываем кнопку "Поделиться" только если браузер поддерживает Web Share API
-            const shareBtn = document.getElementById('pdfShareBtn');
-            if (navigator.share && navigator.canShare) {
-                const testFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
-                if (navigator.canShare({ files: [testFile] })) {
-                    shareBtn.style.display = 'block';
-                }
-            }
-            document.getElementById('pdfModal').style.display = 'flex';
-        }
-        function closePdfModal() {
-            document.getElementById('pdfModal').style.display = 'none';
-        }
-        function pdfAction(action) {
-            const blob = window._pdfBlob;
-            const filename = window._pdfFilename || 'report.pdf';
-            if (!blob) return;
-
-            if (action === 'share') {
-                const file = new File([blob], filename, { type: 'application/pdf' });
-                navigator.share({ files: [file], title: 'Дневник побед — Отчёт' }).catch(() => {});
-                closePdfModal();
-                return;
-            }
-
-            const url = URL.createObjectURL(blob);
-            if (action === 'open') {
-                const a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.rel = 'noopener';
-                a.click();
-            } else if (action === 'download') {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.click();
-            } else if (action === 'print') {
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = url;
-                document.body.appendChild(iframe);
-                iframe.onload = () => { iframe.contentWindow.print(); };
-            }
-            closePdfModal();
         }
     </script>
 </body>
