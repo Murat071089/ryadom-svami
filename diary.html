@@ -602,6 +602,7 @@
 
     <!-- Уведомление -->
     <div class="save-toast" id="saveToast">✅ Запись сохранена!</div>
+    <div class="save-toast" id="pdfToast" style="background: linear-gradient(135deg, #618296, #4a6d80);">⏳ Формируем отчёт...</div>
 
     <!-- Модальное окно удаления -->
     <div class="modal-overlay" id="deleteModal">
@@ -685,7 +686,8 @@
                     <option value="good">☀️ Хороший день</option>
                     <option value="great">⭐ Отличный день</option>
                 </select>
-                <button class="btn-export" onclick="exportData()">📄 Скачать отчёт</button>
+                <button class="btn-export" onclick="exportData()" style="background: var(--text-muted);">📄 TXT</button>
+                <button class="btn-export" onclick="exportPDF()" id="pdfBtn">📄 Скачать PDF</button>
             </div>
 
             <!-- Записи -->
@@ -1109,10 +1111,285 @@
         // =========================================
         // УВЕДОМЛЕНИЕ
         // =========================================
-        function showToast() {
-            const toast = document.getElementById('saveToast');
+        function showToast(msg, elementId) {
+            const id = elementId || 'saveToast';
+            const toast = document.getElementById(id);
+            if (msg) toast.textContent = msg;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // =========================================
+        // PDF ЭКСПОРТ (pdfmake)
+        // =========================================
+        let pdfmakeLoaded = false;
+
+        function loadPdfMake() {
+            return new Promise((resolve, reject) => {
+                if (pdfmakeLoaded) { resolve(); return; }
+                const s1 = document.createElement('script');
+                s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js';
+                s1.onload = () => {
+                    const s2 = document.createElement('script');
+                    s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js';
+                    s2.onload = () => { pdfmakeLoaded = true; resolve(); };
+                    s2.onerror = reject;
+                    document.head.appendChild(s2);
+                };
+                s1.onerror = reject;
+                document.head.appendChild(s1);
+            });
+        }
+
+        async function exportPDF() {
+            if (entries.length === 0) {
+                alert('Нет данных для экспорта');
+                return;
+            }
+
+            // Показываем лоадер
+            const pdfToast = document.getElementById('pdfToast');
+            pdfToast.textContent = '⏳ Формируем отчёт...';
+            pdfToast.classList.add('show');
+
+            try {
+                await loadPdfMake();
+            } catch(e) {
+                pdfToast.classList.remove('show');
+                alert('Не удалось загрузить библиотеку PDF. Проверьте подключение к интернету.');
+                return;
+            }
+
+            // Данные
+            const sorted = [...entries].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const firstDate = formatDate(sorted[0].date);
+            const lastDate = formatDate(sorted[sorted.length - 1].date);
+            const totalEntries = sorted.length;
+            const hardDays = sorted.filter(e => e.mood === 'hard').length;
+            const calmDays = sorted.filter(e => e.mood === 'calm').length;
+            const goodDays = sorted.filter(e => e.mood === 'good').length;
+            const greatDays = sorted.filter(e => e.mood === 'great').length;
+
+            // Цвета сайта
+            const C = {
+                teal: '#618296',
+                gold: '#d0ae8b',
+                dark: '#1a1a1a',
+                muted: '#888888',
+                bg: '#f8f6f3',
+                white: '#ffffff',
+                cardBorder: '#e8e4df',
+                hardBg: '#f3eef8',
+                calmBg: '#eef5fa',
+                goodBg: '#fef9ef',
+                greatBg: '#fefce8'
+            };
+
+            const moodColors = {
+                hard: { bg: C.hardBg, text: '#7c3aed' },
+                calm: { bg: C.calmBg, text: C.teal },
+                good: { bg: C.goodBg, text: '#d97706' },
+                great: { bg: C.greatBg, text: '#ca8a04' }
+            };
+
+            // Формируем документ
+            const content = [];
+
+            // ===== ТИТУЛЬНАЯ СТРАНИЦА =====
+            content.push({ text: '\n\n\n', fontSize: 10 });
+            content.push({
+                text: 'ОТЧЁТ',
+                fontSize: 12,
+                letterSpacing: 4,
+                color: C.gold,
+                alignment: 'center',
+                margin: [0, 0, 0, 8]
+            });
+            content.push({
+                text: 'Дневник побед\nи настроения',
+                fontSize: 32,
+                bold: true,
+                color: C.teal,
+                alignment: 'center',
+                lineHeight: 1.2,
+                margin: [0, 0, 0, 16]
+            });
+            content.push({
+                text: 'История наблюдений и маленьких достижений',
+                fontSize: 14,
+                color: C.muted,
+                alignment: 'center',
+                margin: [0, 0, 0, 6]
+            });
+            content.push({
+                text: `${firstDate} — ${lastDate}`,
+                fontSize: 13,
+                color: C.dark,
+                bold: true,
+                alignment: 'center',
+                margin: [0, 0, 0, 40]
+            });
+
+            // Статистика
+            content.push({
+                table: {
+                    widths: ['*', '*'],
+                    body: [
+                        [
+                            { text: `${totalEntries}`, fontSize: 28, bold: true, color: C.teal, alignment: 'center', border: [false,false,false,false], margin: [0,8,0,0] },
+                            { text: `${goodDays + greatDays}`, fontSize: 28, bold: true, color: '#22c55e', alignment: 'center', border: [false,false,false,false], margin: [0,8,0,0] }
+                        ],
+                        [
+                            { text: 'всего записей', fontSize: 11, color: C.muted, alignment: 'center', border: [false,false,false,false], margin: [0,0,0,8] },
+                            { text: 'хороших дней', fontSize: 11, color: C.muted, alignment: 'center', border: [false,false,false,false], margin: [0,0,0,8] }
+                        ],
+                        [
+                            { text: `${calmDays}`, fontSize: 28, bold: true, color: C.teal, alignment: 'center', border: [false,false,false,false], margin: [0,8,0,0] },
+                            { text: `${hardDays}`, fontSize: 28, bold: true, color: '#ef4444', alignment: 'center', border: [false,false,false,false], margin: [0,8,0,0] }
+                        ],
+                        [
+                            { text: 'спокойных дней', fontSize: 11, color: C.muted, alignment: 'center', border: [false,false,false,false], margin: [0,0,0,8] },
+                            { text: 'тяжёлых дней', fontSize: 11, color: C.muted, alignment: 'center', border: [false,false,false,false], margin: [0,0,0,8] }
+                        ]
+                    ]
+                },
+                layout: {
+                    fillColor: function(rowIndex) { return (rowIndex % 2 === 0) ? '#f0f4f7' : null; },
+                    hLineWidth: () => 0,
+                    vLineWidth: () => 0
+                },
+                margin: [40, 0, 40, 40]
+            });
+
+            // Мотивирующий блок
+            content.push({
+                table: {
+                    widths: ['*'],
+                    body: [[
+                        {
+                            text: '«Каждый маленький шаг имеет значение.\nВы — замечательный родитель.»',
+                            fontSize: 14,
+                            italics: true,
+                            color: C.teal,
+                            alignment: 'center',
+                            border: [false,false,false,false],
+                            margin: [20, 16, 20, 16]
+                        }
+                    ]]
+                },
+                layout: {
+                    fillColor: () => '#f0f4f7',
+                    hLineWidth: () => 0,
+                    vLineWidth: () => 0
+                },
+                margin: [30, 0, 30, 20]
+            });
+
+            content.push({
+                text: 'ryadom-svami.ru',
+                fontSize: 11,
+                color: C.gold,
+                alignment: 'center',
+                margin: [0, 10, 0, 0]
+            });
+
+            // ===== ЗАПИСИ =====
+            content.push({ text: '', pageBreak: 'after' });
+
+            content.push({
+                text: 'Записи дневника',
+                fontSize: 22,
+                bold: true,
+                color: C.teal,
+                margin: [0, 0, 0, 20]
+            });
+
+            const reverseSorted = [...sorted].reverse();
+            reverseSorted.forEach((e, idx) => {
+                const mood = MOODS[e.mood] || MOODS.calm;
+                const mc = moodColors[e.mood] || moodColors.calm;
+                const dateStr = formatDate(e.date);
+
+                const cardBody = [];
+
+                // Дата + настроение
+                cardBody.push([{
+                    columns: [
+                        { text: dateStr, fontSize: 13, bold: true, color: C.dark, width: '*' },
+                        { text: `${mood.emoji} ${mood.label}`, fontSize: 12, color: mc.text, alignment: 'right', width: 'auto' }
+                    ],
+                    border: [false,false,false,false],
+                    margin: [12, 10, 12, 6]
+                }]);
+
+                // Победа
+                cardBody.push([{
+                    stack: [
+                        { text: 'ПОБЕДА', fontSize: 9, bold: true, color: C.teal, letterSpacing: 1.5, margin: [0,0,0,4] },
+                        { text: e.winText || '—', fontSize: 13, color: C.dark, lineHeight: 1.5 }
+                    ],
+                    border: [false,false,false,false],
+                    margin: [12, 4, 12, 6]
+                }]);
+
+                // Сложности
+                if (e.hardText) {
+                    cardBody.push([{
+                        stack: [
+                            { text: 'СЛОЖНОСТИ', fontSize: 9, bold: true, color: C.muted, letterSpacing: 1.5, margin: [0,0,0,4] },
+                            { text: e.hardText, fontSize: 12, color: '#666666', lineHeight: 1.5 }
+                        ],
+                        border: [false,false,false,false],
+                        margin: [12, 4, 12, 10]
+                    }]);
+                }
+
+                content.push({
+                    table: {
+                        widths: ['*'],
+                        body: cardBody
+                    },
+                    layout: {
+                        fillColor: () => mc.bg,
+                        hLineWidth: () => 0,
+                        vLineWidth: () => 0
+                    },
+                    margin: [0, 0, 0, 14],
+                    unbreakable: true
+                });
+            });
+
+            // Подпись
+            content.push({
+                text: '\nС любовью, проект «Рядом с вами» 💛\nryadom-svami.ru',
+                fontSize: 11,
+                color: C.muted,
+                alignment: 'center',
+                margin: [0, 20, 0, 0]
+            });
+
+            // Генерация
+            const docDefinition = {
+                pageSize: 'A4',
+                pageMargins: [40, 50, 40, 50],
+                defaultStyle: {
+                    font: 'Roboto'
+                },
+                content: content
+            };
+
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const filename = `diary-report-${month}-${year}.pdf`;
+
+            pdfMake.createPdf(docDefinition).download(filename);
+
+            // Обновляем toast
+            setTimeout(() => {
+                pdfToast.textContent = '✅ Отчёт скачан!';
+                setTimeout(() => pdfToast.classList.remove('show'), 2000);
+            }, 500);
         }
     </script>
 </body>
