@@ -7,6 +7,29 @@
     <meta name="description" content="Бесплатный онлайн-тест M-CHAT для раннего выявления признаков аутизма у детей от 16 до 30 месяцев. Быстро, анонимно, без регистрации.">
     <link rel="stylesheet" href="style.css?v=3">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        .save-toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: linear-gradient(135deg, #618296 0%, #4a6d80 100%);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 12px 40px rgba(97, 130, 150, 0.4);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .save-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
 </head>
 <body data-theme="dark">
 
@@ -29,6 +52,9 @@
     <div class="test-progress-bar">
         <div class="test-progress-fill" id="progressFill"></div>
     </div>
+
+    <!-- Уведомление -->
+    <div class="save-toast" id="pdfToast">⏳ Формируем отчёт...</div>
 
     <main class="test-page">
         <div class="container">
@@ -145,10 +171,10 @@
                     <h2 class="vx-result-title" style="margin-bottom: 16px;">Карта ответов</h2>
                     <p class="vx-result-text" style="font-size: 13px; line-height: 1.6; margin-bottom: 32px; text-align: center;">
                         Развёрнутые ответы пациента скрыты в целях безопасности.<br><br>
-                        Сгенерируйте красивый и профессиональный отчёт со списком всех ответов в виде изображения для консультации с лечащим врачом.
+                        Сгенерируйте красивый и профессиональный отчёт со списком всех ответов в виде PDF-файла для консультации с лечащим врачом.
                     </p>
 
-                    <button class="vx-btn" onclick="downloadResults()" style="margin-top: 0; margin-bottom: 12px; width: 100%;">⬇ Скачать в виде картинки</button>
+                    <button class="vx-btn" onclick="downloadPDFResults()" style="margin-top: 0; margin-bottom: 12px; width: 100%;">📄 Скачать PDF отчёт</button>
                     <button class="vx-btn-ghost" onclick="showScreen('screenResult')" style="width: 100%;">← Назад</button>
                 </div>
             </div>
@@ -380,9 +406,42 @@
         }
 
         // =========================================
-        // КРАСИВАЯ КАРТОЧКА ДЛЯ ВРАЧА (PNG)
+        // КРАСИВАЯ КАРТОЧКА ДЛЯ ВРАЧА (PDF)
         // =========================================
-        function downloadResults() {
+        let pdfmakeLoaded = false;
+
+        function loadPdfMake() {
+            return new Promise((resolve, reject) => {
+                if (pdfmakeLoaded) { resolve(); return; }
+                const s1 = document.createElement('script');
+                s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js';
+                s1.onload = () => {
+                    const s2 = document.createElement('script');
+                    s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js';
+                    s2.onload = () => { pdfmakeLoaded = true; resolve(); };
+                    s2.onerror = reject;
+                    document.head.appendChild(s2);
+                };
+                s1.onerror = reject;
+                document.head.appendChild(s1);
+            });
+        }
+
+        async function downloadPDFResults() {
+            const pdfToast = document.getElementById('pdfToast');
+            if (pdfToast) {
+                pdfToast.textContent = '⏳ Формируем отчёт...';
+                pdfToast.classList.add('show');
+            }
+
+            try {
+                await loadPdfMake();
+            } catch(e) {
+                if (pdfToast) pdfToast.classList.remove('show');
+                alert('Не удалось загрузить библиотеку PDF. Проверьте интернет.');
+                return;
+            }
+
             let riskScore = 0;
             for (let i = 0; i < questions.length; i++) {
                 if (answers[i] === questions[i].riskAnswer) riskScore++;
@@ -390,298 +449,146 @@
 
             let level, levelColor, levelMsg;
             if (riskScore <= 2) {
-                level = 'Низкий риск';
-                levelColor = '#61be82';
+                level = 'НИЗКИЙ РИСК';
+                levelColor = '#22c55e'; // Green
                 levelMsg = 'Развитие соответствует норме';
             } else if (riskScore <= 7) {
-                level = 'Средний риск';
-                levelColor = '#f59e0b';
+                level = 'СРЕДНИЙ РИСК';
+                levelColor = '#f59e0b'; // Amber
                 levelMsg = 'Рекомендуется консультация специалиста';
             } else {
-                level = 'Высокий риск';
-                levelColor = '#ef6464';
+                level = 'ВЫСОКИЙ РИСК';
+                levelColor = '#ef4444'; // Red
                 levelMsg = 'Необходима консультация специалиста';
             }
 
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const W = 700;
-            const headerH = 300;
-            const footerH = 90;
-            const maxTextW = W - 190;
-            
-            // Вспомогательная функция для переноса текста
-            const wrapText = (text, maxWidth) => {
-                ctx.font = '400 12px Inter, Arial, sans-serif';
-                const words = text.split(' ');
-                const lines = [];
-                let currentLine = words[0];
-                for (let i = 1; i < words.length; i++) {
-                    const width = ctx.measureText(currentLine + ' ' + words[i]).width;
-                    if (width < maxWidth) {
-                        currentLine += ' ' + words[i];
-                    } else {
-                        lines.push(currentLine);
-                        currentLine = words[i];
-                    }
-                }
-                lines.push(currentLine);
-                return lines;
-            };
-
-            const wrappedQuestions = [];
-            const rowHeights = [];
-            let totalRowsH = 0;
-            
-            for (let i = 0; i < questions.length; i++) {
-                const lines = wrapText(questions[i].text, maxTextW);
-                wrappedQuestions.push(lines);
-                // Базовая высота 54px, увеличивается если строк больше
-                const rH = Math.max(54, lines.length * 18 + 26);
-                rowHeights.push(rH);
-                totalRowsH += rH;
-            }
-
-            const H = headerH + totalRowsH + footerH - 40;
-            canvas.width = W;
-            canvas.height = H;
-
-            // ─── Фон ───
-            const bg = ctx.createLinearGradient(0, 0, 0, H);
-            bg.addColorStop(0,   '#0d1820');
-            bg.addColorStop(0.4, '#142232');
-            bg.addColorStop(1,   '#0a1520');
-            ctx.fillStyle = bg;
-            ctx.fillRect(0, 0, W, H);
-
-            // Свечение сверху
-            const glow = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, 280);
-            glow.addColorStop(0, 'rgba(208, 174, 139, 0.10)');
-            glow.addColorStop(1, 'transparent');
-            ctx.fillStyle = glow;
-            ctx.fillRect(0, 0, W, 280);
-
-            // Рамка
-            ctx.strokeStyle = 'rgba(208, 174, 139, 0.15)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.roundRect(14, 14, W - 28, H - 28, 20);
-            ctx.stroke();
-
-            // Верхняя золотая линия
-            const topG = ctx.createLinearGradient(80, 0, W - 80, 0);
-            topG.addColorStop(0, 'transparent');
-            topG.addColorStop(0.5, 'rgba(208, 174, 139, 0.6)');
-            topG.addColorStop(1, 'transparent');
-            ctx.strokeStyle = topG;
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(80, 14);
-            ctx.lineTo(W - 80, 14);
-            ctx.stroke();
-
-            // ─── Мета ───
-            ctx.textAlign = 'center';
-            ctx.fillStyle = 'rgba(208, 174, 139, 0.4)';
-            ctx.font = '500 10px Inter, Arial, sans-serif';
-            ctx.fillText('M-CHAT-R  ·  КАРТА ОТВЕТОВ ДЛЯ СПЕЦИАЛИСТА', W / 2, 48);
-
-            // ─── Компактный блок: кольцо + текст ───
-            const ringR = 48;
-            const ringCx = 120, ringCy = 140;
-
-            // Фон кольца
-            ctx.beginPath();
-            ctx.arc(ringCx, ringCy, ringR, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-            ctx.lineWidth = 8;
-            ctx.stroke();
-            // Дуга
-            const pct = riskScore / questions.length;
-            ctx.beginPath();
-            ctx.arc(ringCx, ringCy, ringR, -Math.PI/2, -Math.PI/2 + pct * Math.PI * 2);
-            ctx.strokeStyle = levelColor;
-            ctx.lineWidth = 8;
-            ctx.lineCap = 'round';
-            ctx.shadowColor = levelColor;
-            ctx.shadowBlur = 12;
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-            // Балл в кольце
-            ctx.fillStyle = 'rgba(255,255,255,0.92)';
-            ctx.font = '700 28px Inter, Arial, sans-serif';
-            ctx.fillText(riskScore, ringCx, ringCy + 8);
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.font = '400 10px Inter, Arial, sans-serif';
-            ctx.fillText('из 20', ringCx, ringCy + 24);
-
-            // Текст справа от кольца
-            ctx.textAlign = 'left';
-            // Бейдж
-            const bW = 170, bH = 26, bX = 200, bY = 108;
-            ctx.fillStyle = levelColor + '20';
-            ctx.beginPath();
-            ctx.roundRect(bX, bY, bW, bH, 13);
-            ctx.fill();
-            ctx.strokeStyle = levelColor + '50';
-            ctx.lineWidth = 0.8;
-            ctx.beginPath();
-            ctx.roundRect(bX, bY, bW, bH, 13);
-            ctx.stroke();
-            ctx.fillStyle = levelColor;
-            ctx.font = '600 12px Inter, Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(level, bX + bW/2, bY + 17);
-
-            ctx.textAlign = 'left';
-            ctx.fillStyle = 'rgba(255,255,255,0.4)';
-            ctx.font = '400 11px Inter, Arial, sans-serif';
-            ctx.fillText(levelMsg, 200, 160);
-
-            // Дата
             const now = new Date();
             const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-            ctx.fillStyle = 'rgba(255,255,255,0.25)';
-            ctx.font = '400 10px Inter, Arial, sans-serif';
-            ctx.fillText(dateStr, 200, 178);
 
-            // ─── Разделитель перед таблицей ───
-            const sepY = 210;
-            const sepG = ctx.createLinearGradient(40, 0, W - 40, 0);
-            sepG.addColorStop(0, 'transparent');
-            sepG.addColorStop(0.5, 'rgba(208, 174, 139, 0.25)');
-            sepG.addColorStop(1, 'transparent');
-            ctx.strokeStyle = sepG;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(40, sepY);
-            ctx.lineTo(W - 40, sepY);
-            ctx.stroke();
+            const C = {
+                teal: '#618296',
+                gold: '#d0ae8b',
+                dark: '#1a1a1a',
+                muted: '#888888',
+                bg: '#f8f6f3',
+                redBg: '#fef2f2'
+            };
 
-            // ─── Заголовки колонок ───
-            const colNumX = 42;
-            const colQX = 72;
-            const colAX = W - 60;
-            ctx.textAlign = 'left';
-            ctx.fillStyle = 'rgba(208, 174, 139, 0.35)';
-            ctx.font = '600 9px Inter, Arial, sans-serif';
-            ctx.fillText('№', colNumX, 232);
-            ctx.fillText('ВОПРОС', colQX, 232);
-            ctx.textAlign = 'right';
-            ctx.fillText('ОТВЕТ', colAX, 232);
+            const content = [];
 
-            // Тонкая линия под шапкой
-            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-            ctx.beginPath();
-            ctx.moveTo(40, 242);
-            ctx.lineTo(W - 40, 242);
-            ctx.stroke();
+            // Титульный блок
+            content.push({ text: '\n\n', fontSize: 10 });
+            content.push({
+                text: 'РЕЗУЛЬТАТЫ СКРИНИНГА',
+                fontSize: 12,
+                letterSpacing: 2,
+                color: C.gold,
+                alignment: 'center',
+                margin: [0, 0, 0, 8]
+            });
+            content.push({
+                text: 'Тест M-CHAT-R',
+                fontSize: 28,
+                bold: true,
+                color: C.teal,
+                alignment: 'center',
+                margin: [0, 0, 0, 24]
+            });
 
-            // ─── Вопросы и ответы ───
-            let currentY = headerH - 50;
+            // Итог
+            content.push({
+                table: {
+                    widths: ['*'],
+                    body: [[
+                        {
+                            stack: [
+                                { text: riskScore.toString(), fontSize: 42, bold: true, color: levelColor, alignment: 'center', margin: [0, 10, 0, 4] },
+                                { text: 'из 20', fontSize: 14, color: C.muted, alignment: 'center', margin: [0, 0, 0, 12] },
+                                { text: level, fontSize: 16, bold: true, color: levelColor, alignment: 'center', margin: [0, 0, 0, 4] },
+                                { text: levelMsg, fontSize: 13, color: C.dark, alignment: 'center', margin: [0, 0, 0, 10] }
+                            ],
+                            border: [false,false,false,false]
+                        }
+                    ]]
+                },
+                layout: {
+                    fillColor: () => '#f0f4f7',
+                },
+                margin: [40, 0, 40, 24]
+            });
+
+            // Таблица вопросов
+            const tableBody = [];
+            tableBody.push([
+                { text: '№', fontSize: 10, bold: true, color: C.muted, border: [false,false,false,true], borderColor: ['#e0e0e0','#e0e0e0','#e0e0e0','#e0e0e0'], margin: [0,4,0,4] },
+                { text: 'Вопрос', fontSize: 10, bold: true, color: C.muted, border: [false,false,false,true], borderColor: ['#e0e0e0','#e0e0e0','#e0e0e0','#e0e0e0'], margin: [0,4,0,4] },
+                { text: 'Ответ', fontSize: 10, bold: true, color: C.muted, alignment: 'center', border: [false,false,false,true], borderColor: ['#e0e0e0','#e0e0e0','#e0e0e0','#e0e0e0'], margin: [0,4,0,4] }
+            ]);
 
             for (let i = 0; i < questions.length; i++) {
-                const rH = rowHeights[i];
-                const y = currentY;
                 const q = questions[i];
                 const ans = answers[i];
                 const risk = (ans === q.riskAnswer);
-
-                // Чередование фона
-                if (i % 2 === 0) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.015)';
-                    ctx.fillRect(30, y, W - 60, rH);
-                }
-
-                // Подсветка рисковых
-                if (risk) {
-                    ctx.fillStyle = 'rgba(239, 100, 100, 0.05)';
-                    ctx.fillRect(30, y, W - 60, rH);
-                    ctx.fillStyle = 'rgba(239, 100, 100, 0.4)';
-                    ctx.fillRect(30, y, 3, rH);
-                }
-
-                // Номер
-                ctx.textAlign = 'left';
-                ctx.fillStyle = risk ? 'rgba(239,100,100,0.5)' : 'rgba(255,255,255,0.25)';
-                ctx.font = '600 11px Inter, Arial, sans-serif';
-                ctx.fillText((i + 1), colNumX, y + 22 + (rH - 54)/2);
-
-                // Текст вопроса (полный, с переносом)
-                ctx.fillStyle = risk ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.6)';
-                ctx.font = '400 12px Inter, Arial, sans-serif';
                 
-                const lines = wrappedQuestions[i];
-                const textStartY = y + 24; 
-                for (let j = 0; j < lines.length; j++) {
-                    ctx.fillText(lines[j], colQX, textStartY + (j * 18));
-                }
+                const bg = risk ? C.redBg : null;
+                const textColor = risk ? '#b91c1c' : C.dark;
 
-                // Ответ — маленький бейдж справа
-                const ansText = ans ? 'Да' : 'Нет';
-                const ansColor = ans ? '#61be82' : (risk ? '#ef6464' : '#d0ae8b');
-                const abW = 44, abH = 22;
-                const abX = W - 60 - abW/2;
-                const abY = y + (rH - abH) / 2; // Вертикальное центрирование
-                
-                ctx.fillStyle = ansColor + '18';
-                ctx.beginPath();
-                ctx.roundRect(abX, abY, abW, abH, 6);
-                ctx.fill();
-                ctx.strokeStyle = ansColor + '40';
-                ctx.lineWidth = 0.6;
-                ctx.beginPath();
-                ctx.roundRect(abX, abY, abW, abH, 6);
-                ctx.stroke();
-                ctx.fillStyle = ansColor;
-                ctx.font = '700 11px Inter, Arial, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(ansText, abX + abW/2, abY + 15);
-
-                // Флаг риска
-                if (risk) {
-                    ctx.fillStyle = 'rgba(239, 100, 100, 0.45)';
-                    ctx.font = '400 8px Inter, Arial, sans-serif';
-                    ctx.fillText('⚠', abX + abW/2, abY + abH + 9);
-                }
-
-                currentY += rH;
+                tableBody.push([
+                    { text: (i + 1).toString(), fontSize: 11, color: C.muted, fillColor: bg, border: [false,false,false,true], borderColor: ['#f0f0f0','#f0f0f0','#f0f0f0','#f0f0f0'], margin: [4,8,4,8] },
+                    { text: q.text, fontSize: 11, color: textColor, fillColor: bg, border: [false,false,false,true], borderColor: ['#f0f0f0','#f0f0f0','#f0f0f0','#f0f0f0'], margin: [4,8,4,8] },
+                    { text: ans ? 'Да' : 'Нет', fontSize: 11, bold: true, color: textColor, fillColor: bg, alignment: 'center', border: [false,false,false,true], borderColor: ['#f0f0f0','#f0f0f0','#f0f0f0','#f0f0f0'], margin: [4,8,4,8] }
+                ]);
             }
 
+            content.push({
+                table: {
+                    headerRows: 1,
+                    widths: ['auto', '*', 50],
+                    body: tableBody
+                },
+                layout: 'lightHorizontalLines',
+                margin: [0, 10, 0, 20]
+            });
 
-            // ─── Футер ───
-            const fy = H - footerH + 12;
+            // Футер
+            content.push({
+                text: 'Дата прохождения: ' + dateStr,
+                fontSize: 10,
+                color: C.muted,
+                alignment: 'center',
+                margin: [0, 20, 0, 4]
+            });
+            content.push({
+                text: 'Результат носит исключительно рекомендательный характер.\nПожалуйста, проконсультируйтесь с врачом.',
+                fontSize: 10,
+                color: C.muted,
+                italics: true,
+                alignment: 'center',
+                margin: [0, 0, 0, 10]
+            });
+            content.push({
+                text: 'ryadom-svami.ru',
+                fontSize: 11,
+                color: C.gold,
+                alignment: 'center'
+            });
 
-            // Кривая фраза
-            ctx.textAlign = 'center';
-            ctx.fillStyle = 'rgba(255,255,255,0.14)';
-            ctx.font = 'italic 400 11px Georgia, serif';
-            ctx.fillText('Вы заботитесь о своём ребёнке — это главное', W/2, fy);
+            const docDefinition = {
+                pageSize: 'A4',
+                pageMargins: [40, 50, 40, 50],
+                defaultStyle: { font: 'Roboto', lineHeight: 1.3 },
+                content: content
+            };
 
-            // Разделитель
-            const fG = ctx.createLinearGradient(100, 0, W - 100, 0);
-            fG.addColorStop(0, 'transparent');
-            fG.addColorStop(0.5, 'rgba(208, 174, 139, 0.18)');
-            fG.addColorStop(1, 'transparent');
-            ctx.strokeStyle = fG;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(100, fy + 14);
-            ctx.lineTo(W - 100, fy + 14);
-            ctx.stroke();
+            const filename = `M-CHAT-R_${dateStr.replace(/ /g, '_')}.pdf`;
+            pdfMake.createPdf(docDefinition).download(filename);
 
-            ctx.fillStyle = 'rgba(255,255,255,0.18)';
-            ctx.font = '400 9px Inter, Arial, sans-serif';
-            ctx.fillText(dateStr + '  ·  Результат носит рекомендательный характер', W/2, fy + 34);
-            ctx.fillStyle = 'rgba(208, 174, 139, 0.35)';
-            ctx.font = '500 10px Inter, Arial, sans-serif';
-            ctx.fillText('ryadom-svami.ru', W/2, fy + 52);
-
-            // ─── Скачивание ───
-            const link = document.createElement('a');
-            link.download = 'M-CHAT-R_' + dateStr.replace(/ /g, '_') + '.jpg';
-            link.href = canvas.toDataURL('image/jpeg', 0.95);
-            link.click();
+            setTimeout(() => {
+                if (pdfToast) {
+                    pdfToast.textContent = '✅ Отчёт скачан!';
+                    setTimeout(() => pdfToast.classList.remove('show'), 2000);
+                }
+            }, 500);
         }
         function restartTest() {
             currentQuestion = 0;
