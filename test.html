@@ -273,11 +273,30 @@
         // =========================================
         // УПРАВЛЕНИЕ ЭКРАНАМИ
         // =========================================
-        function showScreen(screenId) {
+        let screenHistory = ['screenWelcome'];
+
+        function showScreen(screenId, skipHistory) {
             document.querySelectorAll('.test-screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (!skipHistory) {
+                screenHistory.push(screenId);
+                history.pushState({ screen: screenId }, '');
+            }
         }
+
+        // Кнопка «Назад» в браузере / телефоне
+        window.addEventListener('popstate', (e) => {
+            if (screenHistory.length > 1) {
+                screenHistory.pop();
+                const prev = screenHistory[screenHistory.length - 1];
+                showScreen(prev, true);
+            }
+        });
+
+        // Начальное состояние
+        history.replaceState({ screen: 'screenWelcome' }, '');
 
         function updateProgress() {
             const percent = ((currentQuestion) / questions.length) * 100;
