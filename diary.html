@@ -686,7 +686,6 @@
                     <option value="good">☀️ Хороший день</option>
                     <option value="great">⭐ Отличный день</option>
                 </select>
-                <button class="btn-export" onclick="exportData()" style="background: var(--text-muted);">📄 TXT</button>
                 <button class="btn-export" onclick="exportPDF()" id="pdfBtn">📄 Скачать PDF</button>
             </div>
 
@@ -1071,42 +1070,7 @@
             localStorage.removeItem(DRAFT_KEY);
         }
 
-        // =========================================
-        // ЭКСПОРТ
-        // =========================================
-        function exportData() {
-            if (entries.length === 0) {
-                alert('Нет записей для экспорта');
-                return;
-            }
 
-            let text = '══════════════════════════════════\n';
-            text += '    ДНЕВНИК ПОБЕД И НАСТРОЕНИЯ\n';
-            text += '    Рядом с вами · ryadom-svami.ru\n';
-            text += '══════════════════════════════════\n\n';
-            text += `Всего записей: ${entries.length}\n`;
-            text += `Дата экспорта: ${new Date().toLocaleDateString('ru-RU')}\n\n`;
-            text += '──────────────────────────────────\n\n';
-
-            const sorted = [...entries].sort((a, b) => new Date(a.date) - new Date(b.date));
-            sorted.forEach((e, i) => {
-                const mood = MOODS[e.mood] || MOODS.calm;
-                text += `📅 ${formatDate(e.date)}  ${mood.emoji} ${mood.label}\n`;
-                text += `🏆 Победа: ${e.winText}\n`;
-                if (e.hardText) text += `💔 Сложности: ${e.hardText}\n`;
-                text += '\n──────────────────────────────────\n\n';
-            });
-
-            text += 'С любовью, проект «Рядом с вами» 💛\n';
-
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `дневник-побед-${new Date().toISOString().slice(0, 10)}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
 
         // =========================================
         // УВЕДОМЛЕНИЕ
