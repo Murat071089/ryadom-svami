@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Дневник побед — Рядом с вами</title>
+    <meta name="description" content="Дневник побед и настроения для родителей особенных детей. Фиксируйте прогресс, замечайте маленькие победы каждый день.">
+    <link rel="stylesheet" href="style.css?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================
+           ДНЕВНИК ПОБЕД — СТИЛИ
+           ========================================= */
+        .diary-page {
+            padding: 40px 0 80px;
+            min-height: 80vh;
+        }
+
+        .diary-header {
+            text-align: center;
+            margin-bottom: 36px;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .diary-header h1 {
+            font-size: 36px;
+            color: var(--heading-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .diary-header p {
+            color: var(--text-muted);
+            font-size: 15px;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+
+        .diary-stats {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--heading-color);
+            box-shadow: 0 4px 20px var(--card-shadow);
+        }
+
+        .diary-stats .stat-num {
+            background: linear-gradient(135deg, #d0ae8b, #c49b74);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Форма */
+        .diary-form-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px 28px;
+            box-shadow: 0 12px 40px var(--card-shadow);
+            margin-bottom: 36px;
+            animation: fadeInUp 0.8s ease 0.15s both;
+            transition: background 0.4s, border-color 0.4s;
+        }
+
+        .diary-form-card h2 {
+            font-size: 20px;
+            color: var(--heading-color);
+            margin-bottom: 24px;
+            text-align: left;
+            letter-spacing: -0.2px;
+        }
+
+        .form-field {
+            margin-bottom: 22px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .form-field input[type="date"],
+        .form-field textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--card-border);
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            transition: border-color 0.3s, background-color 0.4s, color 0.4s;
+            -webkit-appearance: none;
+        }
+
+        .form-field input[type="date"]:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--heading-color);
+        }
+
+        .form-field textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-field textarea.small {
+            min-height: 70px;
+        }
+
+        .form-field .hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        /* Кнопки настроения */
+        .mood-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .mood-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 16px 8px;
+            border-radius: 16px;
+            border: 2px solid var(--card-border);
+            background: var(--bg-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+        }
+
+        .mood-btn .mood-emoji {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .mood-btn .mood-img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .mood-btn .mood-label {
+            font-size: 11px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .mood-btn:hover {
+            border-color: rgba(208, 174, 139, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .mood-btn.active {
+            border-color: #d0ae8b;
+            background: rgba(208, 174, 139, 0.12);
+            box-shadow: 0 4px 16px rgba(208, 174, 139, 0.2);
+        }
+
+        /* CTA кнопки формы */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .btn-save {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 28px;
+            background: linear-gradient(135deg, #d0ae8b 0%, #c49b74 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(208, 174, 139, 0.3);
+        }
+
+        .btn-save:hover {
+            transform: scale(1.03) translateY(-2px);
+            box-shadow: 0 8px 30px rgba(208, 174, 139, 0.5);
+        }
+
+        .btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-hard-day {
+            padding: 16px 24px;
+            background: transparent;
+            border: 2px solid var(--card-border);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-hard-day:hover {
+            border-color: rgba(208, 174, 139, 0.5);
+            color: var(--text-main);
+        }
+
+        /* Уведомление об успехе */
+        .save-toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 12px 40px rgba(34, 197, 94, 0.4);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .save-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Фильтры и поиск */
+        .diary-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 18px;
+            border: 2px solid var(--card-border);
+            border-radius: 50px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--text-main);
+            transition: border-color 0.3s, background-color 0.4s, color 0.4s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--heading-color);
+        }
+
+        .filter-select {
+            padding: 12px 18px;
+            border: 2px solid var(--card-border);
+            border-radius: 50px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--card-bg);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: border-color 0.3s, background-color 0.4s, color 0.4s;
+            -webkit-appearance: none;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--heading-color);
+        }
+
+        .btn-export {
+            padding: 12px 22px;
+            background: var(--heading-color);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(97, 130, 150, 0.3);
+        }
+
+        /* Карточки записей */
+        .diary-entries {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .entry-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 24px var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .entry-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px var(--card-shadow);
+        }
+
+        .entry-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .entry-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .entry-mood {
+            font-size: 24px;
+        }
+
+        .entry-mood img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .entry-win {
+            margin-bottom: 10px;
+        }
+
+        .entry-win h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--heading-color);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .entry-win p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .entry-hard {
+            margin-bottom: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .entry-hard h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .entry-hard p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .entry-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .entry-btn {
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            background: transparent;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .entry-btn:hover {
+            border-color: var(--heading-color);
+            color: var(--heading-color);
+        }
+
+        .entry-btn.delete:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        /* Пустое состояние */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Модальное подтверждение удаления */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: var(--bg-main);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-box p {
+            font-size: 16px;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btns button {
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .modal-btns .btn-cancel {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            color: var(--text-main);
+        }
+
+        .modal-btns .btn-confirm-delete {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .modal-btns .btn-confirm-delete:hover {
+            background: #dc2626;
+        }
+
+        /* Адаптив */
+        @media (max-width: 600px) {
+            .diary-header h1 {
+                font-size: 28px;
+            }
+
+            .diary-form-card {
+                padding: 24px 20px;
+                border-radius: 20px;
+            }
+
+            .mood-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn-save, .btn-hard-day {
+                width: 100%;
+                text-align: center;
+            }
+
+            .diary-controls {
+                flex-direction: column;
+            }
+
+            .search-input, .filter-select, .btn-export {
+                width: 100%;
+            }
+
+            .entry-card {
+                padding: 20px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body data-theme="dark">
+
+    <header class="header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Рядом с вами" height="40">
+            </a>
+            <nav class="nav">
+                <a href="test.html" class="nav-test-btn">🧩 Тест</a>
+                <a href="diary.html" class="nav-test-btn">📖 Дневник</a>
+                <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="btn-primary header-btn">Сообщество</a>
+                <div class="theme-toggle" id="themeToggle" title="Переключить тему">☀️</div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Уведомление -->
+    <div class="save-toast" id="saveToast">✅ Запись сохранена!</div>
+
+    <!-- Модальное окно удаления -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-box">
+            <p>Удалить эту запись?</p>
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Отмена</button>
+                <button class="btn-confirm-delete" id="confirmDeleteBtn">Да, удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="diary-page">
+        <div class="container">
+
+            <!-- Заголовок и статистика -->
+            <div class="diary-header">
+                <h1>Дневник побед и настроения</h1>
+                <p>Сохраняйте важные шаги и замечайте прогресс каждый день</p>
+                <div class="diary-stats">
+                    <span class="stat-num" id="monthCount">0</span>
+                    <span id="monthLabel">побед в этом месяце</span>
+                </div>
+            </div>
+
+            <!-- Форма -->
+            <div class="diary-form-card" id="formCard">
+                <h2 id="formTitle">✏️ Новая запись</h2>
+
+                <div class="form-field">
+                    <label for="entryDate">Дата</label>
+                    <input type="date" id="entryDate">
+                </div>
+
+                <div class="form-field">
+                    <label>Настроение дня</label>
+                    <div class="mood-selector" id="moodSelector">
+                        <button type="button" class="mood-btn" data-mood="hard" aria-label="Было тяжело">
+                            <img src="img/mood_hard.png" class="mood-img" alt="Тяжело">
+                            <span class="mood-label">Было тяжело</span>
+                        </button>
+                        <button type="button" class="mood-btn" data-mood="calm" aria-label="Спокойно">
+                            <img src="img/mood_calm.png" class="mood-img" alt="Спокойно">
+                            <span class="mood-label">Спокойно</span>
+                        </button>
+                        <button type="button" class="mood-btn" data-mood="good" aria-label="Хороший день">
+                            <img src="img/mood_good.png" class="mood-img" alt="Хороший день">
+                            <span class="mood-label">Хороший день</span>
+                        </button>
+                        <button type="button" class="mood-btn" data-mood="great" aria-label="Отличный день">
+                            <img src="img/mood_great.png" class="mood-img" alt="Отличный день">
+                            <span class="mood-label">Отличный день</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="winText">Победа дня</label>
+                    <textarea id="winText" placeholder="Например: посмотрел в глаза, спокойно сходили в магазин, спал всю ночь, откликнулся на имя"></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label for="hardText">Что было сложно? <span style="font-weight:400; opacity:0.6">(необязательно)</span></label>
+                    <textarea id="hardText" class="small" placeholder="Например: плохо спал, истерика утром, усталость, отказ от еды"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-save" id="saveBtn" onclick="saveEntry()">Сохранить в дневник</button>
+                    <button class="btn-hard-day" onclick="saveHardDay()">🤍 Сегодня просто тяжёлый день</button>
+                </div>
+                <button class="entry-btn" id="cancelEditBtn" style="display:none; margin-top:12px;" onclick="cancelEdit()">Отменить редактирование</button>
+            </div>
+
+            <!-- Фильтры -->
+            <div class="diary-controls">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Поиск по записям..." oninput="renderEntries()">
+                <select class="filter-select" id="filterMood" onchange="renderEntries()">
+                    <option value="all">Все настроения</option>
+                    <option value="hard">🌪️ Было тяжело</option>
+                    <option value="calm">🌤️ Спокойно</option>
+                    <option value="good">☀️ Хороший день</option>
+                    <option value="great">⭐ Отличный день</option>
+                </select>
+                <button class="btn-export" onclick="exportData()">📄 Скачать отчёт</button>
+            </div>
+
+            <!-- Записи -->
+            <div class="diary-entries" id="entriesList"></div>
+
+        </div>
+    </section>
+
+    <footer class="footer footer-premium">
+        <div class="footer-glow footer-glow-1"></div>
+        <div class="footer-glow footer-glow-2"></div>
+        <div class="container">
+            <div class="footer-hero-block">
+                <p class="footer-eyebrow">Рядом с вами · 2025</p>
+                <h2 class="footer-main-title">Каждый ребёнок — целая&nbsp;вселенная</h2>
+            </div>
+
+            <div class="footer-cards-column">
+                <div class="footer-compact-card">
+                    <img src="img/icon_autism.png" class="footer-compact-img" alt="Разделы">
+                    <div class="footer-compact-text">
+                        <h4>Разделы</h4>
+                        <div class="footer-compact-links">
+                            <a href="index.html">Главная</a> <span class="dot-sep">·</span>
+                            <a href="index.html#diagnoses">Наши дети</a> <span class="dot-sep">·</span>
+                            <a href="test.html">Тест</a> <span class="dot-sep">·</span>
+                            <a href="diary.html">Дневник</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-compact-card">
+                    <img src="img/icon_speech.png" class="footer-compact-img" alt="Телефон">
+                    <div class="footer-compact-text">
+                        <h4>Телефон доверия</h4>
+                        <div class="footer-compact-links">
+                            <a href="tel:88002000122" class="phone-gold">8-800-2000-122</a>
+                            <span class="dot-sep">·</span> Бесплатно <span class="dot-sep">·</span> 24/7
+                        </div>
+                    </div>
+                </div>
+
+                <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="footer-compact-card footer-compact-link">
+                    <img src="img/icon_okr.png" class="footer-compact-img" alt="Telegram">
+                    <div class="footer-compact-text">
+                        <h4>Сообщество</h4>
+                        <div class="footer-compact-links">Telegram · поддержка и общение →</div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="footer-copy">© Рядом с вами · Информация не заменяет консультацию специалиста</p>
+        </div>
+    </footer>
+
+    <script>
+        // =========================================
+        // ТЕМА
+        // =========================================
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.removeAttribute('data-theme');
+            themeToggle.textContent = '🌙';
+        }
+        themeToggle.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // =========================================
+        // ДАННЫЕ
+        // =========================================
+        const STORAGE_KEY = 'milestoneDiaryEntries';
+        const DRAFT_KEY = 'milestoneDiaryDraft';
+        let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        let editingId = null;
+        let deleteTargetId = null;
+        let selectedMood = null;
+
+        const MOODS = {
+            hard: { emoji: '🌪️', img: 'img/mood_hard.png', label: 'Было тяжело' },
+            calm: { emoji: '🌤️', img: 'img/mood_calm.png', label: 'Спокойно' },
+            good: { emoji: '☀️', img: 'img/mood_good.png', label: 'Хороший день' },
+            great: { emoji: '⭐', img: 'img/mood_great.png', label: 'Отличный день' }
+        };
+
+        // =========================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // =========================================
+        document.getElementById('entryDate').valueAsDate = new Date();
+        loadDraft();
+        renderEntries();
+        updateStats();
+
+        // Настроение
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedMood = btn.dataset.mood;
+                saveDraft();
+            });
+        });
+
+        // Автосохранение черновика
+        document.getElementById('winText').addEventListener('input', saveDraft);
+        document.getElementById('hardText').addEventListener('input', saveDraft);
+
+        // =========================================
+        // СОХРАНЕНИЕ
+        // =========================================
+        function saveEntry() {
+            const winText = document.getElementById('winText').value.trim();
+            const hardText = document.getElementById('hardText').value.trim();
+            const date = document.getElementById('entryDate').value;
+
+            if (!winText && !editingId) {
+                document.getElementById('winText').style.borderColor = '#ef4444';
+                setTimeout(() => document.getElementById('winText').style.borderColor = '', 2000);
+                return;
+            }
+
+            if (!selectedMood) {
+                document.querySelectorAll('.mood-btn').forEach(b => {
+                    b.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                    setTimeout(() => b.style.borderColor = '', 2000);
+                });
+                return;
+            }
+
+            const entry = {
+                id: editingId || Date.now().toString(),
+                date: date,
+                mood: selectedMood,
+                winText: winText,
+                hardText: hardText,
+                createdAt: editingId ? (entries.find(e => e.id === editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString()
+            };
+
+            if (editingId) {
+                const idx = entries.findIndex(e => e.id === editingId);
+                if (idx >= 0) entries[idx] = entry;
+                editingId = null;
+                document.getElementById('formTitle').textContent = '✏️ Новая запись';
+                document.getElementById('cancelEditBtn').style.display = 'none';
+                document.getElementById('saveBtn').textContent = 'Сохранить в дневник';
+            } else {
+                entries.unshift(entry);
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+            clearDraft();
+            clearForm();
+            showToast();
+            renderEntries();
+            updateStats();
+        }
+
+        function saveHardDay() {
+            selectedMood = 'hard';
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-mood="hard"]').classList.add('active');
+
+            const date = document.getElementById('entryDate').value;
+            const entry = {
+                id: Date.now().toString(),
+                date: date,
+                mood: 'hard',
+                winText: 'Сегодня просто тяжёлый день',
+                hardText: '',
+                createdAt: new Date().toISOString()
+            };
+
+            entries.unshift(entry);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+            clearDraft();
+            clearForm();
+            showToast();
+            renderEntries();
+            updateStats();
+        }
+
+        function clearForm() {
+            document.getElementById('winText').value = '';
+            document.getElementById('hardText').value = '';
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+            selectedMood = null;
+            document.getElementById('entryDate').valueAsDate = new Date();
+        }
+
+        // =========================================
+        // РЕДАКТИРОВАНИЕ
+        // =========================================
+        function editEntry(id) {
+            const entry = entries.find(e => e.id === id);
+            if (!entry) return;
+
+            editingId = id;
+            document.getElementById('entryDate').value = entry.date;
+            document.getElementById('winText').value = entry.winText;
+            document.getElementById('hardText').value = entry.hardText;
+
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+            const moodBtn = document.querySelector(`[data-mood="${entry.mood}"]`);
+            if (moodBtn) moodBtn.classList.add('active');
+            selectedMood = entry.mood;
+
+            document.getElementById('formTitle').textContent = '✏️ Редактирование записи';
+            document.getElementById('saveBtn').textContent = 'Сохранить изменения';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            clearForm();
+            document.getElementById('formTitle').textContent = '✏️ Новая запись';
+            document.getElementById('saveBtn').textContent = 'Сохранить в дневник';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+
+        // =========================================
+        // УДАЛЕНИЕ
+        // =========================================
+        function confirmDelete(id) {
+            deleteTargetId = id;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+            deleteTargetId = null;
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+            if (deleteTargetId) {
+                entries = entries.filter(e => e.id !== deleteTargetId);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+                renderEntries();
+                updateStats();
+                closeDeleteModal();
+            }
+        });
+
+        // =========================================
+        // ОТРИСОВКА
+        // =========================================
+        function renderEntries() {
+            const container = document.getElementById('entriesList');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filter = document.getElementById('filterMood').value;
+
+            let filtered = entries.filter(e => {
+                const matchSearch = !search ||
+                    e.winText.toLowerCase().includes(search) ||
+                    (e.hardText && e.hardText.toLowerCase().includes(search));
+                const matchMood = filter === 'all' || e.mood === filter;
+                return matchSearch && matchMood;
+            });
+
+            // Сортировка по дате убывание
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filtered.length === 0 && entries.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">💛</span>
+                        <p>У вас пока нет записей.<br>Начните с первой маленькой победы!</p>
+                    </div>`;
+                return;
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">🔍</span>
+                        <p>Записей по этому запросу не найдено</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(e => {
+                const mood = MOODS[e.mood] || MOODS.calm;
+                const dateStr = formatDate(e.date);
+                return `
+                <div class="entry-card">
+                    <div class="entry-top">
+                        <span class="entry-date">${dateStr}</span>
+                        <span class="entry-mood" title="${mood.label}"><img src="${mood.img}" alt="${mood.label}"></span>
+                    </div>
+                    <div class="entry-win">
+                        <h4>Победа</h4>
+                        <p>${escapeHtml(e.winText)}</p>
+                    </div>
+                    ${e.hardText ? `
+                    <div class="entry-hard">
+                        <h4>Сложности</h4>
+                        <p>${escapeHtml(e.hardText)}</p>
+                    </div>` : ''}
+                    <div class="entry-actions">
+                        <button class="entry-btn" onclick="editEntry('${e.id}')"><img src="img/icon_edit.png" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Редактировать</button>
+                        <button class="entry-btn delete" onclick="confirmDelete('${e.id}')"><img src="img/icon_delete.png" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Удалить</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function formatDate(dateStr) {
+            const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+            const d = new Date(dateStr + 'T00:00:00');
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // =========================================
+        // СТАТИСТИКА
+        // =========================================
+        function updateStats() {
+            const now = new Date();
+            const month = now.getMonth();
+            const year = now.getFullYear();
+            const count = entries.filter(e => {
+                const d = new Date(e.date + 'T00:00:00');
+                return d.getMonth() === month && d.getFullYear() === year;
+            }).length;
+            document.getElementById('monthCount').textContent = count;
+
+            const word = getDeclension(count, ['победа', 'победы', 'побед']);
+            document.getElementById('monthLabel').textContent = `${word} в этом месяце`;
+        }
+
+        function getDeclension(n, forms) {
+            const abs = Math.abs(n) % 100;
+            const n1 = abs % 10;
+            if (abs > 10 && abs < 20) return forms[2];
+            if (n1 > 1 && n1 < 5) return forms[1];
+            if (n1 === 1) return forms[0];
+            return forms[2];
+        }
+
+        // =========================================
+        // АВТОСОХРАНЕНИЕ ЧЕРНОВИКА
+        // =========================================
+        function saveDraft() {
+            const draft = {
+                winText: document.getElementById('winText').value,
+                hardText: document.getElementById('hardText').value,
+                mood: selectedMood
+            };
+            localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        }
+
+        function loadDraft() {
+            const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+            if (!draft) return;
+            if (draft.winText) document.getElementById('winText').value = draft.winText;
+            if (draft.hardText) document.getElementById('hardText').value = draft.hardText;
+            if (draft.mood) {
+                selectedMood = draft.mood;
+                const btn = document.querySelector(`[data-mood="${draft.mood}"]`);
+                if (btn) btn.classList.add('active');
+            }
+        }
+
+        function clearDraft() {
+            localStorage.removeItem(DRAFT_KEY);
+        }
+
+        // =========================================
+        // ЭКСПОРТ
+        // =========================================
+        function exportData() {
+            if (entries.length === 0) {
+                alert('Нет записей для экспорта');
+                return;
+            }
+
+            let text = '══════════════════════════════════\n';
+            text += '    ДНЕВНИК ПОБЕД И НАСТРОЕНИЯ\n';
+            text += '    Рядом с вами · ryadom-svami.ru\n';
+            text += '══════════════════════════════════\n\n';
+            text += `Всего записей: ${entries.length}\n`;
+            text += `Дата экспорта: ${new Date().toLocaleDateString('ru-RU')}\n\n`;
+            text += '──────────────────────────────────\n\n';
+
+            const sorted = [...entries].sort((a, b) => new Date(a.date) - new Date(b.date));
+            sorted.forEach((e, i) => {
+                const mood = MOODS[e.mood] || MOODS.calm;
+                text += `📅 ${formatDate(e.date)}  ${mood.emoji} ${mood.label}\n`;
+                text += `🏆 Победа: ${e.winText}\n`;
+                if (e.hardText) text += `💔 Сложности: ${e.hardText}\n`;
+                text += '\n──────────────────────────────────\n\n';
+            });
+
+            text += 'С любовью, проект «Рядом с вами» 💛\n';
+
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `дневник-побед-${new Date().toISOString().slice(0, 10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // =========================================
+        // УВЕДОМЛЕНИЕ
+        // =========================================
+        function showToast() {
+            const toast = document.getElementById('saveToast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+
+</html>
