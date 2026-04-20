@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -692,7 +692,8 @@
                 const dlLink = document.createElement('a');
                 dlLink.href = dlUrl;
                 dlLink.download = filename;
-                dlLink.click();\r\n                URL.revokeObjectURL(dlUrl);
+                dlLink.click();
+                URL.revokeObjectURL(dlUrl);
 
                 // 2. Нативное меню «Поделиться» (мобильные)
                 setTimeout(() => {
