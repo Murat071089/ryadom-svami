@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -1591,6 +1591,41 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
+    </script>
+
+    <!-- EXIT CONFIRMATION DIALOG -->
+    <div id="exitModal" style="display:none; position:fixed; inset:0; z-index:99998; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center;">
+        <div style="background:var(--card-bg,#1a2535); border:1px solid rgba(208,174,139,0.2); border-radius:28px; padding:32px 28px 24px; max-width:320px; width:90%; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,0.45);">
+            <div style="font-size:48px; margin-bottom:16px;">👋</div>
+            <h3 style="font-family:'Philosopher',sans-serif; font-size:22px; margin:0 0 8px; color:var(--text-main,#e8e0d5);">Уходите?</h3>
+            <p style="color:var(--text-muted,#9aafbb); font-size:15px; margin:0 0 28px; line-height:1.5;">Вы точно хотите покинуть эту страницу?</p>
+            <div style="display:flex; gap:12px;">
+                <button id="exitModalNo" style="flex:1; padding:14px; border:1.5px solid rgba(208,174,139,0.3); background:transparent; border-radius:16px; font-size:16px; font-weight:600; color:var(--text-main,#e8e0d5); cursor:pointer; font-family:'Inter',sans-serif;">Нет, остаться</button>
+                <button id="exitModalYes" style="flex:1; padding:14px; border:none; background:linear-gradient(135deg,#618296,#4d6f82); border-radius:16px; font-size:16px; font-weight:600; color:#fff; cursor:pointer; font-family:'Inter',sans-serif;">Да, выйти</button>
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes exitModalIn { from { transform:scale(0.85) translateY(20px); opacity:0; } to { transform:scale(1) translateY(0); opacity:1; } }
+        #exitModal.visible { display:flex !important; animation:exitModalIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        #exitModalNo:hover, #exitModalNo:active { background:rgba(208,174,139,0.1); }
+        #exitModalYes:hover, #exitModalYes:active { filter:brightness(1.15); }
+    </style>
+    <script>
+    (function() {
+        history.pushState({ page: 'guard' }, '', location.href);
+        var confirmed = false;
+        var modal = document.getElementById('exitModal');
+        var btnYes = document.getElementById('exitModalYes');
+        var btnNo = document.getElementById('exitModalNo');
+        function showModal() { modal.classList.add('visible'); document.body.style.overflow = 'hidden'; }
+        function hideModal() { modal.classList.remove('visible'); document.body.style.overflow = ''; history.pushState({ page: 'guard' }, '', location.href); }
+        window.addEventListener('popstate', function() { if (!confirmed) showModal(); });
+        btnNo.addEventListener('click', hideModal);
+        modal.addEventListener('click', function(e) { if (e.target === modal) hideModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modal.classList.contains('visible')) hideModal(); });
+        btnYes.addEventListener('click', function() { confirmed = true; modal.classList.remove('visible'); document.body.style.overflow = ''; history.go(-2); });
+    })();
     </script>
 </body>
 
