@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,7 @@
         /* =========================================
            PECS — КОММУНИКАТИВНАЯ ДОСКА
            ========================================= */
-        .pecs-page { padding: 100px 0 40px; min-height: 100vh; }
+        .pecs-page { padding: 40px 0 40px; min-height: 100vh; }
 
         /* Панель фразы */
         .sentence-bar {
@@ -261,7 +261,6 @@
                 <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
             </nav>
             <script>
-            <script>
             (function() {
                 const btn = document.getElementById('navDropdownBtn');
                 const content = document.getElementById('navDropdownContent');
@@ -325,10 +324,7 @@
             <!-- Категории -->
             <div class="category-tabs" id="categoryTabs"></div>
 
-            <!-- Управление голосом -->
-            <div style="display:flex; justify-content:flex-end; margin-bottom: 16px;">
-                <select id="voiceSelect" class="voice-select" onchange="changeVoice()" title="Выберите голос озвучки"></select>
-            </div>
+            <!-- Управление голосом (Убрано по просьбе) -->
 
             <!-- Карточки -->
             <div class="pecs-grid" id="pecsGrid"></div>
@@ -504,53 +500,15 @@
         }
 
         // =========================================
-        // ВЫБОР ГОЛОСА
+        // ОЗВУЧКА (Web Speech API)
         // =========================================
         let availableVoices = [];
-        let selectedVoiceName = localStorage.getItem('pecs_voice') || '';
 
         function populateVoices() {
             if (!('speechSynthesis' in window)) return;
             availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('ru'));
-            const select = document.getElementById('voiceSelect');
-            if (availableVoices.length === 0) {
-                select.innerHTML = '<option value="">Стандартный голос устройства</option>';
-                return;
-            }
-            select.innerHTML = '';
-            let defaultName = '';
-            availableVoices.forEach((voice) => {
-                const option = document.createElement('option');
-                option.value = voice.name;
-                // Упрощаем названия для красоты
-                option.textContent = voice.name.replace('Microsoft ', '').replace(' Desktop', '') + (voice.localService ? ' (офлайн)' : ' (онлайн)');
-                if (selectedVoiceName && voice.name === selectedVoiceName) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            });
-            // Если ничего не выбрано, ставим лучший по умолчанию
-            if (!select.value) {
-                const best = availableVoices.find(v => v.name.includes('Google')) ||
-                             availableVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
-                             availableVoices[0];
-                if (best) {
-                    select.value = best.name;
-                    selectedVoiceName = best.name;
-                }
-            }
         }
 
-        function changeVoice() {
-            const select = document.getElementById('voiceSelect');
-            selectedVoiceName = select.value;
-            localStorage.setItem('pecs_voice', selectedVoiceName);
-            speak('Голос изменён');
-        }
-
-        // =========================================
-        // ОЗВУЧКА (Web Speech API)
-        // =========================================
         function speak(text) {
             if (!('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel();
@@ -559,15 +517,15 @@
             utter.rate = 0.9;
             utter.pitch = 1.0;
             
+            if (availableVoices.length === 0) {
+                populateVoices();
+            }
+
             if (availableVoices.length > 0) {
-                const selected = availableVoices.find(v => v.name === selectedVoiceName);
-                if (selected) utter.voice = selected;
-                else {
-                    const best = availableVoices.find(v => v.name.includes('Google')) ||
-                                 availableVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
-                                 availableVoices[0];
-                    if (best) utter.voice = best;
-                }
+                const best = availableVoices.find(v => v.name.includes('Google')) ||
+                             availableVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
+                             availableVoices[0];
+                if (best) utter.voice = best;
             }
             window.speechSynthesis.speak(utter);
         }
