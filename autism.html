@@ -28,6 +28,7 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+<link rel="apple-touch-icon" href="img/app_icon_192.png">
 </head>
 <body class="story-page" data-theme="dark">
 
@@ -40,6 +41,10 @@
                 <a href="test.html" class="nav-test-btn">🧩 Тест</a>
                 <a href="diary.html" class="nav-test-btn">📖 Дневник</a>
                 <a href="pecs.html" class="nav-test-btn">🗣️ PECS</a>
+                <button id="installAppBtn" class="btn-primary header-btn" style="display: none; align-items: center; gap: 6px; padding: 8px 14px; margin-right: 4px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Скачать
+                </button>
                 <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
             </nav>
         </div>
@@ -229,6 +234,28 @@
             window.addEventListener('scroll', () => {
                 const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                 if (h > 0) progressBar.style.width = (document.documentElement.scrollTop / h * 100) + '%';
+            });
+        }
+    </script>
+    <script>
+        // PWA Install Logic
+        let deferredPrompt;
+        const installBtn = document.getElementById('installAppBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (installBtn) installBtn.style.display = 'inline-flex';
+        });
+
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') installBtn.style.display = 'none';
+                    deferredPrompt = null;
+                }
             });
         }
     </script>
