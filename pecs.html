@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -370,12 +370,18 @@
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(text);
             utter.lang = 'ru-RU';
-            utter.rate = 0.85;
-            utter.pitch = 1.1;
-            // Try to find a Russian voice
+            utter.rate = 0.9;
+            utter.pitch = 1.0;
+            // Pick the best Russian voice (prefer Google/natural, then male)
             const voices = window.speechSynthesis.getVoices();
-            const ruVoice = voices.find(v => v.lang.startsWith('ru'));
-            if (ruVoice) utter.voice = ruVoice;
+            const ruVoices = voices.filter(v => v.lang.startsWith('ru'));
+            let best = null;
+            // Priority: Google > online > male > any
+            best = ruVoices.find(v => v.name.includes('Google')) ||
+                   ruVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
+                   ruVoices.find(v => !v.localService) ||
+                   ruVoices[0];
+            if (best) utter.voice = best;
             window.speechSynthesis.speak(utter);
         }
 
