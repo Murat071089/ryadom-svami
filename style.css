@@ -3056,3 +3056,227 @@ a.footer-compact-link:hover .footer-compact-links {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+/* ========================================= */
+/* NAV DROPDOWN (ПРЕМИУМ) */
+/* ========================================= */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(97, 130, 150, 0.1);
+    color: var(--text-main);
+    border: 1px solid rgba(97, 130, 150, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-dropdown-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.nav-dropdown:hover .nav-dropdown-btn,
+.nav-dropdown-btn.active {
+    background: rgba(97, 130, 150, 0.2);
+    border-color: rgba(97, 130, 150, 0.4);
+}
+
+.nav-dropdown:hover .nav-dropdown-btn svg,
+.nav-dropdown-btn.active svg {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown-content {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: -20px;
+    background: var(--card-bg);
+    min-width: 280px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Треугольник сверху для десктопа */
+.nav-dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 50px;
+    width: 12px;
+    height: 12px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+    transform: rotate(45deg);
+}
+
+.nav-dropdown:hover .nav-dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    text-decoration: none;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+}
+
+.nav-dropdown-item:hover {
+    background: rgba(97, 130, 150, 0.08);
+    transform: translateX(4px);
+}
+
+.nav-dropdown-icon {
+    font-size: 24px;
+    background: rgba(208, 174, 139, 0.15);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.nav-dropdown-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-dropdown-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 2px;
+}
+
+.nav-dropdown-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.nav-dropdown-overlay {
+    display: none;
+}
+.mobile-only {
+    display: none;
+}
+
+/* Мобильная адаптация (Bottom Sheet) */
+@media (max-width: 768px) {
+    .nav-dropdown:hover .nav-dropdown-content {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(100%);
+    }
+
+    .nav-dropdown-btn {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+    
+    .nav-dropdown-content {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        min-width: auto;
+        border-radius: 28px 28px 0 0;
+        padding: 24px 20px 40px;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.3, 1, 0.3, 1), opacity 0.4s ease;
+        z-index: 1001;
+    }
+    
+    .nav-dropdown-content::before {
+        display: none;
+    }
+
+    .nav-dropdown-content.show {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .nav-dropdown-overlay {
+        display: block;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+    }
+    
+    .nav-dropdown-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mobile-only {
+        display: flex;
+    }
+
+    .nav-dropdown-header {
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-dropdown-header-title {
+        font-size: 18px;
+        font-weight: 700;
+        font-family: 'Philosopher', sans-serif;
+        color: var(--text-main);
+    }
+
+    .nav-dropdown-close {
+        background: rgba(136, 136, 136, 0.1);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    .nav-dropdown-item {
+        padding: 14px 10px;
+        margin-bottom: 8px;
+    }
+}
