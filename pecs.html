@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -139,6 +139,25 @@
         }
         .pecs-hint strong { color: var(--text-main); }
 
+        /* Выбор голоса */
+        .voice-select {
+            padding: 8px 16px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(97,130,150,0.2);
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px; font-weight: 500;
+            cursor: pointer; outline: none;
+            max-width: 100%; transition: all 0.2s;
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23618296' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
+            padding-right: 36px;
+        }
+        .voice-select:hover { border-color: rgba(97,130,150,0.4); }
+        .voice-select option { background: var(--bg-main); color: var(--text-main); }
+
         /* Мобильные */
         @media (max-width: 768px) {
             .pecs-page { padding: 80px 0 30px; }
@@ -187,6 +206,11 @@
 
             <!-- Категории -->
             <div class="category-tabs" id="categoryTabs"></div>
+
+            <!-- Управление голосом -->
+            <div style="display:flex; justify-content:flex-end; margin-bottom: 16px;">
+                <select id="voiceSelect" class="voice-select" onchange="changeVoice()" title="Выберите голос озвучки"></select>
+            </div>
 
             <!-- Карточки -->
             <div class="pecs-grid" id="pecsGrid"></div>
@@ -362,6 +386,51 @@
         }
 
         // =========================================
+        // ВЫБОР ГОЛОСА
+        // =========================================
+        let availableVoices = [];
+        let selectedVoiceName = localStorage.getItem('pecs_voice') || '';
+
+        function populateVoices() {
+            if (!('speechSynthesis' in window)) return;
+            availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('ru'));
+            const select = document.getElementById('voiceSelect');
+            if (availableVoices.length === 0) {
+                select.innerHTML = '<option value="">Стандартный голос устройства</option>';
+                return;
+            }
+            select.innerHTML = '';
+            let defaultName = '';
+            availableVoices.forEach((voice) => {
+                const option = document.createElement('option');
+                option.value = voice.name;
+                // Упрощаем названия для красоты
+                option.textContent = voice.name.replace('Microsoft ', '').replace(' Desktop', '') + (voice.localService ? ' (офлайн)' : ' (онлайн)');
+                if (selectedVoiceName && voice.name === selectedVoiceName) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            // Если ничего не выбрано, ставим лучший по умолчанию
+            if (!select.value) {
+                const best = availableVoices.find(v => v.name.includes('Google')) ||
+                             availableVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
+                             availableVoices[0];
+                if (best) {
+                    select.value = best.name;
+                    selectedVoiceName = best.name;
+                }
+            }
+        }
+
+        function changeVoice() {
+            const select = document.getElementById('voiceSelect');
+            selectedVoiceName = select.value;
+            localStorage.setItem('pecs_voice', selectedVoiceName);
+            speak('Голос изменён');
+        }
+
+        // =========================================
         // ОЗВУЧКА (Web Speech API)
         // =========================================
         function speak(text) {
@@ -371,23 +440,24 @@
             utter.lang = 'ru-RU';
             utter.rate = 0.9;
             utter.pitch = 1.0;
-            // Pick the best Russian voice (prefer Google/natural, then male)
-            const voices = window.speechSynthesis.getVoices();
-            const ruVoices = voices.filter(v => v.lang.startsWith('ru'));
-            let best = null;
-            // Priority: Google > online > male > any
-            best = ruVoices.find(v => v.name.includes('Google')) ||
-                   ruVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
-                   ruVoices.find(v => !v.localService) ||
-                   ruVoices[0];
-            if (best) utter.voice = best;
+            
+            if (availableVoices.length > 0) {
+                const selected = availableVoices.find(v => v.name === selectedVoiceName);
+                if (selected) utter.voice = selected;
+                else {
+                    const best = availableVoices.find(v => v.name.includes('Google')) ||
+                                 availableVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
+                                 availableVoices[0];
+                    if (best) utter.voice = best;
+                }
+            }
             window.speechSynthesis.speak(utter);
         }
 
         // Preload voices
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.getVoices();
-            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+            populateVoices();
+            window.speechSynthesis.onvoiceschanged = populateVoices;
         }
 
         // =========================================
