@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Коммуникативная доска — Рядом с вами</title>
+    <meta name="description" content="Бесплатная коммуникативная доска PECS на русском языке. Карточки с озвучкой для невербальных детей с аутизмом и другими особенностями.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="canonical" href="https://ryadom-svami.ru/pecs.html">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <meta property="og:title" content="Коммуникативная доска — Рядом с вами">
+    <meta property="og:description" content="Бесплатная коммуникативная доска PECS на русском. Карточки с озвучкой для невербальных детей.">
+    <meta property="og:url" content="https://ryadom-svami.ru/pecs.html">
+    <meta property="og:image" content="https://ryadom-svami.ru/img/logo.png">
+    <link rel="preload" href="style.css?v=5" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css?v=5">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+        ym(108678187, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <style>
+        /* =========================================
+           PECS — КОММУНИКАТИВНАЯ ДОСКА
+           ========================================= */
+        .pecs-page { padding: 100px 0 40px; min-height: 100vh; }
+
+        /* Панель фразы */
+        .sentence-bar {
+            position: sticky; top: 70px; z-index: 90;
+            background: var(--header-bg); backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(208,174,139,0.2);
+            border-radius: 20px; padding: 14px 20px;
+            margin-bottom: 24px; display: flex; align-items: center;
+            gap: 10px; min-height: 72px; flex-wrap: wrap;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        .sentence-cards { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; align-items: center; min-height: 44px; }
+        .sentence-cards:empty::before {
+            content: 'Нажмите на карточку, чтобы составить фразу';
+            color: var(--text-muted); font-size: 14px; opacity: 0.6;
+        }
+        .sentence-chip {
+            display: flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, rgba(208,174,139,0.15), rgba(208,174,139,0.08));
+            border: 1px solid rgba(208,174,139,0.25);
+            border-radius: 12px; padding: 6px 14px; font-size: 15px;
+            font-family: 'Inter', sans-serif; color: var(--text-main);
+            animation: chipIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .sentence-chip .chip-emoji { font-size: 22px; }
+        @keyframes chipIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .sentence-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        .sentence-btn {
+            border: none; border-radius: 14px; padding: 10px 18px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: all 0.2s;
+        }
+        .btn-speak {
+            background: linear-gradient(135deg, #618296, #4d6f82); color: #fff;
+            box-shadow: 0 4px 16px rgba(97,130,150,0.3);
+        }
+        .btn-speak:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(97,130,150,0.4); }
+        .btn-speak:active { transform: scale(0.96); }
+        .btn-clear {
+            background: rgba(239,68,68,0.1); color: #ef4444;
+            border: 1.5px solid rgba(239,68,68,0.2);
+        }
+        .btn-clear:hover { background: rgba(239,68,68,0.2); }
+
+        /* Категории */
+        .category-tabs {
+            display: flex; gap: 8px; margin-bottom: 20px;
+            overflow-x: auto; padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .category-tabs::-webkit-scrollbar { display: none; }
+        .cat-tab {
+            border: none; border-radius: 14px; padding: 10px 18px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; white-space: nowrap;
+            background: rgba(97,130,150,0.08); color: var(--text-muted);
+            border: 1.5px solid transparent; transition: all 0.25s;
+        }
+        .cat-tab:hover { background: rgba(97,130,150,0.15); color: var(--text-main); }
+        .cat-tab.active {
+            background: linear-gradient(135deg, rgba(208,174,139,0.2), rgba(208,174,139,0.1));
+            border-color: rgba(208,174,139,0.4); color: var(--text-main);
+        }
+
+        /* Сетка карточек */
+        .pecs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 14px;
+        }
+        .pecs-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border: 1.5px solid rgba(208,174,139,0.15);
+            border-radius: 20px; padding: 18px 10px 14px;
+            text-align: center; cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+            user-select: none; -webkit-user-select: none;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .pecs-card:hover { transform: translateY(-4px) scale(1.04); border-color: rgba(208,174,139,0.4);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .pecs-card:active { transform: scale(0.94); }
+        .pecs-card.speaking {
+            border-color: #618296; background: rgba(97,130,150,0.12);
+            box-shadow: 0 0 0 4px rgba(97,130,150,0.2);
+        }
+        .pecs-emoji { font-size: 48px; line-height: 1; }
+        .pecs-label {
+            font-size: 14px; font-weight: 600; color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+        }
+
+        [data-theme="dark"] .pecs-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+        }
+
+        /* Подсказка */
+        .pecs-hint {
+            text-align: center; margin-top: 32px; padding: 20px;
+            color: var(--text-muted); font-size: 14px;
+            border-top: 1px solid rgba(208,174,139,0.1);
+        }
+        .pecs-hint strong { color: var(--text-main); }
+
+        /* Мобильные */
+        @media (max-width: 768px) {
+            .pecs-page { padding: 80px 0 30px; }
+            .sentence-bar { top: 60px; padding: 10px 14px; border-radius: 16px; margin-bottom: 16px; }
+            .pecs-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+            .pecs-card { padding: 14px 8px 10px; border-radius: 16px; }
+            .pecs-emoji { font-size: 38px; }
+            .pecs-label { font-size: 12px; }
+            .cat-tab { padding: 8px 14px; font-size: 13px; }
+            .sentence-btn { padding: 8px 14px; font-size: 13px; }
+        }
+        @media (max-width: 480px) {
+            .pecs-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <header class="header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="img/logo.webp" alt="Рядом с вами" height="40">
+            </a>
+            <nav class="nav">
+                <a href="test.html" class="nav-test-btn">🧩 Тест</a>
+                <a href="diary.html" class="nav-test-btn">📖 Дневник</a>
+                <a href="pecs.html" class="nav-test-btn">🗣️ PECS</a>
+                <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="btn-primary header-btn">Сообщество</a>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="pecs-page">
+        <div class="container">
+            <h1 style="font-family:'Philosopher',sans-serif; font-size:28px; margin-bottom:8px; color:var(--text-main);">🗣️ Коммуникативная доска</h1>
+            <p style="color:var(--text-muted); margin-bottom:24px; font-size:15px;">Нажмите на карточку — она озвучится. Собирайте фразы из нескольких карточек.</p>
+
+            <!-- Панель фразы -->
+            <div class="sentence-bar" id="sentenceBar">
+                <div class="sentence-cards" id="sentenceCards"></div>
+                <div class="sentence-actions">
+                    <button class="sentence-btn btn-speak" onclick="speakSentence()" title="Озвучить фразу">🔊 Озвучить</button>
+                    <button class="sentence-btn btn-clear" onclick="clearSentence()" title="Очистить">✕</button>
+                </div>
+            </div>
+
+            <!-- Категории -->
+            <div class="category-tabs" id="categoryTabs"></div>
+
+            <!-- Карточки -->
+            <div class="pecs-grid" id="pecsGrid"></div>
+
+            <div class="pecs-hint">
+                <strong>💡 Подсказка:</strong> Нажмите карточку — она произнесётся вслух и добавится во фразу сверху.<br>
+                Соберите фразу из нескольких карточек и нажмите «🔊 Озвучить».
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer footer-premium">
+        <div class="footer-glow footer-glow-1"></div>
+        <div class="footer-glow footer-glow-2"></div>
+        <div class="container">
+            <div class="footer-hero-block">
+                <p class="footer-eyebrow">Рядом с вами · 2025–2026</p>
+                <h2 class="footer-main-title">Каждый ребёнок — целая&nbsp;вселенная</h2>
+            </div>
+            <div class="footer-cards-column">
+                <div class="footer-compact-card">
+                    <img src="img/icon_autism.webp" class="footer-compact-img" loading="lazy" alt="Разделы">
+                    <div class="footer-compact-text">
+                        <h4>Разделы</h4>
+                        <div class="footer-compact-links">
+                            <a href="index.html">Главная</a> <span class="dot-sep">·</span>
+                            <a href="test.html">Тест</a> <span class="dot-sep">·</span>
+                            <a href="diary.html">Дневник</a> <span class="dot-sep">·</span>
+                            <a href="pecs.html">PECS</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-compact-card">
+                    <img src="img/icon_speech.webp" class="footer-compact-img" loading="lazy" alt="Телефон">
+                    <div class="footer-compact-text">
+                        <h4>Телефон доверия</h4>
+                        <div class="footer-compact-links">
+                            <a href="tel:88002000122" class="phone-gold">8-800-2000-122</a>
+                            <span class="dot-sep">·</span> Бесплатно <span class="dot-sep">·</span> 24/7
+                        </div>
+                    </div>
+                </div>
+                <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="footer-compact-card footer-compact-link">
+                    <img src="img/icon_okr.webp" class="footer-compact-img" loading="lazy" alt="Telegram">
+                    <div class="footer-compact-text">
+                        <h4>Сообщество</h4>
+                        <div class="footer-compact-links">Telegram · поддержка и общение →</div>
+                    </div>
+                </a>
+            </div>
+            <div class="footer-bottom-text">
+                <p>Данный сайт носит информационный характер и не заменяет профессиональную консультацию специалиста.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // =========================================
+        // БАЗА КАРТОЧЕК
+        // =========================================
+        const CARDS = {
+            'Потребности': [
+                { emoji: '👆', label: 'Хочу', speech: 'Я хочу' },
+                { emoji: '🚫', label: 'Не хочу', speech: 'Я не хочу' },
+                { emoji: '🤝', label: 'Помоги', speech: 'Помоги мне' },
+                { emoji: '🤗', label: 'Обними', speech: 'Обними меня' },
+                { emoji: '🚽', label: 'Туалет', speech: 'Я хочу в туалет' },
+                { emoji: '➕', label: 'Ещё', speech: 'Ещё' },
+                { emoji: '✅', label: 'Да', speech: 'Да' },
+                { emoji: '❌', label: 'Нет', speech: 'Нет' },
+                { emoji: '⏳', label: 'Подожди', speech: 'Подожди' },
+                { emoji: '👋', label: 'Привет', speech: 'Привет' },
+                { emoji: '💤', label: 'Спать', speech: 'Я хочу спать' },
+                { emoji: '🏠', label: 'Домой', speech: 'Я хочу домой' },
+            ],
+            'Еда': [
+                { emoji: '🍞', label: 'Хлеб', speech: 'Хлеб' },
+                { emoji: '🥣', label: 'Каша', speech: 'Каша' },
+                { emoji: '🍲', label: 'Суп', speech: 'Суп' },
+                { emoji: '🍎', label: 'Яблоко', speech: 'Яблоко' },
+                { emoji: '🍌', label: 'Банан', speech: 'Банан' },
+                { emoji: '🍪', label: 'Печенье', speech: 'Печенье' },
+                { emoji: '🍝', label: 'Макароны', speech: 'Макароны' },
+                { emoji: '🧀', label: 'Сыр', speech: 'Сыр' },
+                { emoji: '🥚', label: 'Яйцо', speech: 'Яйцо' },
+                { emoji: '🍗', label: 'Курица', speech: 'Курица' },
+            ],
+            'Питьё': [
+                { emoji: '💧', label: 'Вода', speech: 'Вода' },
+                { emoji: '🧃', label: 'Сок', speech: 'Сок' },
+                { emoji: '🥛', label: 'Молоко', speech: 'Молоко' },
+                { emoji: '🍵', label: 'Чай', speech: 'Чай' },
+                { emoji: '🫗', label: 'Компот', speech: 'Компот' },
+                { emoji: '🍶', label: 'Кефир', speech: 'Кефир' },
+            ],
+            'Действия': [
+                { emoji: '🍽️', label: 'Есть', speech: 'Есть' },
+                { emoji: '🥤', label: 'Пить', speech: 'Пить' },
+                { emoji: '🚶', label: 'Гулять', speech: 'Гулять' },
+                { emoji: '🎮', label: 'Играть', speech: 'Играть' },
+                { emoji: '🎨', label: 'Рисовать', speech: 'Рисовать' },
+                { emoji: '📖', label: 'Читать', speech: 'Читать' },
+                { emoji: '🛁', label: 'Мыться', speech: 'Мыться' },
+                { emoji: '👕', label: 'Одеться', speech: 'Одеться' },
+                { emoji: '📺', label: 'Смотреть', speech: 'Смотреть' },
+                { emoji: '🎵', label: 'Музыка', speech: 'Музыка' },
+            ],
+            'Эмоции': [
+                { emoji: '😊', label: 'Радость', speech: 'Мне радостно' },
+                { emoji: '😢', label: 'Грусть', speech: 'Мне грустно' },
+                { emoji: '😠', label: 'Злость', speech: 'Я злюсь' },
+                { emoji: '😨', label: 'Страх', speech: 'Мне страшно' },
+                { emoji: '😫', label: 'Устал', speech: 'Я устал' },
+                { emoji: '❤️', label: 'Люблю', speech: 'Я тебя люблю' },
+                { emoji: '🤕', label: 'Больно', speech: 'Мне больно' },
+                { emoji: '😊', label: 'Хорошо', speech: 'Мне хорошо' },
+            ],
+            'Люди': [
+                { emoji: '👩', label: 'Мама', speech: 'Мама' },
+                { emoji: '👨', label: 'Папа', speech: 'Папа' },
+                { emoji: '👵', label: 'Бабушка', speech: 'Бабушка' },
+                { emoji: '👴', label: 'Дедушка', speech: 'Дедушка' },
+                { emoji: '👦', label: 'Брат', speech: 'Брат' },
+                { emoji: '👧', label: 'Сестра', speech: 'Сестра' },
+                { emoji: '👨‍⚕️', label: 'Врач', speech: 'Врач' },
+                { emoji: '👩‍🏫', label: 'Учитель', speech: 'Учитель' },
+                { emoji: '🧑‍🤝‍🧑', label: 'Друг', speech: 'Друг' },
+            ],
+            'Места': [
+                { emoji: '🏠', label: 'Дом', speech: 'Дом' },
+                { emoji: '🏫', label: 'Школа', speech: 'Школа' },
+                { emoji: '🏪', label: 'Магазин', speech: 'Магазин' },
+                { emoji: '🌳', label: 'Парк', speech: 'Парк' },
+                { emoji: '🏥', label: 'Больница', speech: 'Больница' },
+                { emoji: '🛝', label: 'Площадка', speech: 'Площадка' },
+                { emoji: '🚗', label: 'Машина', speech: 'Машина' },
+            ],
+        };
+
+        // =========================================
+        // СОСТОЯНИЕ
+        // =========================================
+        let currentCategory = 'Потребности';
+        let sentence = [];
+
+        // =========================================
+        // РЕНДЕР КАТЕГОРИЙ
+        // =========================================
+        function renderTabs() {
+            const tabs = document.getElementById('categoryTabs');
+            tabs.innerHTML = Object.keys(CARDS).map(cat => 
+                `<button class="cat-tab ${cat === currentCategory ? 'active' : ''}" onclick="switchCategory('${cat}')">${cat}</button>`
+            ).join('');
+        }
+
+        function switchCategory(cat) {
+            currentCategory = cat;
+            renderTabs();
+            renderCards();
+        }
+
+        // =========================================
+        // РЕНДЕР КАРТОЧЕК
+        // =========================================
+        function renderCards() {
+            const grid = document.getElementById('pecsGrid');
+            grid.innerHTML = CARDS[currentCategory].map((card, i) => 
+                `<div class="pecs-card" onclick="tapCard(${i})" id="card-${i}">
+                    <span class="pecs-emoji">${card.emoji}</span>
+                    <span class="pecs-label">${card.label}</span>
+                </div>`
+            ).join('');
+        }
+
+        // =========================================
+        // ОЗВУЧКА (Web Speech API)
+        // =========================================
+        function speak(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ru-RU';
+            utter.rate = 0.85;
+            utter.pitch = 1.1;
+            // Try to find a Russian voice
+            const voices = window.speechSynthesis.getVoices();
+            const ruVoice = voices.find(v => v.lang.startsWith('ru'));
+            if (ruVoice) utter.voice = ruVoice;
+            window.speechSynthesis.speak(utter);
+        }
+
+        // Preload voices
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        // =========================================
+        // НАЖАТИЕ НА КАРТОЧКУ
+        // =========================================
+        function tapCard(index) {
+            const card = CARDS[currentCategory][index];
+            // Speak
+            speak(card.speech);
+            // Visual feedback
+            const el = document.getElementById('card-' + index);
+            el.classList.add('speaking');
+            setTimeout(() => el.classList.remove('speaking'), 600);
+            // Add to sentence
+            sentence.push({ emoji: card.emoji, label: card.label, speech: card.speech });
+            renderSentence();
+        }
+
+        // =========================================
+        // ПАНЕЛЬ ФРАЗЫ
+        // =========================================
+        function renderSentence() {
+            const container = document.getElementById('sentenceCards');
+            container.innerHTML = sentence.map((s, i) => 
+                `<div class="sentence-chip" onclick="removeChip(${i})">
+                    <span class="chip-emoji">${s.emoji}</span> ${s.label}
+                </div>`
+            ).join('');
+        }
+
+        function removeChip(index) {
+            sentence.splice(index, 1);
+            renderSentence();
+        }
+
+        function speakSentence() {
+            if (sentence.length === 0) return;
+            const text = sentence.map(s => s.speech).join('. ');
+            speak(text);
+        }
+
+        function clearSentence() {
+            sentence = [];
+            renderSentence();
+        }
+
+        // =========================================
+        // ТЁМНАЯ ТЕМА
+        // =========================================
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.removeAttribute('data-theme');
+            themeToggle.textContent = '🌙';
+        }
+        themeToggle.addEventListener('click', () => {
+            if (document.body.getAttribute('data-theme') === 'dark') {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // =========================================
+        // INIT
+        // =========================================
+        renderTabs();
+        renderCards();
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
