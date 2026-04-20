@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -473,11 +473,10 @@
         var btnNo = document.getElementById('exitModalNo');
         if (!modal) return;
 
-        // Push ONE guard entry on top of the current history entry.
-        // Stack becomes: [...external?, index.html(natural), index.html(guard)] ← current
-        history.pushState({ exitGuard: true }, '', location.href);
+        var exiting = false;
 
-        var guardActive = true; // Is our guard state currently on top?
+        // Push one guard state
+        history.pushState(null, '', location.href);
 
         function showModal() {
             modal.classList.add('visible');
@@ -487,45 +486,41 @@
         function hideModal() {
             modal.classList.remove('visible');
             document.body.style.overflow = '';
-            // Re-push guard so next back press is intercepted again
-            history.pushState({ exitGuard: true }, '', location.href);
-            guardActive = true;
+            // Re-push guard for next time
+            history.pushState(null, '', location.href);
         }
 
-        window.addEventListener('popstate', function(e) {
-            // Browser already moved back when popstate fires.
-            // We are now at index.html(natural). The guard state is in the forward stack.
-            // Show the modal to ask the user.
-            guardActive = false;
+        window.addEventListener('popstate', function() {
+            if (exiting) {
+                // User already confirmed — keep going back through any remaining states
+                history.back();
+                return;
+            }
             showModal();
         });
 
         btnNo.addEventListener('click', hideModal);
-
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) hideModal();
-        });
-
+        modal.addEventListener('click', function(e) { if (e.target === modal) hideModal(); });
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && modal.classList.contains('visible')) hideModal();
         });
 
         btnYes.addEventListener('click', function() {
-            // User confirmed exit. We're currently at index.html(natural).
-            // history.back() will either go to external page, or close the tab (PWA/mobile).
+            exiting = true;
             modal.classList.remove('visible');
             document.body.style.overflow = '';
 
-            // Remove popstate listener to prevent modal re-appearing
-            guardActive = false;
+            // Try to close (works in PWA / tabs opened by script)
+            try { window.close(); } catch(e) {}
 
-            // First try to close (works in PWA standalone / if opened by script)
-            try { window.close(); } catch(ex) {}
+            // Go back — if more same-page states exist, popstate will chain history.back()
+            history.back();
 
-            // Small delay then go back (most reliable cross-browser/mobile approach)
+            // Safety net: if still on this page after 600ms, force exit
             setTimeout(function() {
-                history.back();
-            }, 80);
+                try { window.close(); } catch(e) {}
+                location.replace('about:blank');
+            }, 600);
         });
     })();
     </script>
