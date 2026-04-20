@@ -710,17 +710,32 @@
                 <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
             </nav>
             <script>
+            <script>
             (function() {
                 const btn = document.getElementById('navDropdownBtn');
                 const content = document.getElementById('navDropdownContent');
                 const overlay = document.getElementById('navDropdownOverlay');
                 if (!btn || !content) return;
+
+                document.body.appendChild(overlay);
+                document.body.appendChild(content);
+
                 function open() {
+                    if (window.innerWidth > 768) {
+                        const r = btn.getBoundingClientRect();
+                        content.style.top = (r.bottom + 10) + 'px';
+                        content.style.right = (window.innerWidth - r.right) + 'px';
+                        content.style.bottom = 'auto';
+                    } else {
+                        content.style.top = '';
+                        content.style.right = '';
+                        content.style.bottom = '0';
+                        document.body.style.overflow = 'hidden';
+                    }
                     content.classList.add('show');
                     overlay.classList.add('show');
                     btn.classList.add('active');
                     btn.setAttribute('aria-expanded', 'true');
-                    document.body.style.overflow = 'hidden';
                 }
                 function close() {
                     content.classList.remove('show');
@@ -729,11 +744,13 @@
                     btn.setAttribute('aria-expanded', 'false');
                     document.body.style.overflow = '';
                 }
+
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     content.classList.contains('show') ? close() : open();
                 });
                 overlay.addEventListener('click', close);
+                document.addEventListener('click', (e) => { if (!btn.contains(e.target) && !content.contains(e.target)) close(); });
                 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
             })();
             </script>

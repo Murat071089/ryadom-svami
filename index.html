@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -129,23 +129,25 @@
                 const overlay = document.getElementById('navDropdownOverlay');
                 if (!btn || !content) return;
 
-                function positionDesktop() {
+                document.body.appendChild(overlay);
+                document.body.appendChild(content);
+
+                function open() {
                     if (window.innerWidth > 768) {
                         const r = btn.getBoundingClientRect();
                         content.style.top = (r.bottom + 10) + 'px';
                         content.style.right = (window.innerWidth - r.right) + 'px';
+                        content.style.bottom = 'auto';
                     } else {
                         content.style.top = '';
                         content.style.right = '';
+                        content.style.bottom = '0';
+                        document.body.style.overflow = 'hidden';
                     }
-                }
-                function open() {
-                    positionDesktop();
                     content.classList.add('show');
                     overlay.classList.add('show');
                     btn.classList.add('active');
                     btn.setAttribute('aria-expanded', 'true');
-                    if (window.innerWidth <= 768) document.body.style.overflow = 'hidden';
                 }
                 function close() {
                     content.classList.remove('show');
