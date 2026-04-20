@@ -1667,7 +1667,8 @@ a.footer-compact-link:hover .footer-compact-links {
     color: rgba(255, 255, 255, 0.95);
     font-family: 'Philosopher', sans-serif;
     letter-spacing: 1px;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 /* Bottom subtitle */
@@ -1718,7 +1719,10 @@ a.footer-compact-link:hover .footer-compact-links {
     }
 
     .test-banner-title {
-        font-size: 28px;
+        font-size: 24px;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
     }
 
     .test-banner-bottom {
