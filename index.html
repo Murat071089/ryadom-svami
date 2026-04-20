@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -7,10 +7,33 @@
     <title>Рядом с вами — поддержка и сообщество</title>
     <meta name="description"
         content="Сообщество семей, которые растят уникальных детей. Поддержка родителей детей с аутизмом, ДЦП, синдромом Дауна и другими особенностями.">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="manifest" href="manifest.json">
+    <link rel="canonical" href="https://ryadom-svami.ru/">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:title" content="Рядом с вами — поддержка и сообщество">
+    <meta property="og:description" content="Сообщество семей, которые растят уникальных детей. Поддержка родителей детей с аутизмом, ДЦП, синдромом Дауна и другими особенностями.">
+    <meta property="og:url" content="https://ryadom-svami.ru/">
+    <meta property="og:image" content="https://ryadom-svami.ru/img/logo.png">
+    <link rel="preload" href="style.css?v=5" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css?v=5">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+        ym(108678187, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 </head>
 
 <body data-theme="dark">
@@ -18,13 +41,13 @@
     <header class="header">
         <div class="container header-inner">
             <a href="index.html" class="logo">
-                <img src="img/logo.png" alt="Рядом с вами" height="40">
+                <img src="img/logo.webp" alt="Рядом с вами" height="40">
             </a>
             <nav class="nav">
                 <a href="test.html" class="nav-test-btn">🧩 Тест</a>
                 <a href="diary.html" class="nav-test-btn">📖 Дневник</a>
                 <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="btn-primary header-btn">Сообщество</a>
-                <div class="theme-toggle" id="themeToggle" title="Переключить тему">☀️</div>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
             </nav>
         </div>
     </header>
@@ -42,9 +65,9 @@
 
             <div class="story-card">
                 <div class="story-photos-row">
-                    <img id="dynamic-img1" src="img/family2.jpg" alt="Родители">
-                    <img id="dynamic-img2" src="img/family1.jpg" alt="Семья">
-                    <img id="dynamic-img3" src="img/family3.jpg" alt="Дети">
+                    <img id="dynamic-img1" src="img/family2.webp" alt="Родители" loading="lazy">
+                    <img id="dynamic-img2" src="img/family1.webp" alt="Семья" loading="lazy">
+                    <img id="dynamic-img3" src="img/family3.webp" alt="Дети" loading="lazy">
                 </div>
                 <div class="story-divider"></div>
                 <div class="story-body" id="dynamic-welcome">
@@ -65,7 +88,7 @@
 
             <div class="cards-grid layout-grid">
                 <a href="autism.html" class="card grid-card card-autism animate-card">
-                    <img src="img/icon_autism.png" alt="Аутизм" class="card-image">
+                    <img src="img/icon_autism.webp" alt="Аутизм" class="card-image" loading="lazy">
                     <div class="card-content">
                         <h3>Аутизм / РАС</h3>
                         <p>Ребёнок, который видит мир по-своему</p>
@@ -73,7 +96,7 @@
                 </a>
 
                 <a href="cp.html" class="card grid-card card-cp animate-card">
-                    <img src="img/icon_cp.png" alt="ДЦП" class="card-image">
+                    <img src="img/icon_cp.webp" alt="ДЦП" class="card-image" loading="lazy">
                     <div class="card-content">
                         <h3>ДЦП</h3>
                         <p>Движение, свобода, преображение</p>
@@ -81,7 +104,7 @@
                 </a>
 
                 <a href="down.html" class="card grid-card card-down animate-card">
-                    <img src="img/icon_down.png" alt="Синдром Дауна" class="card-image">
+                    <img src="img/icon_down.webp" alt="Синдром Дауна" class="card-image" loading="lazy">
                     <div class="card-content">
                         <h3>Синдром Дауна</h3>
                         <p>Солнечный ребёнок с огромным сердцем</p>
@@ -89,7 +112,7 @@
                 </a>
 
                 <a href="speech.html" class="card grid-card card-speech animate-card">
-                    <img src="img/icon_speech.png" alt="Задержка речи" class="card-image">
+                    <img src="img/icon_speech.webp" alt="Задержка речи" class="card-image" loading="lazy">
                     <div class="card-content">
                         <h3>Задержка речи</h3>
                         <p>Мысли, которые мы слышим без слов</p>
@@ -97,7 +120,7 @@
                 </a>
 
                 <a href="uo.html" class="card grid-card card-uo animate-card">
-                    <img src="img/icon_uo.png" alt="Умственная отсталость" class="card-image">
+                    <img src="img/icon_uo.webp" alt="Умственная отсталость" class="card-image" loading="lazy">
                     <div class="card-content">
                         <h3>Умственная отсталость</h3>
                         <p>Малыш из страны Вечного Детства</p>
@@ -105,7 +128,7 @@
                 </a>
 
                 <a href="okr.html" class="card grid-card card-okr animate-card">
-                    <img src="img/icon_okr.png" alt="ОКР" class="card-image">
+                    <img src="img/icon_okr.webp" alt="ОКР" class="card-image" loading="lazy">
                     <div class="card-content">
                         <h3>ОКР</h3>
                         <p>Маленький хранитель Порядка</p>
@@ -131,7 +154,7 @@
                     <span>M-CHAT</span>
                 </div>
                 <div class="test-banner-hero">
-                    <img src="img/icon_test.png" alt="M-CHAT" class="test-banner-icon">
+                    <img src="img/icon_test.webp" alt="M-CHAT" class="test-banner-icon" loading="lazy">
                     <span class="test-banner-title">Пройти тест</span>
                 </div>
                 <div class="test-banner-bottom">
@@ -152,7 +175,7 @@
                     <span>Local Storage</span>
                 </div>
                 <div class="test-banner-hero">
-                    <img src="img/icon_diary.png" alt="Дневник побед" class="test-banner-icon">
+                    <img src="img/icon_diary.webp" alt="Дневник побед" class="test-banner-icon" loading="lazy">
                     <span class="test-banner-title">Дневник побед</span>
                 </div>
                 <div class="test-banner-bottom">
@@ -167,25 +190,26 @@
         <div class="footer-glow footer-glow-2"></div>
         <div class="container">
             <div class="footer-hero-block">
-                <p class="footer-eyebrow">Рядом с вами · 2025</p>
+                <p class="footer-eyebrow">Рядом с вами · 2025–2026</p>
                 <h2 class="footer-main-title">Каждый ребёнок — целая&nbsp;вселенная</h2>
             </div>
 
             <div class="footer-cards-column">
                 <div class="footer-compact-card">
-                    <img src="img/icon_autism.png" class="footer-compact-img" alt="Разделы">
+                    <img src="img/icon_autism.webp" class="footer-compact-img" alt="Разделы" loading="lazy">
                     <div class="footer-compact-text">
                         <h4>Разделы</h4>
                         <div class="footer-compact-links">
-                            <a href="#">Главная</a> <span class="dot-sep">·</span>
+                            <a href="index.html">Главная</a> <span class="dot-sep">·</span>
                             <a href="#diagnoses">Наши дети</a> <span class="dot-sep">·</span>
-                            <a href="test.html">Тест</a>
+                            <a href="test.html">Тест</a> <span class="dot-sep">·</span>
+                            <a href="diary.html">Дневник</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="footer-compact-card">
-                    <img src="img/icon_speech.png" class="footer-compact-img" alt="Телефон">
+                    <img src="img/icon_speech.webp" class="footer-compact-img" alt="Телефон" loading="lazy">
                     <div class="footer-compact-text">
                         <h4>Телефон доверия</h4>
                         <div class="footer-compact-links">
@@ -196,7 +220,7 @@
                 </div>
 
                 <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="footer-compact-card footer-compact-link">
-                    <img src="img/icon_okr.png" class="footer-compact-img" alt="Telegram">
+                    <img src="img/icon_okr.webp" class="footer-compact-img" alt="Telegram" loading="lazy">
                     <div class="footer-compact-text">
                         <h4>Сообщество</h4>
                         <div class="footer-compact-links">Telegram · поддержка и общение →</div>
@@ -241,6 +265,11 @@
                 localStorage.setItem('theme', 'dark');
             }
         });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
     </script>
 </body>
 

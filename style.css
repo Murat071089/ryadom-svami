@@ -216,8 +216,11 @@ body {
 }
 
 .theme-toggle {
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 22px;
     margin-left: 20px;
     width: 38px;
     height: 38px;
@@ -1315,375 +1318,8 @@ a.footer-compact-link:hover .footer-compact-links {
     }
 }
 
-/* =========================================
-   ИИ ЧАТ-БОТ — ПРЕМИУМ ДИЗАЙН
-   ========================================= */
+/* Чат-бот удалён — стили были неиспользуемые */
 
-/* Пульсирующее свечение кнопки */
-@keyframes chatBtnGlow {
-    0%, 100% { box-shadow: 0 6px 24px rgba(208, 174, 139, 0.35), 0 0 0 0 rgba(208, 174, 139, 0.4); }
-    50% { box-shadow: 0 6px 32px rgba(208, 174, 139, 0.55), 0 0 0 8px rgba(208, 174, 139, 0); }
-}
-
-/* Появление окна чата */
-@keyframes chatWindowIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.92);
-        filter: blur(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-    }
-}
-
-/* Мерцание точек загрузки */
-@keyframes shimmer {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
-}
-
-.chat-open-btn {
-    position: fixed;
-    bottom: 30px;
-    left: 30px;
-    background: linear-gradient(135deg, #d0ae8b 0%, #c49b74 50%, #618296 100%);
-    color: #fff;
-    border: none;
-    border-radius: 60px;
-    padding: 16px 28px;
-    font-family: 'Philosopher', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    z-index: 2000;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    letter-spacing: 0.3px;
-    animation: chatBtnGlow 3s ease-in-out infinite;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-.chat-open-btn .chat-btn-icon {
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-}
-
-.chat-open-btn:hover {
-    transform: scale(1.07) translateY(-2px);
-    filter: brightness(1.08);
-}
-
-.chat-open-btn:active {
-    transform: scale(0.97);
-}
-
-/* Когда чат открыт — кнопка меняет стиль */
-.chat-open-btn.active {
-    background: linear-gradient(135deg, #618296 0%, #4d6f82 100%);
-    animation: none;
-    box-shadow: 0 6px 20px rgba(97, 130, 150, 0.4);
-}
-
-.chat-window {
-    position: fixed;
-    bottom: 100px;
-    left: 30px;
-    width: 380px;
-    height: 520px;
-    border-radius: 24px;
-    display: flex;
-    flex-direction: column;
-    z-index: 2001;
-    overflow: hidden;
-    border: 1.5px solid rgba(208, 174, 139, 0.35);
-    box-shadow:
-        0 25px 60px rgba(0, 0, 0, 0.28),
-        0 8px 24px rgba(97, 130, 150, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    animation: chatWindowIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-/* Фон для светлой темы — полностью непрозрачный */
-.chat-window {
-    background: linear-gradient(180deg, #f7f3ee 0%, #f0ebe4 100%);
-}
-
-/* Фон для тёмной темы — полностью непрозрачный */
-[data-theme="dark"] .chat-window {
-    background: linear-gradient(180deg, #1e2d3d 0%, #172330 100%);
-    border-color: rgba(208, 174, 139, 0.2);
-}
-
-/* Этот класс прячет чат, пока на кнопку не нажали */
-.chat-window.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(30px) scale(0.92);
-    filter: blur(6px);
-    animation: none;
-}
-
-/* Заголовок чата — премиальный градиент */
-.chat-header {
-    background: linear-gradient(135deg, #618296 0%, #4d6f82 40%, #3d5f72 100%);
-    color: #fff;
-    padding: 18px 22px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Декоративная полоска на заголовке */
-.chat-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #d0ae8b, #e8c4a0, #d0ae8b);
-}
-
-.chat-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.chat-header-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #d0ae8b, #c49b74);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-}
-
-.chat-header-info h4 {
-    margin: 0;
-    font-size: 15px;
-    font-family: 'Philosopher', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-}
-
-.chat-header-info .chat-status {
-    font-size: 11px;
-    opacity: 0.8;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-top: 2px;
-}
-
-.chat-status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #7be8a4;
-    display: inline-block;
-    box-shadow: 0 0 6px rgba(123, 232, 164, 0.5);
-    animation: pulse 2s infinite;
-}
-
-.chat-close-btn {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.chat-close-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.1);
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 18px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-/* Кастомный скроллбар */
-.chat-messages::-webkit-scrollbar {
-    width: 5px;
-}
-.chat-messages::-webkit-scrollbar-track {
-    background: transparent;
-}
-.chat-messages::-webkit-scrollbar-thumb {
-    background: rgba(208, 174, 139, 0.3);
-    border-radius: 10px;
-}
-
-.message {
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 85%;
-    position: relative;
-}
-
-.ai-message {
-    background: linear-gradient(135deg, rgba(97, 130, 150, 0.12) 0%, rgba(97, 130, 150, 0.06) 100%);
-    color: var(--text-main);
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-    border: 1px solid rgba(97, 130, 150, 0.12);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="dark"] .ai-message {
-    background: linear-gradient(135deg, rgba(97, 130, 150, 0.2) 0%, rgba(97, 130, 150, 0.1) 100%);
-    border-color: rgba(97, 130, 150, 0.2);
-}
-
-.user-message {
-    background: linear-gradient(135deg, #d0ae8b 0%, #c49b74 100%);
-    color: #1a1a1a;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-    box-shadow: 0 4px 12px rgba(208, 174, 139, 0.3);
-}
-
-.chat-input-area {
-    display: flex;
-    padding: 14px 16px;
-    border-top: 1px solid rgba(208, 174, 139, 0.15);
-    background: rgba(255, 255, 255, 0.5);
-    gap: 10px;
-    align-items: center;
-}
-
-[data-theme="dark"] .chat-input-area {
-    background: rgba(0, 0, 0, 0.2);
-    border-top-color: rgba(255, 255, 255, 0.06);
-}
-
-#chatInput {
-    flex: 1;
-    padding: 11px 18px;
-    border: 1.5px solid rgba(208, 174, 139, 0.25);
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.7);
-    color: var(--text-main);
-    outline: none;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-#chatInput:focus {
-    border-color: #d0ae8b;
-    box-shadow: 0 0 0 3px rgba(208, 174, 139, 0.15);
-}
-
-[data-theme="dark"] #chatInput {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(208, 174, 139, 0.2);
-}
-
-[data-theme="dark"] #chatInput:focus {
-    border-color: #d0ae8b;
-    box-shadow: 0 0 0 3px rgba(208, 174, 139, 0.1);
-}
-
-.chat-send-btn {
-    background: linear-gradient(135deg, #618296 0%, #4d6f82 100%);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 42px;
-    height: 42px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 12px rgba(97, 130, 150, 0.3);
-}
-
-.chat-send-btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 6px 16px rgba(97, 130, 150, 0.4);
-}
-
-.chat-send-btn:active {
-    transform: scale(0.95);
-}
-
-/* Брендинг внизу сообщений */
-.chat-branding {
-    text-align: center;
-    padding: 6px 0 2px;
-    font-size: 10px;
-    color: var(--text-muted);
-    opacity: 0.5;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 0.5px;
-}
-
-/* Настройки для телефонов */
-@media (max-width: 768px) {
-    .chat-open-btn {
-        bottom: 20px;
-        left: 20px;
-        padding: 13px 20px;
-        font-size: 14px;
-        border-radius: 50px;
-    }
-
-    .chat-window {
-        bottom: 78px;
-        left: 12px;
-        right: 12px;
-        width: auto;
-        height: 420px;
-        border-radius: 20px;
-    }
-
-    .chat-header {
-        padding: 14px 16px;
-    }
-
-    .chat-header-avatar {
-        width: 32px;
-        height: 32px;
-        font-size: 15px;
-    }
-
-    .chat-messages {
-        padding: 14px;
-    }
-}
 
 /* =========================================
    МОБИЛЬНОЕ МЕНЮ
@@ -1903,10 +1539,7 @@ a.footer-compact-link:hover .footer-compact-links {
     animation: shimmer 3s ease-in-out infinite;
 }
 
-@keyframes shimmer {
-    0%, 100% { left: -75%; }
-    50% { left: 125%; }
-}
+
 
 .nav-test-btn:hover {
     background: rgba(97, 130, 150, 0.2);
@@ -3247,5 +2880,35 @@ a.footer-compact-link:hover .footer-compact-links {
 
     .result-footer-note {
         font-size: 11px;
+    }
+}
+/* =========================================
+   REDUCED MOTION -- DOSTUPNOST
+   Otklyuchaet animacii dlya polzovatelej,
+   kotorye predpochitayut minimum dvizheniya.
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .animate-scroll {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+
+    .animate-card {
+        opacity: 1;
+        transform: none;
+    }
+
+    .bg-video {
+        animation: none;
     }
 }

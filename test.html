@@ -1,11 +1,21 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Тест M-CHAT — Проверка развития ребёнка</title>
     <meta name="description" content="Бесплатный онлайн-тест M-CHAT для раннего выявления признаков аутизма у детей от 16 до 30 месяцев. Быстро, анонимно, без регистрации.">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="manifest" href="manifest.json">
+    <link rel="canonical" href="https://ryadom-svami.ru/test.html">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <meta property="og:title" content="Тест M-CHAT — Проверка развития ребёнка">
+    <meta property="og:description" content="Бесплатный онлайн-тест M-CHAT для раннего выявления признаков аутизма.">
+    <meta property="og:url" content="https://ryadom-svami.ru/test.html">
+    <meta property="og:image" content="https://ryadom-svami.ru/img/icon_test.png">
+    <link rel="preload" href="style.css?v=5" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css?v=5">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         .save-toast {
@@ -30,20 +40,30 @@
             transform: translateX(-50%) translateY(0);
         }
     </style>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+        ym(108678187, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 </head>
 <body data-theme="dark">
 
     <header class="header">
         <div class="container header-inner">
             <a href="index.html" class="logo">
-                <img src="img/logo.png" alt="Рядом с вами" height="40">
+                <img src="img/logo.webp" alt="Рядом с вами" height="40">
             </a>
             <nav class="nav">
-                <a href="index.html#diagnoses" class="nav-link">Наши дети</a>
-                <a href="index.html#about" class="nav-link">О нас</a>
                 <a href="test.html" class="nav-test-btn">🧩 Тест</a>
+                <a href="diary.html" class="nav-test-btn">📖 Дневник</a>
                 <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="btn-primary header-btn">Сообщество</a>
-                <div class="theme-toggle" id="themeToggle" title="Переключить тему">☀️</div>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
             </nav>
         </div>
     </header>
@@ -86,7 +106,7 @@
                         <span>АНОНИМНО</span>
                     </div>
                     <div class="vx-hero">
-                        <img src="img/icon_test.png" alt="Тест" class="vx-icon">
+                        <img src="img/icon_test.webp" alt="Тест" class="vx-icon">
                         <span class="vx-title" style="white-space: nowrap;">Проверка развития</span>
                     </div>
                     <p class="vx-subtitle">Международный скрининговый опросник (M-CHAT-R) для оценки риска нарушений аутистического спектра.</p>
@@ -146,7 +166,7 @@
                         <span>M-CHAT-R</span>
                     </div>
                     <div class="vx-result-image-box">
-                        <img src="img/icon_test.png" alt="Результат" class="vx-icon" id="resultImage">
+                        <img src="img/icon_test.webp" alt="Результат" class="vx-icon" id="resultImage">
                     </div>
                     <h2 class="vx-result-title" id="resultTitle"></h2>
                     <p class="vx-result-text" id="resultText"></p>
@@ -203,23 +223,24 @@
         <div class="footer-glow footer-glow-2"></div>
         <div class="container">
             <div class="footer-hero-block">
-                <p class="footer-eyebrow">Рядом с вами · 2025</p>
+                <p class="footer-eyebrow">Рядом с вами · 2025–2026</p>
                 <h2 class="footer-main-title">Каждый ребёнок — целая&nbsp;вселенная</h2>
             </div>
             <div class="footer-cards-column">
                 <div class="footer-compact-card">
-                    <img src="img/icon_autism.png" class="footer-compact-img" alt="Разделы">
+                    <img src="img/icon_autism.webp" class="footer-compact-img" alt="Разделы">
                     <div class="footer-compact-text">
                         <h4>Разделы</h4>
                         <div class="footer-compact-links">
                             <a href="index.html">Главная</a> <span class="dot-sep">·</span>
                             <a href="index.html#diagnoses">Наши дети</a> <span class="dot-sep">·</span>
-                            <a href="test.html">Тест</a>
+                            <a href="test.html">Тест</a> <span class="dot-sep">·</span>
+                            <a href="diary.html">Дневник</a>
                         </div>
                     </div>
                 </div>
                 <div class="footer-compact-card">
-                    <img src="img/icon_speech.png" class="footer-compact-img" alt="Телефон">
+                    <img src="img/icon_speech.webp" class="footer-compact-img" alt="Телефон">
                     <div class="footer-compact-text">
                         <h4>Телефон доверия</h4>
                         <div class="footer-compact-links">
@@ -229,7 +250,7 @@
                     </div>
                 </div>
                 <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="footer-compact-card footer-compact-link">
-                    <img src="img/icon_okr.png" class="footer-compact-img" alt="Telegram">
+                    <img src="img/icon_okr.webp" class="footer-compact-img" alt="Telegram">
                     <div class="footer-compact-text">
                         <h4>Сообщество</h4>
                         <div class="footer-compact-links">Telegram · поддержка и общение →</div>
@@ -626,7 +647,7 @@
                 const dlLink = document.createElement('a');
                 dlLink.href = dlUrl;
                 dlLink.download = filename;
-                dlLink.click();
+                dlLink.click();\r\n                URL.revokeObjectURL(dlUrl);
 
                 // 2. Нативное меню «Поделиться» (мобильные)
                 setTimeout(() => {
@@ -667,6 +688,11 @@
                 localStorage.setItem('theme', 'dark');
             }
         });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
     </script>
 </body>
 </html>

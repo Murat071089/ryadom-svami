@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -6,7 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Дневник побед — Рядом с вами</title>
     <meta name="description" content="Дневник побед и настроения для родителей особенных детей. Фиксируйте прогресс, замечайте маленькие победы каждый день.">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="manifest" href="manifest.json">
+    <link rel="canonical" href="https://ryadom-svami.ru/diary.html">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <meta property="og:title" content="Дневник побед — Рядом с вами">
+    <meta property="og:description" content="Дневник побед и настроения для родителей особенных детей.">
+    <meta property="og:url" content="https://ryadom-svami.ru/diary.html">
+    <meta property="og:image" content="https://ryadom-svami.ru/img/icon_diary.png">
+    <link rel="preload" href="style.css?v=5" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css?v=5">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         /* =========================================
@@ -505,7 +515,7 @@
 
         .modal-overlay.show {
             opacity: 1;
-            pointer-events: all;
+            pointer-events: auto;
         }
 
         .modal-box {
@@ -600,6 +610,17 @@
             }
         }
     </style>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+        ym(108678187, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 </head>
 
 <body data-theme="dark">
@@ -607,20 +628,20 @@
     <header class="header">
         <div class="container header-inner">
             <a href="index.html" class="logo">
-                <img src="img/logo.png" alt="Рядом с вами" height="40">
+                <img src="img/logo.webp" alt="Рядом с вами" height="40">
             </a>
             <nav class="nav">
                 <a href="test.html" class="nav-test-btn">🧩 Тест</a>
                 <a href="diary.html" class="nav-test-btn">📖 Дневник</a>
                 <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="btn-primary header-btn">Сообщество</a>
-                <div class="theme-toggle" id="themeToggle" title="Переключить тему">☀️</div>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
             </nav>
         </div>
     </header>
 
     <!-- Уведомление -->
-    <div class="save-toast" id="saveToast">✅ Запись сохранена!</div>
-    <div class="save-toast" id="pdfToast" style="background: linear-gradient(135deg, #618296, #4a6d80);">⏳ Формируем отчёт...</div>
+    <div class="save-toast" id="saveToast" aria-live="polite">✅ Запись сохранена!</div>
+    <div class="save-toast" id="pdfToast" aria-live="polite" style="background: linear-gradient(135deg, #618296, #4a6d80);">⏳ Формируем отчёт...</div>
 
     <!-- Модальное окно удаления -->
     <div class="modal-overlay" id="deleteModal">
@@ -675,19 +696,19 @@
                     <label>Настроение дня</label>
                     <div class="mood-selector" id="moodSelector">
                         <button type="button" class="mood-btn" data-mood="hard" aria-label="Было тяжело">
-                            <img src="img/mood_hard.png" class="mood-img" alt="Тяжело">
+                            <img src="img/mood_hard.webp" class="mood-img" alt="Тяжело">
                             <span class="mood-label">Было тяжело</span>
                         </button>
                         <button type="button" class="mood-btn" data-mood="calm" aria-label="Спокойно">
-                            <img src="img/mood_calm.png" class="mood-img" alt="Спокойно">
+                            <img src="img/mood_calm.webp" class="mood-img" alt="Спокойно">
                             <span class="mood-label">Спокойно</span>
                         </button>
                         <button type="button" class="mood-btn" data-mood="good" aria-label="Хороший день">
-                            <img src="img/mood_good.png" class="mood-img" alt="Хороший день">
+                            <img src="img/mood_good.webp" class="mood-img" alt="Хороший день">
                             <span class="mood-label">Хороший день</span>
                         </button>
                         <button type="button" class="mood-btn" data-mood="great" aria-label="Отличный день">
-                            <img src="img/mood_great.png" class="mood-img" alt="Отличный день">
+                            <img src="img/mood_great.webp" class="mood-img" alt="Отличный день">
                             <span class="mood-label">Отличный день</span>
                         </button>
                     </div>
@@ -721,6 +742,11 @@
                     <option value="great">⭐ Отличный день</option>
                 </select>
                 <button class="btn-export" onclick="exportPDF()" id="pdfBtn">📄 Скачать PDF</button>
+                <button class="btn-export" onclick="exportJSON()" style="background: linear-gradient(135deg, #618296, #4d6f82); color: #fff;">💾 Экспорт JSON</button>
+                <label class="btn-export" style="cursor:pointer; background: rgba(97,130,150,0.1); border: 1.5px solid rgba(97,130,150,0.3); color: var(--text-main);">
+                    📥 Импорт
+                    <input type="file" accept=".json" onchange="importJSON(event)" style="display:none">
+                </label>
             </div>
 
             <!-- Записи -->
@@ -734,13 +760,13 @@
         <div class="footer-glow footer-glow-2"></div>
         <div class="container">
             <div class="footer-hero-block">
-                <p class="footer-eyebrow">Рядом с вами · 2025</p>
+                <p class="footer-eyebrow">Рядом с вами · 2025–2026</p>
                 <h2 class="footer-main-title">Каждый ребёнок — целая&nbsp;вселенная</h2>
             </div>
 
             <div class="footer-cards-column">
                 <div class="footer-compact-card">
-                    <img src="img/icon_autism.png" class="footer-compact-img" alt="Разделы">
+                    <img src="img/icon_autism.webp" class="footer-compact-img" alt="Разделы">
                     <div class="footer-compact-text">
                         <h4>Разделы</h4>
                         <div class="footer-compact-links">
@@ -753,7 +779,7 @@
                 </div>
 
                 <div class="footer-compact-card">
-                    <img src="img/icon_speech.png" class="footer-compact-img" alt="Телефон">
+                    <img src="img/icon_speech.webp" class="footer-compact-img" alt="Телефон">
                     <div class="footer-compact-text">
                         <h4>Телефон доверия</h4>
                         <div class="footer-compact-links">
@@ -764,7 +790,7 @@
                 </div>
 
                 <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="footer-compact-card footer-compact-link">
-                    <img src="img/icon_okr.png" class="footer-compact-img" alt="Telegram">
+                    <img src="img/icon_okr.webp" class="footer-compact-img" alt="Telegram">
                     <div class="footer-compact-text">
                         <h4>Сообщество</h4>
                         <div class="footer-compact-links">Telegram · поддержка и общение →</div>
@@ -810,10 +836,10 @@
         let selectedMood = null;
 
         const MOODS = {
-            hard: { emoji: '🌪️', img: 'img/mood_hard.png', label: 'Было тяжело' },
-            calm: { emoji: '🌤️', img: 'img/mood_calm.png', label: 'Спокойно' },
-            good: { emoji: '☀️', img: 'img/mood_good.png', label: 'Хороший день' },
-            great: { emoji: '⭐', img: 'img/mood_great.png', label: 'Отличный день' }
+            hard: { emoji: '🌪️', img: 'img/mood_hard.webp', label: 'Было тяжело' },
+            calm: { emoji: '🌤️', img: 'img/mood_calm.webp', label: 'Спокойно' },
+            good: { emoji: '☀️', img: 'img/mood_good.webp', label: 'Хороший день' },
+            great: { emoji: '⭐', img: 'img/mood_great.webp', label: 'Отличный день' }
         };
 
         // =========================================
@@ -1031,8 +1057,8 @@
                         <p>${escapeHtml(e.hardText)}</p>
                     </div>` : ''}
                     <div class="entry-actions">
-                        <button class="entry-btn" onclick="editEntry('${e.id}')"><img src="img/icon_edit.png" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Редактировать</button>
-                        <button class="entry-btn delete" onclick="confirmDelete('${e.id}')"><img src="img/icon_delete.png" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Удалить</button>
+                        <button class="entry-btn" onclick="editEntry('${escapeHtml(e.id)}')"><img src="img/icon_edit.webp" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Редактировать</button>
+                        <button class="entry-btn delete" onclick="confirmDelete('${escapeHtml(e.id)}')"><img src="img/icon_delete.webp" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Удалить</button>
                     </div>
                 </div>`;
             }).join('');
@@ -1391,6 +1417,7 @@
                 dlLink.href = dlUrl;
                 dlLink.download = filename;
                 dlLink.click();
+                URL.revokeObjectURL(dlUrl);
 
                 // 2. Нативное меню «Поделиться» (мобильные)
                 setTimeout(() => {
@@ -1403,6 +1430,11 @@
                     }
                 }, 600);
             });
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
     </script>
 </body>
