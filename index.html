@@ -38,11 +38,19 @@
 </head>
 
 <body data-theme="dark">
-    <!-- SPLASH SCREEN -->
+    <!-- SPLASH SCREEN ENHANCED -->
     <div id="splash-screen" class="splash-screen">
+        <div class="splash-bg-decor"></div>
         <div class="splash-content">
-            <img src="img/app_icon_512.png" alt="Рядом с вами" class="splash-logo">
-            <div class="splash-loader"></div>
+            <h2 class="splash-title">Рядом с вами</h2>
+            <div class="splash-logo-container">
+                <img src="img/app_icon_512.png" alt="Рядом с вами" class="splash-logo">
+                <div class="splash-glow"></div>
+            </div>
+            <div class="splash-loader-wrapper">
+                <span class="splash-loading-text">Загрузка...</span>
+                <div class="splash-loader"></div>
+            </div>
             <p class="splash-text" id="splash-text"></p>
         </div>
     </div>
@@ -62,7 +70,7 @@
                     setTimeout(() => {
                         splash.classList.add('hidden');
                         sessionStorage.setItem('splashShown', 'true');
-                    }, 2500);
+                    }, 3500);
                 } else {
                     splash.style.display = 'none';
                 }
