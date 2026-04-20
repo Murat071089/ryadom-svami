@@ -38,6 +38,37 @@
 </head>
 
 <body data-theme="dark">
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <img src="img/app_icon_512.png" alt="Рядом с вами" class="splash-logo">
+            <div class="splash-loader"></div>
+            <p class="splash-text" id="splash-text"></p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                if (!sessionStorage.getItem('splashShown')) {
+                    const phrases = [
+                        "Вы — лучший родитель для своего ребёнка...",
+                        "Вы не одни. Мы рядом с вами...",
+                        "Делаем мир добрее, шаг за шагом...",
+                        "Вдох глубокий... Вы со всем справитесь...",
+                        "Каждая маленькая победа имеет значение..."
+                    ];
+                    document.getElementById('splash-text').textContent = phrases[Math.floor(Math.random() * phrases.length)];
+                    setTimeout(() => {
+                        splash.classList.add('hidden');
+                        sessionStorage.setItem('splashShown', 'true');
+                    }, 2500);
+                } else {
+                    splash.style.display = 'none';
+                }
+            }
+        });
+    </script>
 
     <header class="header">
         <div class="container header-inner">
