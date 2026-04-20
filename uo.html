@@ -74,80 +74,72 @@
         <div class="container header-inner">
             <a href="index.html" class="logo"><img src="img/logo.webp" alt="Рядом с вами" height="40"></a>
             <nav class="nav">
-                                <div class="nav-dropdown" id="navDropdown">
-                    <button class="nav-dropdown-btn" id="navDropdownBtn">
-                        <span>Инструменты</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <div class="nav-dropdown" id="navDropdown">
+                    <button class="nav-dropdown-btn" id="navDropdownBtn" aria-expanded="false">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                        <span class="nav-dropdown-label">Инструменты</span>
+                        <svg class="nav-dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="nav-dropdown-overlay" id="navDropdownOverlay"></div>
                     <div class="nav-dropdown-content" id="navDropdownContent">
-                        <div class="nav-dropdown-header mobile-only">
-                            <span class="nav-dropdown-header-title">Инструменты</span>
-                            <button class="nav-dropdown-close" id="navDropdownClose">✕</button>
-                        </div>
+                        <div class="nav-dropdown-handle"></div>
                         <a href="test.html" class="nav-dropdown-item">
                             <span class="nav-dropdown-icon">🧩</span>
                             <div class="nav-dropdown-text">
                                 <span class="nav-dropdown-title">Тест M-CHAT-R</span>
-                                <span class="nav-dropdown-sub">Скрининг развития</span>
+                                <span class="nav-dropdown-sub">Скрининг развития ребёнка</span>
                             </div>
                         </a>
                         <a href="diary.html" class="nav-dropdown-item">
                             <span class="nav-dropdown-icon">📖</span>
                             <div class="nav-dropdown-text">
-                                <span class="nav-dropdown-title">Дневник</span>
-                                <span class="nav-dropdown-sub">Учёт достижений</span>
+                                <span class="nav-dropdown-title">Дневник побед</span>
+                                <span class="nav-dropdown-sub">Учёт маленьких достижений</span>
                             </div>
                         </a>
                         <a href="pecs.html" class="nav-dropdown-item">
                             <span class="nav-dropdown-icon">🗣️</span>
                             <div class="nav-dropdown-text">
-                                <span class="nav-dropdown-title">PECS</span>
-                                <span class="nav-dropdown-sub">Карточки общения</span>
+                                <span class="nav-dropdown-title">PECS доска</span>
+                                <span class="nav-dropdown-sub">Карточки для общения</span>
                             </div>
                         </a>
                     </div>
                 </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const btn = document.getElementById('navDropdownBtn');
-                        const content = document.getElementById('navDropdownContent');
-                        const overlay = document.getElementById('navDropdownOverlay');
-                        const closeBtn = document.getElementById('navDropdownClose');
-
-                        function toggleDropdown(e) {
-                            if (window.innerWidth <= 768) {
-                                e.preventDefault();
-                                const isOpen = content.classList.contains('show');
-                                if (isOpen) {
-                                    closeDropdown();
-                                } else {
-                                    content.classList.add('show');
-                                    overlay.classList.add('show');
-                                    btn.classList.add('active');
-                                    document.body.style.overflow = 'hidden';
-                                }
-                            }
-                        }
-
-                        function closeDropdown() {
-                            if(content) content.classList.remove('show');
-                            if(overlay) overlay.classList.remove('show');
-                            if(btn) btn.classList.remove('active');
-                            document.body.style.overflow = '';
-                        }
-
-                        if(btn) btn.addEventListener('click', toggleDropdown);
-                        if(overlay) overlay.addEventListener('click', closeDropdown);
-                        if(closeBtn) closeBtn.addEventListener('click', closeDropdown);
-                    });
-                </script>
-                <button id="installAppBtn" class="btn-primary header-btn" style="display: none; align-items: center; gap: 6px; padding: 8px 14px; margin-right: 4px;">
+                <button id="installAppBtn" class="btn-primary header-btn" style="display: none; align-items: center; gap: 5px; padding: 6px 12px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    Скачать
+                    <span class="install-label">Скачать</span>
                 </button>
                 <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
             </nav>
+            <script>
+            (function() {
+                const btn = document.getElementById('navDropdownBtn');
+                const content = document.getElementById('navDropdownContent');
+                const overlay = document.getElementById('navDropdownOverlay');
+                if (!btn || !content) return;
+                function open() {
+                    content.classList.add('show');
+                    overlay.classList.add('show');
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-expanded', 'true');
+                    document.body.style.overflow = 'hidden';
+                }
+                function close() {
+                    content.classList.remove('show');
+                    overlay.classList.remove('show');
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                }
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    content.classList.contains('show') ? close() : open();
+                });
+                overlay.addEventListener('click', close);
+                document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+            })();
+            </script>
         </div>
     </header>
 
