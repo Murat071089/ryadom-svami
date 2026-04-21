@@ -52,7 +52,16 @@
     <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
 <link rel="apple-touch-icon" href="img/app_icon_192.png">
-</head>
+    <!-- OneSignal Push Notifications -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "0009d238-be4d-4813-87bb-7026221769ed",
+            });
+        });
+    </script></head>
 <body data-theme="dark">
     <!-- SPLASH SCREEN ENHANCED -->
     <div id="splash-screen" class="splash-screen">
