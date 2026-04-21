@@ -490,7 +490,38 @@
     <div id="pushPermModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); align-items:flex-end; justify-content:center;">
         <div id="pushPermCard" style="background:linear-gradient(160deg,#1a2535,#162031); border:1.5px solid rgba(208,174,139,0.2); border-radius:28px 28px 0 0; padding:32px 24px 40px; width:100%; max-width:480px; box-shadow:0 -24px 64px rgba(0,0,0,0.5); transform:translateY(100%); transition:transform 0.45s cubic-bezier(0.34,1.3,0.64,1);">
             <div style="width:36px; height:4px; background:rgba(255,255,255,0.12); border-radius:4px; margin:0 auto 28px;"></div>
-            <div style="font-size:46px; text-align:center; margin-bottom:14px;">⭐</div>
+            <style>
+                @keyframes neonStarPulse {
+                    0%, 100% {
+                        text-shadow:
+                            0 0 4px #ffd700,
+                            0 0 12px #d0ae8b,
+                            0 0 24px #b8936a,
+                            0 0 40px rgba(184,147,106,0.6);
+                        transform: scale(1) translateY(0px);
+                    }
+                    50% {
+                        text-shadow:
+                            0 0 8px #fff7aa,
+                            0 0 20px #ffd700,
+                            0 0 40px #d0ae8b,
+                            0 0 70px rgba(208,174,139,0.8);
+                        transform: scale(1.12) translateY(-3px);
+                    }
+                }
+                .neon-star { display:inline-block; color:#ffd700; font-size:36px; animation: neonStarPulse 2s ease-in-out infinite; }
+                .neon-star:nth-child(2) { animation-delay: 0.2s; }
+                .neon-star:nth-child(3) { animation-delay: 0.4s; }
+                .neon-star:nth-child(4) { animation-delay: 0.6s; }
+                .neon-star:nth-child(5) { animation-delay: 0.8s; }
+            </style>
+            <div style="text-align:center; margin-bottom:16px; letter-spacing:4px;">
+                <span class="neon-star">★</span>
+                <span class="neon-star">★</span>
+                <span class="neon-star">★</span>
+                <span class="neon-star">★</span>
+                <span class="neon-star">★</span>
+            </div>
             <h3 style="font-family:'Philosopher',sans-serif; font-size:22px; color:#e8e0d5; text-align:center; margin:0 0 10px; line-height:1.3;">Рядом с вами — каждый день</h3>
             <p style="color:#9aafbb; font-size:15px; text-align:center; line-height:1.65; margin:0 0 30px;">Разрешите присылать полезные советы и напоминания?</p>
             <div style="display:flex; flex-direction:column; gap:12px;">
@@ -566,7 +597,7 @@
             }
         });
 
-        setTimeout(showModal, 8000);
+        setTimeout(showModal, 20000);
     })();
     </script>
     <!-- EXIT CONFIRMATION DIALOG -->
