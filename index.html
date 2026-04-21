@@ -479,6 +479,74 @@
 
 
 
+
+    <!-- BEAUTIFUL PUSH PERMISSION DIALOG -->
+    <div id="pushPermModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); align-items:flex-end; justify-content:center;">
+        <div id="pushPermCard" style="background:linear-gradient(160deg,#1a2535,#162031); border:1.5px solid rgba(208,174,139,0.2); border-radius:28px 28px 0 0; padding:32px 24px 40px; width:100%; max-width:480px; box-shadow:0 -24px 64px rgba(0,0,0,0.5); transform:translateY(100%); transition:transform 0.45s cubic-bezier(0.34,1.3,0.64,1);">
+            <div style="width:36px; height:4px; background:rgba(255,255,255,0.12); border-radius:4px; margin:0 auto 28px;"></div>
+            <div style="font-size:46px; text-align:center; margin-bottom:14px;">⭐</div>
+            <h3 style="font-family:'Philosopher',sans-serif; font-size:22px; color:#e8e0d5; text-align:center; margin:0 0 10px; line-height:1.3;">Рядом с вами — каждый день</h3>
+            <p style="color:#9aafbb; font-size:15px; text-align:center; line-height:1.65; margin:0 0 30px;">Разрешите присылать полезные советы и напоминания?</p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button id="pushAllowBtn" style="padding:16px; border:none; background:linear-gradient(135deg,#d0ae8b,#b8936a); border-radius:18px; font-size:16px; font-weight:700; color:#1a1a1a; cursor:pointer; font-family:'Inter',sans-serif; letter-spacing:0.2px;">
+                    Да, буду в курсе! 💛
+                </button>
+                <button id="pushDenyBtn" style="padding:14px; border:1.5px solid rgba(208,174,139,0.18); background:transparent; border-radius:18px; font-size:15px; font-weight:500; color:#9aafbb; cursor:pointer; font-family:'Inter',sans-serif;">
+                    Позже
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var PUSH_KEY = 'push_dialog_shown';
+        if (localStorage.getItem(PUSH_KEY)) return;
+        if (!('Notification' in window)) return;
+        if (Notification.permission !== 'default') return;
+
+        var modal    = document.getElementById('pushPermModal');
+        var card     = document.getElementById('pushPermCard');
+        var allowBtn = document.getElementById('pushAllowBtn');
+        var denyBtn  = document.getElementById('pushDenyBtn');
+
+        function showModal() {
+            modal.style.display = 'flex';
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        }
+
+        function hideModal() {
+            card.style.transform = 'translateY(100%)';
+            setTimeout(function() { modal.style.display = 'none'; }, 420);
+        }
+
+        allowBtn.addEventListener('click', function() {
+            localStorage.setItem(PUSH_KEY, '1');
+            hideModal();
+            setTimeout(function() {
+                if (window.OneSignalDeferred) {
+                    window.OneSignalDeferred.push(function(OneSignal) {
+                        OneSignal.Slidedown.promptPush({ force: true });
+                    });
+                }
+            }, 500);
+        });
+
+        denyBtn.addEventListener('click', function() {
+            hideModal();
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) hideModal();
+        });
+
+        setTimeout(showModal, 8000);
+    })();
+    </script>
     <!-- EXIT CONFIRMATION DIALOG -->
     <div id="exitModal"
         style="display:none; position:fixed; inset:0; z-index:99998; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center;">
