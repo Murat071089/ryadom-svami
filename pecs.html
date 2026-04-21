@@ -1,15 +1,15 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Коммуникативная доска — Рядом с вами</title>
-    <meta name="description" content="Бесплатная коммуникативная доска PECS на русском языке. Карточки с озвучкой для невербальных детей с аутизмом и другими особенностями.">
+    <title>Космос слов — Рядом с вами</title>
+    <meta name="description" content="Интерактивная коммуникативная доска — слова в космосе. Нажми на планету — услышь слово. Для детей с особенностями развития.">
     <link rel="manifest" href="manifest.json">
     <link rel="canonical" href="https://ryadom-svami.ru/pecs.html">
     <link rel="icon" href="img/logo.png" type="image/png">
-    <meta property="og:title" content="Коммуникативная доска — Рядом с вами">
-    <meta property="og:description" content="Бесплатная коммуникативная доска PECS на русском. Карточки с озвучкой для невербальных детей.">
+    <meta property="og:title" content="Космос слов — Рядом с вами">
+    <meta property="og:description" content="Интерактивная коммуникативная доска для детей с особенностями развития.">
     <meta property="og:url" content="https://ryadom-svami.ru/pecs.html">
     <meta property="og:image" content="https://ryadom-svami.ru/img/logo.png">
     <link rel="preload" href="style.css?v=7" as="style">
@@ -17,7 +17,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style.css?v=7">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();
@@ -26,630 +25,466 @@
         (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
         ym(108678187, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
-    <style>
-        /* =========================================
-           PECS — КОММУНИКАТИВНАЯ ДОСКА
-           ========================================= */
-        .pecs-page { padding: 0px 0 40px; min-height: 100vh; }
+    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt=""/></div></noscript>
+    <link rel="apple-touch-icon" href="img/app_icon_192.png">
+<style>
+/* ===== COSMOS BASE ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { background: #020818; font-family: 'Inter', sans-serif; }
 
-        /* Панель фразы */
-        .sentence-bar {
-            position: relative; top: auto; z-index: 90;
-            background: var(--header-bg); backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(208,174,139,0.2);
-            border-radius: 20px; padding: 14px 20px;
-            margin-bottom: 24px; display: flex; align-items: center;
-            gap: 10px; min-height: 72px; flex-wrap: wrap;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        }
-        .sentence-cards { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; align-items: center; min-height: 44px; }
-        .sentence-cards:empty::before {
-            content: 'Нажмите на карточку, чтобы составить фразу';
-            color: var(--text-muted); font-size: 14px; opacity: 0.6;
-        }
-        .sentence-chip {
-            display: flex; align-items: center; gap: 6px;
-            background: linear-gradient(135deg, rgba(208,174,139,0.15), rgba(208,174,139,0.08));
-            border: 1px solid rgba(208,174,139,0.25);
-            border-radius: 12px; padding: 6px 14px; font-size: 15px;
-            font-family: 'Inter', sans-serif; color: var(--text-main);
-            animation: chipIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        .sentence-chip .chip-emoji { font-size: 22px; }
-        @keyframes chipIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+/* STARFIELD CANVAS */
+#starCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-        .sentence-actions { display: flex; gap: 8px; flex-shrink: 0; }
-        .sentence-btn {
-            border: none; border-radius: 14px; padding: 10px 18px;
-            font-size: 15px; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; transition: all 0.2s;
-        }
-        .btn-speak {
-            background: linear-gradient(135deg, #618296, #4d6f82); color: #fff;
-            box-shadow: 0 4px 16px rgba(97,130,150,0.3);
-        }
-        .btn-speak:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(97,130,150,0.4); }
-        .btn-speak:active { transform: scale(0.96); }
-        .btn-clear {
-            background: rgba(239,68,68,0.1); color: #ef4444;
-            border: 1.5px solid rgba(239,68,68,0.2);
-        }
-        .btn-clear:hover { background: rgba(239,68,68,0.2); }
+/* NEBULA GLOWS */
+.nebula { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: nebulaDrift 20s ease-in-out infinite alternate; }
+.nebula-1 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(97,130,150,0.18) 0%, transparent 70%); top: -100px; left: -100px; }
+.nebula-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(208,174,139,0.12) 0%, transparent 70%); bottom: -150px; right: -100px; animation-delay: -10s; }
+.nebula-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(147,112,219,0.1) 0%, transparent 70%); top: 40%; left: 60%; animation-delay: -5s; }
+@keyframes nebulaDrift { 0%{transform:translate(0,0)} 100%{transform:translate(30px,20px)} }
 
-        /* Категории */
-        .category-tabs {
-            display: flex; gap: 8px; margin-bottom: 20px;
-            overflow-x: auto; padding-bottom: 4px;
-            scrollbar-width: none;
-        }
-        .category-tabs::-webkit-scrollbar { display: none; }
-        .cat-tab {
-            border: none; border-radius: 14px; padding: 10px 18px;
-            font-size: 14px; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; white-space: nowrap;
-            background: rgba(97,130,150,0.08); color: var(--text-muted);
-            border: 1.5px solid transparent; transition: all 0.25s;
-        }
-        .cat-tab:hover { background: rgba(97,130,150,0.15); color: var(--text-main); }
-        .cat-tab.active {
-            background: linear-gradient(135deg, rgba(208,174,139,0.2), rgba(208,174,139,0.1));
-            border-color: rgba(208,174,139,0.4); color: var(--text-main);
-        }
+/* HEADER NAV */
+.cosmos-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 12px 16px; display: flex; align-items: center; gap: 10px; background: rgba(2,8,24,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.cosmos-back { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; flex-shrink: 0; transition: background 0.2s; }
+.cosmos-back:hover { background: rgba(255,255,255,0.12); }
+.cosmos-title-wrap { flex: 1; }
+.cosmos-title { font-family: 'Philosopher', sans-serif; font-size: 18px; color: #fff; font-weight: 700; }
+.cosmos-sub { font-size: 12px; color: rgba(255,255,255,0.45); }
+.cosmos-clear-btn { padding: 8px 14px; border-radius: 12px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: rgba(239,68,68,0.9); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; flex-shrink: 0; }
+.cosmos-clear-btn:hover { background: rgba(239,68,68,0.22); }
 
-        /* Сетка карточек */
-        .pecs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 14px;
-        }
-        .pecs-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-            border: 1.5px solid rgba(208,174,139,0.15);
-            border-radius: 20px; padding: 18px 10px 14px;
-            text-align: center; cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-            user-select: none; -webkit-user-select: none;
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-        }
-        .pecs-card:hover { transform: translateY(-4px) scale(1.04); border-color: rgba(208,174,139,0.4);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
-        .pecs-card:active { transform: scale(0.94); }
-        .pecs-card.speaking {
-            border-color: #618296; background: rgba(97,130,150,0.12);
-            box-shadow: 0 0 0 4px rgba(97,130,150,0.2);
-        }
-        .pecs-emoji { font-size: 48px; line-height: 1; }
-        .pecs-label {
-            font-size: 14px; font-weight: 600; color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-        }
+/* SENTENCE BAR */
+.sentence-bar { position: fixed; top: 65px; left: 0; right: 0; z-index: 99; padding: 10px 16px; background: rgba(2,8,24,0.8); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); min-height: 56px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sentence-word { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; animation: wordPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+.sentence-word .rm { font-size: 12px; opacity: 0.6; }
+.sentence-word:hover .rm { opacity: 1; }
+@keyframes wordPop { from{transform:scale(0) translateY(-10px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+.sentence-empty { color: rgba(255,255,255,0.25); font-size: 14px; font-style: italic; }
+.speak-fab { position: fixed; bottom: 120px; right: 16px; z-index: 200; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #618296, #4d6f82); border: none; color: #fff; font-size: 24px; cursor: pointer; box-shadow: 0 8px 32px rgba(97,130,150,0.5); transition: all 0.25s; display: flex; align-items: center; justify-content: center; }
+.speak-fab:active { transform: scale(0.92); }
+.speak-fab.speaking { animation: pulse 0.8s ease-in-out infinite; background: linear-gradient(135deg, #d0ae8b, #b8945a); }
+@keyframes pulse { 0%,100%{box-shadow:0 8px 32px rgba(208,174,139,0.5)} 50%{box-shadow:0 8px 48px rgba(208,174,139,0.8), 0 0 0 12px rgba(208,174,139,0.15)} }
 
-        [data-theme="dark"] .pecs-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-        }
+/* CATEGORY TABS */
+.cat-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; padding: 10px 16px 16px; background: rgba(2,8,24,0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.cat-bar::-webkit-scrollbar { display: none; }
+.cat-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.25s; white-space: nowrap; }
+.cat-btn.active { color: #fff; border-color: transparent; }
 
-        /* Подсказка */
-        .pecs-hint {
-            text-align: center; margin-top: 32px; padding: 20px;
-            color: var(--text-muted); font-size: 14px;
-            border-top: 1px solid rgba(208,174,139,0.1);
-        }
-        .pecs-hint strong { color: var(--text-main); }
+/* COSMOS STAGE */
+.cosmos-stage { position: fixed; top: 130px; left: 0; right: 0; bottom: 70px; z-index: 10; overflow: hidden; }
 
-        /* Выбор голоса */
-        .voice-select {
-            padding: 8px 16px;
-            border-radius: 14px;
-            border: 1.5px solid rgba(97,130,150,0.2);
-            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px; font-weight: 500;
-            cursor: pointer; outline: none;
-            max-width: 100%; transition: all 0.2s;
-            appearance: none; -webkit-appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23618296' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
-            padding-right: 36px;
-        }
-        .voice-select:hover { border-color: rgba(97,130,150,0.4); }
-        .voice-select option { background: var(--bg-main); color: var(--text-main); }
+/* PLANET WORDS */
+.planet { position: absolute; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, opacity 0.4s; user-select: none; will-change: transform; }
+.planet:active { transform: scale(0.88) !important; }
+.planet-inner { border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; width: 100%; height: 100%; position: relative; overflow: hidden; }
+.planet-inner::before { content: ''; position: absolute; top: 10%; left: 15%; width: 35%; height: 25%; background: rgba(255,255,255,0.15); border-radius: 50%; filter: blur(4px); }
+.planet-emoji { font-size: 1.4em; line-height: 1; margin-bottom: 2px; }
+.planet-label { font-size: 0.72em; font-weight: 700; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.5); line-height: 1.1; text-align: center; padding: 0 4px; }
+.planet.tapped { animation: planetTap 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes planetTap { 0%{transform:scale(1)} 40%{transform:scale(1.3)} 100%{transform:scale(1)} }
 
-        /* Мобильные */
-        @media (max-width: 768px) {
-            .pecs-page { padding: 80px 0 30px; }
-            .sentence-bar { top: 60px; padding: 10px 14px; border-radius: 16px; margin-bottom: 16px; }
-            .pecs-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
-            .pecs-card { padding: 14px 8px 10px; border-radius: 16px; }
-            .pecs-emoji { font-size: 38px; }
-            .pecs-label { font-size: 12px; }
-            .cat-tab { padding: 8px 14px; font-size: 13px; }
-            .sentence-btn { padding: 8px 14px; font-size: 13px; }
-        }
-        @media (max-width: 480px) {
-            .pecs-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-    </style>
-<link rel="apple-touch-icon" href="img/app_icon_192.png">
+/* RIPPLE */
+.ripple { position: fixed; border-radius: 50%; pointer-events: none; z-index: 50; animation: rippleOut 0.6s ease-out forwards; }
+@keyframes rippleOut { 0%{transform:scale(0);opacity:0.7} 100%{transform:scale(3);opacity:0} }
+
+/* PARTICLE */
+.particle { position: fixed; border-radius: 50%; pointer-events: none; z-index: 50; animation: particleFly 0.8s ease-out forwards; }
+@keyframes particleFly { 0%{opacity:1;transform:translate(0,0) scale(1)} 100%{opacity:0;transform:var(--tx,0) var(--ty,0) scale(0)} }
+</style>
 </head>
-<body data-theme="dark">
-    <!-- SPLASH SCREEN ENHANCED -->
-    <div id="splash-screen" class="splash-screen">
-        <div class="splash-bg-decor"></div>
-        <div class="splash-content">
-            <h2 class="splash-title">Рядом с вами</h2>
-            <div class="splash-logo-container">
-                <img src="img/app_icon_512.png" alt="Рядом с вами" class="splash-logo">
-                <div class="splash-glow"></div>
-            </div>
-            <div class="splash-loader-wrapper">
-                <span class="splash-loading-text">Загрузка...</span>
-                <div class="splash-loader"></div>
-            </div>
-            <p class="splash-text" id="splash-text"></p>
-        </div>
+<body>
+<canvas id="starCanvas"></canvas>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<!-- HEADER -->
+<header class="cosmos-header">
+    <a href="index.html" class="cosmos-back" aria-label="Назад">←</a>
+    <div class="cosmos-title-wrap">
+        <div class="cosmos-title">🌌 Космос слов</div>
+        <div class="cosmos-sub">Нажми на планету — скажи слово</div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                if (!sessionStorage.getItem('splashShown')) {
-                    const phrases = [
-                        "Вы — лучший родитель для своего ребёнка...",
-                        "Вы не одни. Мы рядом с вами...",
-                        "Делаем мир добрее, шаг за шагом...",
-                        "Вдох глубокий... Вы со всем справитесь...",
-                        "Каждая маленькая победа имеет значение..."
-                    ];
-                    document.getElementById('splash-text').textContent = phrases[Math.floor(Math.random() * phrases.length)];
-                    setTimeout(() => {
-                        splash.classList.add('hidden');
-                        sessionStorage.setItem('splashShown', 'true');
-                    }, 3500);
-                } else {
-                    splash.style.display = 'none';
-                }
-            }
+    <button class="cosmos-clear-btn" id="clearBtn">Очистить</button>
+</header>
+
+<!-- SENTENCE BAR -->
+<div class="sentence-bar" id="sentenceBar">
+    <span class="sentence-empty" id="sentenceEmpty">Нажмите на слово...</span>
+</div>
+
+<!-- COSMOS STAGE -->
+<div class="cosmos-stage" id="cosmosStage"></div>
+
+<!-- SPEAK FAB -->
+<button class="speak-fab" id="speakFab" title="Озвучить фразу">🔊</button>
+
+<!-- CATEGORY BAR -->
+<div class="cat-bar" id="catBar"></div>
+
+<script>
+(function() {
+    // ========== DATA ==========
+    const CATEGORIES = [
+        { id:'all', label:'🌌 Все', color: null },
+        { id:'people', label:'👨‍👩‍👦 Люди',      color: ['#4a90d9','#2c6fad'] },
+        { id:'actions', label:'⚡ Действия',  color: ['#9b59b6','#7d3c98'] },
+        { id:'food',    label:'🍎 Еда',        color: ['#e67e22','#d35400'] },
+        { id:'feelings',label:'😊 Чувства',   color: ['#e74c3c','#c0392b'] },
+        { id:'places',  label:'🏠 Место',      color: ['#27ae60','#1e8449'] },
+        { id:'misc',    label:'✨ Разное',     color: ['#d0ae8b','#b8945a'] },
+    ];
+
+    const WORDS = [
+        // Люди
+        {id:'w1',  cat:'people',  emoji:'👩', label:'Мама'},
+        {id:'w2',  cat:'people',  emoji:'👨', label:'Папа'},
+        {id:'w3',  cat:'people',  emoji:'🧒', label:'Я'},
+        {id:'w4',  cat:'people',  emoji:'👵', label:'Бабушка'},
+        {id:'w5',  cat:'people',  emoji:'👴', label:'Дедушка'},
+        {id:'w6',  cat:'people',  emoji:'👧', label:'Сестра'},
+        {id:'w7',  cat:'people',  emoji:'👦', label:'Брат'},
+        // Действия
+        {id:'w8',  cat:'actions', emoji:'🙏', label:'Хочу'},
+        {id:'w9',  cat:'actions', emoji:'✋', label:'Нет'},
+        {id:'w10', cat:'actions', emoji:'👍', label:'Да'},
+        {id:'w11', cat:'actions', emoji:'🤲', label:'Дай'},
+        {id:'w12', cat:'actions', emoji:'🚶', label:'Иди'},
+        {id:'w13', cat:'actions', emoji:'⛔', label:'Стоп'},
+        {id:'w14', cat:'actions', emoji:'➕', label:'Ещё'},
+        {id:'w15', cat:'actions', emoji:'🙌', label:'Помоги'},
+        {id:'w16', cat:'actions', emoji:'❤️', label:'Люблю'},
+        {id:'w17', cat:'actions', emoji:'🤗', label:'Обниму'},
+        // Еда
+        {id:'w18', cat:'food',    emoji:'🍎', label:'Яблоко'},
+        {id:'w19', cat:'food',    emoji:'🍞', label:'Хлеб'},
+        {id:'w20', cat:'food',    emoji:'🥛', label:'Молоко'},
+        {id:'w21', cat:'food',    emoji:'🧃', label:'Сок'},
+        {id:'w22', cat:'food',    emoji:'🍗', label:'Курица'},
+        {id:'w23', cat:'food',    emoji:'🍚', label:'Каша'},
+        {id:'w24', cat:'food',    emoji:'🍪', label:'Печенье'},
+        {id:'w25', cat:'food',    emoji:'🍌', label:'Банан'},
+        {id:'w26', cat:'food',    emoji:'💧', label:'Вода'},
+        {id:'w27', cat:'food',    emoji:'🍫', label:'Шоколад'},
+        // Чувства
+        {id:'w28', cat:'feelings',emoji:'😊', label:'Хорошо'},
+        {id:'w29', cat:'feelings',emoji:'😢', label:'Грустно'},
+        {id:'w30', cat:'feelings',emoji:'😡', label:'Злюсь'},
+        {id:'w31', cat:'feelings',emoji:'😰', label:'Страшно'},
+        {id:'w32', cat:'feelings',emoji:'😴', label:'Устал'},
+        {id:'w33', cat:'feelings',emoji:'🤒', label:'Больно'},
+        {id:'w34', cat:'feelings',emoji:'😃', label:'Весело'},
+        {id:'w35', cat:'feelings',emoji:'🤗', label:'Радость'},
+        // Место
+        {id:'w36', cat:'places',  emoji:'🏠', label:'Домой'},
+        {id:'w37', cat:'places',  emoji:'🚽', label:'Туалет'},
+        {id:'w38', cat:'places',  emoji:'🛏️', label:'Кровать'},
+        {id:'w39', cat:'places',  emoji:'🌳', label:'Улица'},
+        {id:'w40', cat:'places',  emoji:'🚗', label:'Машина'},
+        {id:'w41', cat:'places',  emoji:'🏥', label:'Врач'},
+        {id:'w42', cat:'places',  emoji:'🛁', label:'Ванна'},
+        // Разное
+        {id:'w43', cat:'misc',    emoji:'📺', label:'Мультики'},
+        {id:'w44', cat:'misc',    emoji:'🧸', label:'Игрушка'},
+        {id:'w45', cat:'misc',    emoji:'🎵', label:'Музыка'},
+        {id:'w46', cat:'misc',    emoji:'📱', label:'Телефон'},
+        {id:'w47', cat:'misc',    emoji:'😴', label:'Спать'},
+        {id:'w48', cat:'misc',    emoji:'🛍️', label:'Магазин'},
+        {id:'w49', cat:'misc',    emoji:'🎮', label:'Играть'},
+        {id:'w50', cat:'misc',    emoji:'🌙', label:'Ночь'},
+    ];
+
+    const PLANET_COLORS = {
+        people:   [['#4a90d9','#1a5fa0'],['#5ba3e8','#2a77c2']],
+        actions:  [['#9b59b6','#6c3483'],['#a569bd','#76448a']],
+        food:     [['#e67e22','#b7590a'],['#f39c12','#d68910']],
+        feelings: [['#e74c3c','#922b21'],['#ec7063','#c0392b']],
+        places:   [['#27ae60','#1a7a40'],['#2ecc71','#229954']],
+        misc:     [['#d0ae8b','#9a7a5a'],['#e8c9a0','#c4956a']],
+    };
+
+    let activeCategory = 'all';
+    let sentence = [];
+    let planets = [];
+    let tiltX = 0, tiltY = 0;
+    let voiceReady = false;
+
+    // ========== STARFIELD ==========
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function initStars() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        stars = [];
+        const count = Math.floor((canvas.width * canvas.height) / 3500);
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.5 + 0.3,
+                a: Math.random(),
+                speed: Math.random() * 0.008 + 0.002,
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+    }
+
+    function drawStars(t) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+            const alpha = 0.3 + 0.5 * Math.sin(t * s.speed + s.phase);
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+            ctx.fill();
         });
-    </script>
+        requestAnimationFrame(drawStars);
+    }
 
-    <header class="header">
-        <div class="container header-inner">
-            <a href="index.html" class="logo">
-                <img src="img/logo.webp" alt="Рядом с вами" height="40">
-            </a>
-            <nav class="nav">
-                <div class="nav-dropdown" id="navDropdown">
-                    <button class="nav-dropdown-btn" id="navDropdownBtn" aria-expanded="false">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
-                        <span class="nav-dropdown-label">Инструменты</span>
-                        <svg class="nav-dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="nav-dropdown-overlay" id="navDropdownOverlay"></div>
-                    <div class="nav-dropdown-content" id="navDropdownContent">
-                        <div class="nav-dropdown-handle"></div>
-                        <a href="test.html" class="nav-dropdown-item">
-                            <span class="nav-dropdown-icon">🧩</span>
-                            <div class="nav-dropdown-text">
-                                <span class="nav-dropdown-title">Тест M-CHAT-R</span>
-                                <span class="nav-dropdown-sub">Скрининг развития ребёнка</span>
-                            </div>
-                        </a>
-                        <a href="diary.html" class="nav-dropdown-item">
-                            <span class="nav-dropdown-icon">📖</span>
-                            <div class="nav-dropdown-text">
-                                <span class="nav-dropdown-title">Дневник побед</span>
-                                <span class="nav-dropdown-sub">Учёт маленьких достижений</span>
-                            </div>
-                        </a>
-                        <a href="pecs.html" class="nav-dropdown-item">
-                            <span class="nav-dropdown-icon">🗣️</span>
-                            <div class="nav-dropdown-text">
-                                <span class="nav-dropdown-title">PECS доска</span>
-                                <span class="nav-dropdown-sub">Карточки для общения</span>
-                            </div>
-                        </a>
-                        <a href="timer.html" class="nav-dropdown-item"><span class="nav-dropdown-icon">⏱️</span><div class="nav-dropdown-text"><span class="nav-dropdown-title">Таймер дня</span><span class="nav-dropdown-sub">Расписание и визуальный таймер</span></div></a>
-                    </div>
-                </div>
-                <button id="installAppBtn" class="btn-primary header-btn" style="display: none; align-items: center; gap: 5px; padding: 6px 12px;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    <span class="install-label">Скачать</span>
-                </button>
-                <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
-            </nav>
-            <script>
-            (function() {
-                const btn = document.getElementById('navDropdownBtn');
-                const content = document.getElementById('navDropdownContent');
-                const overlay = document.getElementById('navDropdownOverlay');
-                if (!btn || !content) return;
+    initStars();
+    requestAnimationFrame(drawStars);
+    window.addEventListener('resize', initStars);
 
-                document.body.appendChild(overlay);
-                document.body.appendChild(content);
+    // ========== CATEGORIES ==========
+    const catBar = document.getElementById('catBar');
+    CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'cat-btn' + (cat.id === 'all' ? ' active' : '');
+        btn.textContent = cat.label;
+        btn.dataset.cat = cat.id;
+        if (cat.color) btn.style.background = `linear-gradient(135deg, ${cat.color[0]}, ${cat.color[1]})`;
+        btn.addEventListener('click', () => {
+            activeCategory = cat.id;
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.classList.remove('active');
+                b.style.borderColor = 'rgba(255,255,255,0.1)';
+            });
+            btn.classList.add('active');
+            if (cat.color) btn.style.borderColor = 'transparent';
+            renderPlanets();
+        });
+        catBar.appendChild(btn);
+    });
 
-                function open() {
-                    if (window.innerWidth > 768) {
-                        const r = btn.getBoundingClientRect();
-                        content.style.top = (r.bottom + 10) + 'px';
-                        content.style.right = (window.innerWidth - r.right) + 'px';
-                        content.style.bottom = 'auto';
-                    } else {
-                        content.style.top = '';
-                        content.style.right = '';
-                        content.style.bottom = '0';
-                        document.body.style.overflow = 'hidden';
-                    }
-                    content.classList.add('show');
-                    overlay.classList.add('show');
-                    btn.classList.add('active');
-                    btn.setAttribute('aria-expanded', 'true');
-                }
-                function close() {
-                    content.classList.remove('show');
-                    overlay.classList.remove('show');
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-expanded', 'false');
-                    document.body.style.overflow = '';
-                }
+    // ========== PLANETS ==========
+    const stage = document.getElementById('cosmosStage');
 
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    content.classList.contains('show') ? close() : open();
-                });
-                overlay.addEventListener('click', close);
-                document.addEventListener('click', (e) => { if (!btn.contains(e.target) && !content.contains(e.target)) close(); });
-                document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-            })();
-            </script>
-        </div>
-    </header>
+    function getWords() {
+        return activeCategory === 'all' ? WORDS : WORDS.filter(w => w.cat === activeCategory);
+    }
 
-    <section class="pecs-page">
-        <div class="container">
-            <h1 style="font-family:'Philosopher',sans-serif; font-size:26px; margin-top:0; margin-bottom:4px; color:var(--text-main);">🗣️ Коммуникативная доска</h1>
-            <p style="color:var(--text-muted); margin-top:0; margin-bottom:12px; font-size:14px;">Нажмите на карточку — она озвучится. Собирайте фразы из нескольких карточек.</p>
+    function randomFloat(min, max) { return min + Math.random() * (max - min); }
 
-            <!-- Панель фразы -->
-            <div class="sentence-bar" id="sentenceBar" style="margin-bottom:16px;">
-                <div class="sentence-cards" id="sentenceCards"></div>
-                <div class="sentence-actions">
-                    <button class="sentence-btn btn-speak" onclick="speakSentence()" title="Озвучить фразу">🔊 Озвучить</button>
-                    <button class="sentence-btn btn-clear" onclick="clearSentence()" title="Очистить">✕</button>
-                </div>
-            </div>
+    function renderPlanets() {
+        stage.innerHTML = '';
+        planets = [];
+        const words = getWords();
+        const stageW = stage.clientWidth;
+        const stageH = stage.clientHeight;
+        const count = words.length;
 
-            <!-- Категории -->
-            <div class="category-tabs" id="categoryTabs" style="margin-bottom:12px;"></div>
+        // Size based on count
+        const baseSize = Math.min(stageW, stageH) / (count > 20 ? 6.5 : count > 10 ? 5.5 : 4.5);
+        const minSize = Math.max(62, baseSize);
+        const maxSize = minSize * 1.4;
 
-            <!-- Управление голосом (Убрано по просьбе) -->
+        // Use grid + jitter for collision-free placement
+        const cols = Math.ceil(Math.sqrt(count * stageW / stageH));
+        const rows = Math.ceil(count / cols);
+        const cellW = stageW / cols;
+        const cellH = stageH / rows;
+        const jitter = 0.28;
 
-            <!-- Карточки -->
-            <div class="pecs-grid" id="pecsGrid"></div>
+        words.forEach((word, i) => {
+            const size = randomFloat(minSize, maxSize);
+            const col = i % cols;
+            const row = Math.floor(i / cols);
+            const cx = cellW * (col + 0.5) + (Math.random() - 0.5) * cellW * jitter;
+            const cy = cellH * (row + 0.5) + (Math.random() - 0.5) * cellH * jitter;
+            const x = Math.max(size/2 + 4, Math.min(stageW - size/2 - 4, cx));
+            const y = Math.max(size/2 + 4, Math.min(stageH - size/2 - 4, cy));
 
-            <div class="pecs-hint">
-                <strong>💡 Подсказка:</strong> Нажмите карточку — она произнесётся вслух и добавится во фразу сверху.<br>
-                Соберите фразу из нескольких карточек и нажмите «🔊 Озвучить».
-            </div>
-        </div>
-    </section>
+            const colors = PLANET_COLORS[word.cat] || PLANET_COLORS.misc;
+            const colorPair = colors[Math.floor(Math.random() * colors.length)];
+            const floatDur = randomFloat(4, 8);
+            const floatDelay = randomFloat(0, 4);
+            const floatAmp = randomFloat(8, 18);
+            const floatAmpX = randomFloat(6, 14);
 
-    <footer class="footer footer-premium">
-        <div class="footer-glow footer-glow-1"></div>
-        <div class="footer-glow footer-glow-2"></div>
-        <div class="container">
-            <div class="footer-hero-block">
-                <p class="footer-eyebrow">Рядом с вами · 2025–2026</p>
-                <h2 class="footer-main-title">Каждый ребёнок — целая&nbsp;вселенная</h2>
-            </div>
-            <div class="footer-cards-column">
-                <div class="footer-compact-card">
-                    <img src="img/icon_autism.webp" class="footer-compact-img" loading="lazy" alt="Разделы">
-                    <div class="footer-compact-text">
-                        <h4>Разделы</h4>
-                        <div class="footer-compact-links">
-                            <a href="index.html">Главная</a> <span class="dot-sep">·</span>
-                            <a href="test.html">Тест</a> <span class="dot-sep">·</span>
-                            <a href="diary.html">Дневник</a> <span class="dot-sep">·</span>
-                            <a href="pecs.html">PECS</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="footer-compact-card">
-                    <img src="img/icon_speech.webp" class="footer-compact-img" loading="lazy" alt="Телефон">
-                    <div class="footer-compact-text">
-                        <h4>Телефон доверия</h4>
-                        <div class="footer-compact-links">
-                            <a href="tel:88002000122" class="phone-gold">8-800-2000-122</a>
-                            <span class="dot-sep">·</span> Бесплатно <span class="dot-sep">·</span> 24/7
-                        </div>
-                    </div>
-                </div>
-                <a href="https://t.me/+PFfgr3RmK_dmMGRi" class="footer-compact-card footer-compact-link">
-                    <img src="img/icon_okr.webp" class="footer-compact-img" loading="lazy" alt="Telegram">
-                    <div class="footer-compact-text">
-                        <h4>Сообщество</h4>
-                        <div class="footer-compact-links">Telegram · поддержка и общение →</div>
-                    </div>
-                </a>
-            </div>
-            <div class="footer-bottom-text">
-                <p>Данный сайт носит информационный характер и не заменяет профессиональную консультацию специалиста.</p>
-            </div>
-        </div>
-    </footer>
+            const el = document.createElement('div');
+            el.className = 'planet';
+            el.style.cssText = `
+                width:${size}px; height:${size}px;
+                left:${x - size/2}px; top:${y - size/2}px;
+                font-size:${size * 0.18}px;
+            `;
 
-    <script>
-        // =========================================
-        // БАЗА КАРТОЧЕК
-        // =========================================
-        const CARDS = {
-            'Потребности': [
-                { emoji: '👆', label: 'Хочу', speech: 'Я хочу' },
-                { emoji: '🚫', label: 'Не хочу', speech: 'Я не хочу' },
-                { emoji: '🤝', label: 'Помоги', speech: 'Помоги мне' },
-                { emoji: '🤗', label: 'Обними', speech: 'Обними меня' },
-                { emoji: '🚽', label: 'Туалет', speech: 'Я хочу в туалет' },
-                { emoji: '➕', label: 'Ещё', speech: 'Ещё' },
-                { emoji: '✅', label: 'Да', speech: 'Да' },
-                { emoji: '❌', label: 'Нет', speech: 'Нет' },
-                { emoji: '⏳', label: 'Подожди', speech: 'Подожди' },
-                { emoji: '👋', label: 'Привет', speech: 'Привет' },
-                { emoji: '💤', label: 'Спать', speech: 'Я хочу спать' },
-                { emoji: '🏠', label: 'Домой', speech: 'Я хочу домой' },
-            ],
-            'Еда': [
-                { emoji: '🍞', label: 'Хлеб', speech: 'Хлеб' },
-                { emoji: '🥣', label: 'Каша', speech: 'Каша' },
-                { emoji: '🍲', label: 'Суп', speech: 'Суп' },
-                { emoji: '🍎', label: 'Яблоко', speech: 'Яблоко' },
-                { emoji: '🍌', label: 'Банан', speech: 'Банан' },
-                { emoji: '🍪', label: 'Печенье', speech: 'Печенье' },
-                { emoji: '🍝', label: 'Макароны', speech: 'Макароны' },
-                { emoji: '🧀', label: 'Сыр', speech: 'Сыр' },
-                { emoji: '🥚', label: 'Яйцо', speech: 'Яйцо' },
-                { emoji: '🍗', label: 'Курица', speech: 'Курица' },
-            ],
-            'Питьё': [
-                { emoji: '💧', label: 'Вода', speech: 'Вода' },
-                { emoji: '🧃', label: 'Сок', speech: 'Сок' },
-                { emoji: '🥛', label: 'Молоко', speech: 'Молоко' },
-                { emoji: '🍵', label: 'Чай', speech: 'Чай' },
-                { emoji: '🫗', label: 'Компот', speech: 'Компот' },
-                { emoji: '🍶', label: 'Кефир', speech: 'Кефир' },
-            ],
-            'Действия': [
-                { emoji: '🍽️', label: 'Есть', speech: 'Есть' },
-                { emoji: '🥤', label: 'Пить', speech: 'Пить' },
-                { emoji: '🚶', label: 'Гулять', speech: 'Гулять' },
-                { emoji: '🎮', label: 'Играть', speech: 'Играть' },
-                { emoji: '🎨', label: 'Рисовать', speech: 'Рисовать' },
-                { emoji: '📖', label: 'Читать', speech: 'Читать' },
-                { emoji: '🛁', label: 'Мыться', speech: 'Мыться' },
-                { emoji: '👕', label: 'Одеться', speech: 'Одеться' },
-                { emoji: '📺', label: 'Смотреть', speech: 'Смотреть' },
-                { emoji: '🎵', label: 'Музыка', speech: 'Музыка' },
-            ],
-            'Эмоции': [
-                { emoji: '😊', label: 'Радость', speech: 'Мне радостно' },
-                { emoji: '😢', label: 'Грусть', speech: 'Мне грустно' },
-                { emoji: '😠', label: 'Злость', speech: 'Я злюсь' },
-                { emoji: '😨', label: 'Страх', speech: 'Мне страшно' },
-                { emoji: '😫', label: 'Устал', speech: 'Я устал' },
-                { emoji: '❤️', label: 'Люблю', speech: 'Я тебя люблю' },
-                { emoji: '🤕', label: 'Больно', speech: 'Мне больно' },
-                { emoji: '😊', label: 'Хорошо', speech: 'Мне хорошо' },
-            ],
-            'Люди': [
-                { emoji: '👩', label: 'Мама', speech: 'Мама' },
-                { emoji: '👨', label: 'Папа', speech: 'Папа' },
-                { emoji: '👵', label: 'Бабушка', speech: 'Бабушка' },
-                { emoji: '👴', label: 'Дедушка', speech: 'Дедушка' },
-                { emoji: '👦', label: 'Брат', speech: 'Брат' },
-                { emoji: '👧', label: 'Сестра', speech: 'Сестра' },
-                { emoji: '👨‍⚕️', label: 'Врач', speech: 'Врач' },
-                { emoji: '👩‍🏫', label: 'Учитель', speech: 'Учитель' },
-                { emoji: '🧑‍🤝‍🧑', label: 'Друг', speech: 'Друг' },
-            ],
-            'Места': [
-                { emoji: '🏠', label: 'Дом', speech: 'Дом' },
-                { emoji: '🏫', label: 'Школа', speech: 'Школа' },
-                { emoji: '🏪', label: 'Магазин', speech: 'Магазин' },
-                { emoji: '🌳', label: 'Парк', speech: 'Парк' },
-                { emoji: '🏥', label: 'Больница', speech: 'Больница' },
-                { emoji: '🛝', label: 'Площадка', speech: 'Площадка' },
-                { emoji: '🚗', label: 'Машина', speech: 'Машина' },
-            ],
-        };
+            const inner = document.createElement('div');
+            inner.className = 'planet-inner';
+            inner.style.cssText = `
+                background: radial-gradient(circle at 35% 35%, ${colorPair[0]}, ${colorPair[1]});
+                box-shadow: 0 0 ${size*0.3}px rgba(${hexToRgb(colorPair[0])}, 0.35),
+                            inset 0 -${size*0.05}px ${size*0.1}px rgba(0,0,0,0.3);
+            `;
+            inner.innerHTML = `<span class="planet-emoji">${word.emoji}</span><span class="planet-label">${word.label}</span>`;
 
-        // =========================================
-        // СОСТОЯНИЕ
-        // =========================================
-        let currentCategory = 'Потребности';
-        let sentence = [];
+            el.appendChild(inner);
+            el.addEventListener('click', e => onPlanetClick(e, el, word, colorPair));
 
-        // =========================================
-        // РЕНДЕР КАТЕГОРИЙ
-        // =========================================
-        function renderTabs() {
-            const tabs = document.getElementById('categoryTabs');
-            tabs.innerHTML = Object.keys(CARDS).map(cat => 
-                `<button class="cat-tab ${cat === currentCategory ? 'active' : ''}" onclick="switchCategory('${cat}')">${cat}</button>`
-            ).join('');
-        }
-
-        function switchCategory(cat) {
-            currentCategory = cat;
-            renderTabs();
-            renderCards();
-        }
-
-        // =========================================
-        // РЕНДЕР КАРТОЧЕК
-        // =========================================
-        function renderCards() {
-            const grid = document.getElementById('pecsGrid');
-            grid.innerHTML = CARDS[currentCategory].map((card, i) => 
-                `<div class="pecs-card" onclick="tapCard(${i})" id="card-${i}">
-                    <span class="pecs-emoji">${card.emoji}</span>
-                    <span class="pecs-label">${card.label}</span>
-                </div>`
-            ).join('');
-        }
-
-        // =========================================
-        // ОЗВУЧКА (Web Speech API)
-        // =========================================
-        let availableVoices = [];
-
-        function populateVoices() {
-            if (!('speechSynthesis' in window)) return;
-            availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('ru'));
-        }
-
-        function speak(text) {
-            if (!('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'ru-RU';
-            utter.rate = 0.9;
-            utter.pitch = 1.0;
-            
-            if (availableVoices.length === 0) {
-                populateVoices();
-            }
-
-            if (availableVoices.length > 0) {
-                const best = availableVoices.find(v => v.name.includes('Google')) ||
-                             availableVoices.find(v => v.name.includes('Dmitry') || v.name.includes('Pavel')) ||
-                             availableVoices[0];
-                if (best) utter.voice = best;
-            }
-            window.speechSynthesis.speak(utter);
-        }
-
-        // Preload voices
-        if ('speechSynthesis' in window) {
-            populateVoices();
-            window.speechSynthesis.onvoiceschanged = populateVoices;
-        }
-
-        // =========================================
-        // НАЖАТИЕ НА КАРТОЧКУ
-        // =========================================
-        function tapCard(index) {
-            const card = CARDS[currentCategory][index];
-            // Speak
-            speak(card.speech);
-            // Visual feedback
-            const el = document.getElementById('card-' + index);
-            el.classList.add('speaking');
-            setTimeout(() => el.classList.remove('speaking'), 600);
-            // Add to sentence
-            sentence.push({ emoji: card.emoji, label: card.label, speech: card.speech });
-            renderSentence();
-        }
-
-        // =========================================
-        // ПАНЕЛЬ ФРАЗЫ
-        // =========================================
-        function renderSentence() {
-            const container = document.getElementById('sentenceCards');
-            container.innerHTML = sentence.map((s, i) => 
-                `<div class="sentence-chip" onclick="removeChip(${i})">
-                    <span class="chip-emoji">${s.emoji}</span> ${s.label}
-                </div>`
-            ).join('');
-        }
-
-        function removeChip(index) {
-            sentence.splice(index, 1);
-            renderSentence();
-        }
-
-        function speakSentence() {
-            if (sentence.length === 0) return;
-            const text = sentence.map(s => s.speech).join('. ');
-            speak(text);
-        }
-
-        function clearSentence() {
-            sentence = [];
-            renderSentence();
-        }
-
-        // =========================================
-        // ТЁМНАЯ ТЕМА
-        // =========================================
-        const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            document.body.removeAttribute('data-theme');
-            themeToggle.textContent = '🌙';
-        }
-        themeToggle.addEventListener('click', () => {
-            if (document.body.getAttribute('data-theme') === 'dark') {
-                document.body.removeAttribute('data-theme');
-                themeToggle.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.body.setAttribute('data-theme', 'dark');
-                themeToggle.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
-            }
+            // Floating animation via JS
+            planets.push({ el, baseX: x - size/2, baseY: y - size/2, floatDur, floatDelay, floatAmp, floatAmpX });
+            stage.appendChild(el);
         });
 
-        // =========================================
-        // INIT
-        // =========================================
-        renderTabs();
-        renderCards();
-    </script>
+        startFloatAnimation();
+    }
 
-        <script>
-        // PWA Install Logic
-        let deferredPrompt;
-        const installBtn = document.getElementById('installAppBtn');
-
-        const isIos = () => {
-            const userAgent = window.navigator.userAgent.toLowerCase();
-            return /iphone|ipad|ipod/.test(userAgent);
-        };
-        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-
-        // Show button for iOS if not already installed
-        if (installBtn && isIos() && !isInStandaloneMode()) {
-            installBtn.style.display = 'inline-flex';
-            installBtn.addEventListener('click', () => {
-                alert('Чтобы установить приложение на iPhone:\n\n1. Нажмите кнопку "Поделиться" (квадрат со стрелочкой) внизу экрана браузера.\n2. Выберите "На экран Домой" (Add to Home Screen).');
+    let floatAnimId = null;
+    function startFloatAnimation() {
+        if (floatAnimId) cancelAnimationFrame(floatAnimId);
+        const start = performance.now();
+        function frame(now) {
+            const t = (now - start) / 1000;
+            planets.forEach(p => {
+                const ox = Math.sin(t / (p.floatDur * 0.7) + p.floatDelay) * p.floatAmpX + tiltX * 12;
+                const oy = Math.sin(t / p.floatDur + p.floatDelay) * p.floatAmp + tiltY * 12;
+                p.el.style.transform = `translate(${ox}px, ${oy}px)`;
             });
-        } else {
-            // Android / Desktop logic
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                if (installBtn) installBtn.style.display = 'inline-flex';
-            });
+            floatAnimId = requestAnimationFrame(frame);
+        }
+        floatAnimId = requestAnimationFrame(frame);
+    }
 
-            if (installBtn) {
-                installBtn.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') installBtn.style.display = 'none';
-                        deferredPrompt = null;
-                    }
-                });
-            }
+    function hexToRgb(hex) {
+        const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+        return `${r},${g},${b}`;
+    }
+
+    // ========== TILT ==========
+    window.addEventListener('deviceorientation', e => {
+        tiltX = Math.max(-1, Math.min(1, (e.gamma || 0) / 30));
+        tiltY = Math.max(-1, Math.min(1, (e.beta  || 0) / 40));
+    });
+
+    // ========== CLICK PLANET ==========
+    function onPlanetClick(e, el, word, colorPair) {
+        el.classList.remove('tapped');
+        void el.offsetWidth;
+        el.classList.add('tapped');
+        spawnRipple(e.clientX, e.clientY, colorPair[0]);
+        spawnParticles(e.clientX, e.clientY, colorPair[0]);
+        addToSentence(word, colorPair);
+        speak(word.label);
+    }
+
+    function spawnRipple(x, y, color) {
+        const r = document.createElement('div');
+        r.className = 'ripple';
+        r.style.cssText = `left:${x-30}px;top:${y-30}px;width:60px;height:60px;background:${color};`;
+        document.body.appendChild(r);
+        r.addEventListener('animationend', () => r.remove());
+    }
+
+    function spawnParticles(x, y, color) {
+        for (let i = 0; i < 8; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const angle = (i / 8) * Math.PI * 2;
+            const dist = 40 + Math.random() * 40;
+            const tx = Math.cos(angle) * dist;
+            const ty = Math.sin(angle) * dist;
+            p.style.cssText = `left:${x-4}px;top:${y-4}px;width:8px;height:8px;background:${color};--tx:translateX(${tx}px);--ty:translateY(${ty}px);animation-delay:${i*0.03}s`;
+            document.body.appendChild(p);
+            p.addEventListener('animationend', () => p.remove());
         }
-    </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+    // ========== SENTENCE ==========
+    const sentenceBar = document.getElementById('sentenceBar');
+    const sentenceEmpty = document.getElementById('sentenceEmpty');
+
+    function addToSentence(word, colorPair) {
+        sentence.push({ word, colorPair });
+        renderSentence();
+    }
+
+    function renderSentence() {
+        sentenceBar.innerHTML = '';
+        if (sentence.length === 0) {
+            sentenceBar.appendChild(sentenceEmpty);
+            return;
         }
-    </script>
+        sentence.forEach((item, i) => {
+            const span = document.createElement('span');
+            span.className = 'sentence-word';
+            span.style.background = `linear-gradient(135deg, ${item.colorPair[0]}, ${item.colorPair[1]})`;
+            span.innerHTML = `${item.word.emoji} ${item.word.label} <span class="rm" data-idx="${i}">✕</span>`;
+            span.querySelector('.rm').addEventListener('click', e => {
+                e.stopPropagation();
+                sentence.splice(parseInt(e.target.dataset.idx), 1);
+                renderSentence();
+            });
+            span.addEventListener('click', () => speak(item.word.label));
+            sentenceBar.appendChild(span);
+        });
+    }
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        sentence = [];
+        renderSentence();
+    });
+
+    // ========== SPEAK ==========
+    let synth = window.speechSynthesis;
+    let ruVoice = null;
+
+    function initVoice() {
+        const voices = synth.getVoices();
+        ruVoice = voices.find(v => v.lang.startsWith('ru') && v.localService) ||
+                  voices.find(v => v.lang.startsWith('ru')) ||
+                  voices.find(v => v.lang.startsWith('en'));
+    }
+    synth.addEventListener('voiceschanged', initVoice);
+    initVoice();
+
+    function speak(text) {
+        if (!synth) return;
+        synth.cancel();
+        const utt = new SpeechSynthesisUtterance(text);
+        utt.lang = 'ru-RU';
+        utt.rate = 0.85;
+        utt.pitch = 1.1;
+        if (ruVoice) utt.voice = ruVoice;
+        synth.speak(utt);
+    }
+
+    const speakFab = document.getElementById('speakFab');
+    speakFab.addEventListener('click', () => {
+        if (sentence.length === 0) return;
+        const fullText = sentence.map(s => s.word.label).join(' ');
+        speak(fullText);
+        speakFab.classList.add('speaking');
+        setTimeout(() => speakFab.classList.remove('speaking'), 2000);
+    });
+
+    // ========== INIT ==========
+    renderPlanets();
+    window.addEventListener('resize', renderPlanets);
+})();
+</script>
+
+<script>
+    // Theme toggle + PWA
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+    let deferredPrompt;
+    const isIos = () => /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isStandalone = () => ('standalone' in navigator) && navigator.standalone;
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+</script>
 </body>
 </html>
