@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -13,7 +13,8 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:title" content="Рядом с вами — поддержка и сообщество">
-    <meta property="og:description" content="Сообщество семей, которые растят уникальных детей. Поддержка родителей детей с аутизмом, ДЦП, синдромом Дауна и другими особенностями.">
+    <meta property="og:description"
+        content="Сообщество семей, которые растят уникальных детей. Поддержка родителей детей с аутизмом, ДЦП, синдромом Дауна и другими особенностями.">
     <meta property="og:url" content="https://ryadom-svami.ru/">
     <meta property="og:image" content="https://ryadom-svami.ru/img/logo.png">
     <link rel="preload" href="style.css?v=7" as="style">
@@ -25,16 +26,20 @@
         rel="stylesheet">
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
-        ym(108678187, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(108678187, "init", { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
     <!-- /Yandex.Metrika counter -->
-<link rel="apple-touch-icon" href="img/app_icon_192.png">
+    <link rel="apple-touch-icon" href="img/app_icon_192.png">
 </head>
 
 <body data-theme="dark">
@@ -86,9 +91,18 @@
             <nav class="nav">
                 <div class="nav-dropdown" id="navDropdown">
                     <button class="nav-dropdown-btn" id="navDropdownBtn" aria-expanded="false">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                        </svg>
                         <span class="nav-dropdown-label">Инструменты</span>
-                        <svg class="nav-dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="nav-dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <div class="nav-dropdown-overlay" id="navDropdownOverlay"></div>
                     <div class="nav-dropdown-content" id="navDropdownContent">
@@ -107,57 +121,70 @@
                                 <span class="nav-dropdown-sub">Учёт маленьких достижений</span>
                             </div>
                         </a>
+                        <a href="pecs.html" class="nav-dropdown-item">
+                            <span class="nav-dropdown-icon">🗣️</span>
+                            <div class="nav-dropdown-text">
+                                <span class="nav-dropdown-title">PECS доска</span>
+                                <span class="nav-dropdown-sub">Карточки для общения</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
-                <button id="installAppBtn" class="btn-primary header-btn" style="display: none; align-items: center; gap: 5px; padding: 6px 12px;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <button id="installAppBtn" class="btn-primary header-btn"
+                    style="display: none; align-items: center; gap: 5px; padding: 6px 12px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
                     <span class="install-label">Скачать</span>
                 </button>
-                <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему"
+                    aria-label="Переключить тему">☀️</button>
             </nav>
             <script>
-            (function() {
-                const btn = document.getElementById('navDropdownBtn');
-                const content = document.getElementById('navDropdownContent');
-                const overlay = document.getElementById('navDropdownOverlay');
-                if (!btn || !content) return;
+                (function () {
+                    const btn = document.getElementById('navDropdownBtn');
+                    const content = document.getElementById('navDropdownContent');
+                    const overlay = document.getElementById('navDropdownOverlay');
+                    if (!btn || !content) return;
 
-                document.body.appendChild(overlay);
-                document.body.appendChild(content);
+                    document.body.appendChild(overlay);
+                    document.body.appendChild(content);
 
-                function open() {
-                    if (window.innerWidth > 768) {
-                        const r = btn.getBoundingClientRect();
-                        content.style.top = (r.bottom + 10) + 'px';
-                        content.style.right = (window.innerWidth - r.right) + 'px';
-                        content.style.bottom = 'auto';
-                    } else {
-                        content.style.top = '';
-                        content.style.right = '';
-                        content.style.bottom = '0';
-                        document.body.style.overflow = 'hidden';
+                    function open() {
+                        if (window.innerWidth > 768) {
+                            const r = btn.getBoundingClientRect();
+                            content.style.top = (r.bottom + 10) + 'px';
+                            content.style.right = (window.innerWidth - r.right) + 'px';
+                            content.style.bottom = 'auto';
+                        } else {
+                            content.style.top = '';
+                            content.style.right = '';
+                            content.style.bottom = '0';
+                            document.body.style.overflow = 'hidden';
+                        }
+                        content.classList.add('show');
+                        overlay.classList.add('show');
+                        btn.classList.add('active');
+                        btn.setAttribute('aria-expanded', 'true');
                     }
-                    content.classList.add('show');
-                    overlay.classList.add('show');
-                    btn.classList.add('active');
-                    btn.setAttribute('aria-expanded', 'true');
-                }
-                function close() {
-                    content.classList.remove('show');
-                    overlay.classList.remove('show');
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-expanded', 'false');
-                    document.body.style.overflow = '';
-                }
+                    function close() {
+                        content.classList.remove('show');
+                        overlay.classList.remove('show');
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-expanded', 'false');
+                        document.body.style.overflow = '';
+                    }
 
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    content.classList.contains('show') ? close() : open();
-                });
-                overlay.addEventListener('click', close);
-                document.addEventListener('click', (e) => { if (!btn.contains(e.target) && !content.contains(e.target)) close(); });
-                document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-            })();
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        content.classList.contains('show') ? close() : open();
+                    });
+                    overlay.addEventListener('click', close);
+                    document.addEventListener('click', (e) => { if (!btn.contains(e.target) && !content.contains(e.target)) close(); });
+                    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+                })();
             </script>
         </div>
     </header>
@@ -297,20 +324,20 @@
 
     <section class="test-banner">
         <div class="container">
-            <a href="timer.html" class="test-banner-card">
+            <a href="pecs.html" class="test-banner-card">
                 <div class="test-banner-top">
                     <span>Бесплатно</span>
                     <span>•</span>
-                    <span>Офлайн</span>
+                    <span>Озвучка</span>
                     <span>•</span>
-                    <span>Каждый день</span>
+                    <span>70+ карточек</span>
                 </div>
                 <div class="test-banner-hero">
-                    <span class="test-banner-icon" style="font-size:48px; display:flex; align-items:center; justify-content:center; width:64px; height:64px;">⏱️</span>
-                    <span class="test-banner-title">Таймер дня</span>
+                    <img src="img/icon_speech.webp" alt="PECS доска" class="test-banner-icon" loading="lazy">
+                    <span class="test-banner-title">Коммуникативная доска</span>
                 </div>
                 <div class="test-banner-bottom">
-                    Визуальный таймер и расписание задач для ребёнка
+                    Карточки с озвучкой для общения. Нажми — услышь
                 </div>
             </a>
         </div>
@@ -334,7 +361,8 @@
                             <a href="index.html">Главная</a> <span class="dot-sep">·</span>
                             <a href="#diagnoses">Наши дети</a> <span class="dot-sep">·</span>
                             <a href="test.html">Тест</a> <span class="dot-sep">·</span>
-                            <a href="diary.html">Дневник</a>
+                            <a href="diary.html">Дневник</a> <span class="dot-sep">·</span>
+                            <a href="pecs.html">PECS</a>
                         </div>
                     </div>
                 </div>
@@ -397,7 +425,7 @@
             }
         });
     </script>
-        <script>
+    <script>
         // PWA Install Logic
         let deferredPrompt;
         const installBtn = document.getElementById('installAppBtn');
@@ -436,85 +464,116 @@
     </script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(() => {});
+            navigator.serviceWorker.register('/sw.js').catch(() => { });
         }
     </script>
 
     <!-- EXIT CONFIRMATION DIALOG -->
-    <div id="exitModal" style="display:none; position:fixed; inset:0; z-index:99998; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center;">
-        <div style="background:var(--card-bg,#1a2535); border:1px solid rgba(208,174,139,0.2); border-radius:28px; padding:32px 28px 24px; max-width:320px; width:90%; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,0.45);">
+    <div id="exitModal"
+        style="display:none; position:fixed; inset:0; z-index:99998; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center;">
+        <div
+            style="background:var(--card-bg,#1a2535); border:1px solid rgba(208,174,139,0.2); border-radius:28px; padding:32px 28px 24px; max-width:320px; width:90%; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,0.45);">
             <div style="font-size:48px; margin-bottom:16px;">👋</div>
-            <h3 style="font-family:'Philosopher',sans-serif; font-size:22px; margin:0 0 8px; color:var(--text-main,#e8e0d5);">Уходите?</h3>
-            <p style="color:var(--text-muted,#9aafbb); font-size:15px; margin:0 0 28px; line-height:1.5;">Вы точно хотите покинуть эту страницу?</p>
+            <h3
+                style="font-family:'Philosopher',sans-serif; font-size:22px; margin:0 0 8px; color:var(--text-main,#e8e0d5);">
+                Уходите?</h3>
+            <p style="color:var(--text-muted,#9aafbb); font-size:15px; margin:0 0 28px; line-height:1.5;">Вы точно
+                хотите покинуть эту страницу?</p>
             <div style="display:flex; gap:12px;">
-                <button id="exitModalNo" style="flex:1; padding:14px; border:1.5px solid rgba(208,174,139,0.3); background:transparent; border-radius:16px; font-size:16px; font-weight:600; color:var(--text-main,#e8e0d5); cursor:pointer; font-family:'Inter',sans-serif;">Нет, остаться</button>
-                <button id="exitModalYes" style="flex:1; padding:14px; border:none; background:linear-gradient(135deg,#618296,#4d6f82); border-radius:16px; font-size:16px; font-weight:600; color:#fff; cursor:pointer; font-family:'Inter',sans-serif;">Да, выйти</button>
+                <button id="exitModalNo"
+                    style="flex:1; padding:14px; border:1.5px solid rgba(208,174,139,0.3); background:transparent; border-radius:16px; font-size:16px; font-weight:600; color:var(--text-main,#e8e0d5); cursor:pointer; font-family:'Inter',sans-serif;">Нет,
+                    остаться</button>
+                <button id="exitModalYes"
+                    style="flex:1; padding:14px; border:none; background:linear-gradient(135deg,#618296,#4d6f82); border-radius:16px; font-size:16px; font-weight:600; color:#fff; cursor:pointer; font-family:'Inter',sans-serif;">Да,
+                    выйти</button>
             </div>
         </div>
     </div>
     <style>
-        @keyframes exitModalIn { from { transform:scale(0.85) translateY(20px); opacity:0; } to { transform:scale(1) translateY(0); opacity:1; } }
-        #exitModal.visible { display:flex !important; animation:exitModalIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-        #exitModalNo:hover, #exitModalNo:active { background:rgba(208,174,139,0.1); }
-        #exitModalYes:hover, #exitModalYes:active { filter:brightness(1.15); }
+        @keyframes exitModalIn {
+            from {
+                transform: scale(0.85) translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #exitModal.visible {
+            display: flex !important;
+            animation: exitModalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #exitModalNo:hover,
+        #exitModalNo:active {
+            background: rgba(208, 174, 139, 0.1);
+        }
+
+        #exitModalYes:hover,
+        #exitModalYes:active {
+            filter: brightness(1.15);
+        }
     </style>
     <script>
-    (function() {
-        var modal = document.getElementById('exitModal');
-        var btnYes = document.getElementById('exitModalYes');
-        var btnNo = document.getElementById('exitModalNo');
-        if (!modal) return;
+        (function () {
+            var modal = document.getElementById('exitModal');
+            var btnYes = document.getElementById('exitModalYes');
+            var btnNo = document.getElementById('exitModalNo');
+            if (!modal) return;
 
-        var exiting = false;
+            var exiting = false;
 
-        // Push one guard state
-        history.pushState(null, '', location.href);
-
-        function showModal() {
-            modal.classList.add('visible');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function hideModal() {
-            modal.classList.remove('visible');
-            document.body.style.overflow = '';
-            // Re-push guard for next time
+            // Push one guard state
             history.pushState(null, '', location.href);
-        }
 
-        window.addEventListener('popstate', function() {
-            if (exiting) {
-                // User already confirmed — keep going back through any remaining states
-                history.back();
-                return;
+            function showModal() {
+                modal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
             }
-            showModal();
-        });
 
-        btnNo.addEventListener('click', hideModal);
-        modal.addEventListener('click', function(e) { if (e.target === modal) hideModal(); });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.classList.contains('visible')) hideModal();
-        });
+            function hideModal() {
+                modal.classList.remove('visible');
+                document.body.style.overflow = '';
+                // Re-push guard for next time
+                history.pushState(null, '', location.href);
+            }
 
-        btnYes.addEventListener('click', function() {
-            exiting = true;
-            modal.classList.remove('visible');
-            document.body.style.overflow = '';
+            window.addEventListener('popstate', function () {
+                if (exiting) {
+                    // User already confirmed — keep going back through any remaining states
+                    history.back();
+                    return;
+                }
+                showModal();
+            });
 
-            // Try to close (works in PWA / tabs opened by script)
-            try { window.close(); } catch(e) {}
+            btnNo.addEventListener('click', hideModal);
+            modal.addEventListener('click', function (e) { if (e.target === modal) hideModal(); });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && modal.classList.contains('visible')) hideModal();
+            });
 
-            // Go back — if more same-page states exist, popstate will chain history.back()
-            history.back();
+            btnYes.addEventListener('click', function () {
+                exiting = true;
+                modal.classList.remove('visible');
+                document.body.style.overflow = '';
 
-            // Safety net: if still on this page after 600ms, force exit
-            setTimeout(function() {
-                try { window.close(); } catch(e) {}
-                location.replace('about:blank');
-            }, 600);
-        });
-    })();
+                // Try to close (works in PWA / tabs opened by script)
+                try { window.close(); } catch (e) { }
+
+                // Go back — if more same-page states exist, popstate will chain history.back()
+                history.back();
+
+                // Safety net: if still on this page after 600ms, force exit
+                setTimeout(function () {
+                    try { window.close(); } catch (e) { }
+                    location.replace('about:blank');
+                }, 600);
+            });
+        })();
     </script>
 </body>
 
