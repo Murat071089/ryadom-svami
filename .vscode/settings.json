@@ -1,3 +1,9 @@
-{
-    "livePreview.defaultPreviewPath": "/index.html"
+﻿{
+    "files.autoSave": "off",
+    "files.hotExit": "off",
+    "workbench.editor.autoLockGroups": {},
+    "files.useExperimentalFileWatcher": true,
+    "files.watcherExclude": {},
+    "workbench.editor.closeOnFileDelete": false,
+    "files.saveConflictResolution": "overwriteFileOnDisk"
 }
