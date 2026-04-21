@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -530,12 +530,14 @@
             localStorage.setItem(PUSH_KEY, '1');
             hideModal();
             setTimeout(function() {
-                if (window.OneSignalDeferred) {
-                    window.OneSignalDeferred.push(function(OneSignal) {
-                        OneSignal.Slidedown.promptPush({ force: true });
-                    });
-                }
-            }, 500);
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted' && window.OneSignalDeferred) {
+                        window.OneSignalDeferred.push(function(OneSignal) {
+                            OneSignal.User.PushSubscription.optIn();
+                        });
+                    }
+                });
+            }, 400);
         });
 
         denyBtn.addEventListener('click', function() {
