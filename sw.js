@@ -1,5 +1,5 @@
 ﻿// Service Worker — Рядом с вами
-const CACHE_NAME = 'ryadom-svami-v2';
+const CACHE_NAME = 'ryadom-svami-v3';
 
 // Ресурсы для предварительного кэширования (App Shell)
 const PRECACHE_URLS = [
@@ -9,7 +9,9 @@ const PRECACHE_URLS = [
   '/diary.html',
   '/test.html',
   '/img/logo.png',
-  '/manifest.json'
+  '/manifest.json',
+  '/timer.html',
+  '/pecs.html'
 ];
 
 // Установка — кэшируем App Shell
