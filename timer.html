@@ -1,0 +1,690 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Таймер дня — Рядом с вами</title>
+    <meta name="description" content="Визуальный таймер и расписание дня для детей с особенностями развития. Бесплатный инструмент для родителей.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="canonical" href="https://ryadom-svami.ru/timer.html">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <meta property="og:title" content="Таймер дня — Рядом с вами">
+    <meta property="og:description" content="Визуальный таймер и расписание дня для детей с особенностями развития.">
+    <meta property="og:url" content="https://ryadom-svami.ru/timer.html">
+    <meta property="og:image" content="https://ryadom-svami.ru/img/logo.png">
+    <link rel="preload" href="style.css?v=7" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css?v=7">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+        ym(108678187, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108678187" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <style>
+        .timer-page { padding: 10px 0 40px; min-height: 100vh; }
+        .timer-header { text-align: center; margin-bottom: 28px; }
+        .timer-header h1 { font-family:'Philosopher',sans-serif; font-size:28px; color:var(--heading-color); margin-bottom:6px; }
+        .timer-header p { color:var(--text-muted); font-size:14px; }
+
+        /* CIRCULAR TIMER */
+        .timer-circle-wrap { display:flex; justify-content:center; margin-bottom:24px; }
+        .timer-circle { position:relative; width:240px; height:240px; }
+        .timer-circle svg { width:100%; height:100%; transform:rotate(-90deg); }
+        .timer-track { fill:none; stroke:rgba(208,174,139,0.12); stroke-width:10; }
+        .timer-progress { fill:none; stroke:#618296; stroke-width:10; stroke-linecap:round;
+            transition: stroke-dashoffset 1s linear, stroke 0.5s ease; }
+        .timer-progress.warning { stroke:#d4a054; }
+        .timer-progress.danger { stroke:#c0392b; }
+        .timer-center { position:absolute; inset:0; display:flex; flex-direction:column;
+            align-items:center; justify-content:center; }
+        .timer-digits { font-family:'Inter',sans-serif; font-size:52px; font-weight:700;
+            color:var(--text-main); letter-spacing:-2px; line-height:1; }
+        .timer-label { font-size:13px; color:var(--text-muted); margin-top:6px; }
+
+        /* PRESET BUTTONS */
+        .timer-presets { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px; }
+        .preset-btn { border:1.5px solid rgba(208,174,139,0.25); background:rgba(208,174,139,0.06);
+            border-radius:14px; padding:10px 18px; font-size:15px; font-weight:600;
+            color:var(--text-main); cursor:pointer; font-family:'Inter',sans-serif;
+            transition:all 0.2s; -webkit-tap-highlight-color:transparent; }
+        .preset-btn:hover, .preset-btn:active { background:rgba(208,174,139,0.15); border-color:rgba(208,174,139,0.5); }
+        .preset-btn.active { background:linear-gradient(135deg,#618296,#4d6f82); color:#fff; border-color:transparent; }
+
+        /* CONTROLS */
+        .timer-controls { display:flex; gap:10px; justify-content:center; margin-bottom:28px; }
+        .timer-ctrl-btn { border:none; border-radius:16px; padding:14px 28px; font-size:16px;
+            font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.25s; }
+        .btn-start { background:linear-gradient(135deg,#618296,#4d6f82); color:#fff; }
+        .btn-start:hover { filter:brightness(1.1); }
+        .btn-pause { background:rgba(208,174,139,0.15); color:var(--text-main); border:1.5px solid rgba(208,174,139,0.3); }
+        .btn-reset { background:rgba(239,68,68,0.1); color:#ef4444; border:1.5px solid rgba(239,68,68,0.2); }
+
+        /* SOUND TOGGLE */
+        .sound-toggle { display:flex; align-items:center; justify-content:center; gap:10px;
+            margin-bottom:32px; font-size:14px; color:var(--text-muted); }
+        .sound-toggle button { background:rgba(208,174,139,0.1); border:1.5px solid rgba(208,174,139,0.2);
+            border-radius:12px; padding:8px 16px; font-size:14px; cursor:pointer;
+            color:var(--text-main); font-family:'Inter',sans-serif; transition:all 0.2s; }
+        .sound-toggle button.active { background:linear-gradient(135deg,rgba(97,130,150,0.2),rgba(97,130,150,0.1));
+            border-color:rgba(97,130,150,0.4); }
+
+        /* DIVIDER */
+        .section-divider { height:1px; background:linear-gradient(90deg,transparent,rgba(208,174,139,0.3),transparent);
+            margin:8px 0 28px; }
+
+        /* SCHEDULE */
+        .schedule-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+        .schedule-header h2 { font-family:'Philosopher',sans-serif; font-size:22px; color:var(--heading-color); }
+        .add-task-btn { background:linear-gradient(135deg,#618296,#4d6f82); color:#fff; border:none;
+            border-radius:14px; padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer;
+            font-family:'Inter',sans-serif; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
+
+        /* PROGRESS BAR */
+        .progress-wrap { margin-bottom:20px; }
+        .progress-text { font-size:14px; color:var(--text-muted); margin-bottom:8px; display:flex; justify-content:space-between; }
+        .progress-bar { height:8px; background:rgba(208,174,139,0.12); border-radius:8px; overflow:hidden; }
+        .progress-fill { height:100%; background:linear-gradient(90deg,#618296,#d0ae8b); border-radius:8px;
+            transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+        /* TASK CARDS */
+        .task-list { display:flex; flex-direction:column; gap:10px; min-height:60px; }
+        .task-card { display:flex; align-items:center; gap:14px; padding:14px 16px;
+            background:var(--card-bg); border:1.5px solid var(--card-border);
+            border-radius:18px; transition:all 0.25s; cursor:grab;
+            -webkit-tap-highlight-color:transparent; }
+        .task-card:active { cursor:grabbing; }
+        .task-card.completed { opacity:0.5; }
+        .task-card.completed .task-name { text-decoration:line-through; }
+        .task-card.dragging { opacity:0.4; transform:scale(0.96); }
+        .task-emoji { font-size:28px; flex-shrink:0; width:44px; height:44px; display:flex;
+            align-items:center; justify-content:center; background:rgba(208,174,139,0.1);
+            border-radius:14px; }
+        .task-info { flex:1; min-width:0; }
+        .task-name { font-size:16px; font-weight:600; color:var(--text-main); }
+        .task-actions { display:flex; gap:6px; flex-shrink:0; }
+        .task-action-btn { width:38px; height:38px; border:none; border-radius:12px; font-size:18px;
+            cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+            background:rgba(208,174,139,0.08); }
+        .task-action-btn:hover { background:rgba(208,174,139,0.18); }
+        .task-action-btn.done-btn { background:rgba(97,130,150,0.12); }
+        .task-action-btn.del-btn { background:rgba(239,68,68,0.08); }
+        .task-action-btn.del-btn:hover { background:rgba(239,68,68,0.2); }
+
+        /* EMPTY STATE */
+        .empty-state { text-align:center; padding:40px 20px; color:var(--text-muted); }
+        .empty-state .empty-icon { font-size:48px; margin-bottom:12px; }
+        .empty-state p { font-size:15px; }
+
+        /* TEMPLATE BUTTONS */
+        .template-btns { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; justify-content:center; }
+        .tpl-btn { border:1.5px solid rgba(208,174,139,0.2); background:rgba(208,174,139,0.06);
+            border-radius:12px; padding:8px 14px; font-size:13px; font-weight:500;
+            color:var(--text-muted); cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s; }
+        .tpl-btn:hover { background:rgba(208,174,139,0.15); color:var(--text-main); }
+
+        /* ADD TASK MODAL */
+        .modal-overlay { display:none; position:fixed; inset:0; z-index:9999;
+            background:rgba(0,0,0,0.5); backdrop-filter:blur(6px);
+            align-items:center; justify-content:center; }
+        .modal-overlay.visible { display:flex; }
+        .modal-box { background:var(--card-bg,#1a2535); backdrop-filter:blur(20px);
+            border:1px solid rgba(208,174,139,0.2); border-radius:24px;
+            padding:28px 24px; max-width:340px; width:92%; }
+        .modal-box h3 { font-family:'Philosopher',sans-serif; font-size:20px;
+            color:var(--text-main); margin-bottom:18px; text-align:center; }
+        .modal-input { width:100%; padding:14px 16px; border:1.5px solid rgba(208,174,139,0.25);
+            background:rgba(255,255,255,0.04); border-radius:14px; font-size:16px;
+            color:var(--text-main); font-family:'Inter',sans-serif; outline:none;
+            margin-bottom:14px; transition:border 0.2s; }
+        .modal-input:focus { border-color:rgba(97,130,150,0.5); }
+        .emoji-picker { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; justify-content:center; }
+        .emoji-pick { width:44px; height:44px; border:1.5px solid transparent; border-radius:12px;
+            font-size:24px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+            background:rgba(208,174,139,0.06); transition:all 0.2s; }
+        .emoji-pick:hover { background:rgba(208,174,139,0.15); }
+        .emoji-pick.selected { border-color:#618296; background:rgba(97,130,150,0.15); }
+        .modal-actions { display:flex; gap:10px; }
+        .modal-actions button { flex:1; padding:14px; border-radius:14px; font-size:15px;
+            font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s; }
+        .modal-cancel { background:transparent; border:1.5px solid rgba(208,174,139,0.3); color:var(--text-main); }
+        .modal-save { background:linear-gradient(135deg,#618296,#4d6f82); border:none; color:#fff; }
+
+        /* TIMER DONE OVERLAY */
+        .timer-done-overlay { display:none; position:fixed; inset:0; z-index:9998;
+            background:rgba(0,0,0,0.6); backdrop-filter:blur(8px);
+            align-items:center; justify-content:center; }
+        .timer-done-overlay.visible { display:flex; }
+        .timer-done-box { text-align:center; padding:40px 30px; background:var(--card-bg,#1a2535);
+            border:1px solid rgba(208,174,139,0.2); border-radius:28px; max-width:300px; width:90%; }
+        .timer-done-box .done-icon { font-size:64px; margin-bottom:16px; }
+        .timer-done-box h3 { font-family:'Philosopher',sans-serif; font-size:24px;
+            color:var(--text-main); margin-bottom:8px; }
+        .timer-done-box p { color:var(--text-muted); font-size:15px; margin-bottom:24px; }
+        .timer-done-box button { background:linear-gradient(135deg,#618296,#4d6f82); color:#fff;
+            border:none; border-radius:16px; padding:14px 32px; font-size:16px; font-weight:600;
+            cursor:pointer; font-family:'Inter',sans-serif; }
+
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+        @media(max-width:480px) {
+            .timer-digits { font-size:44px; }
+            .timer-circle { width:200px; height:200px; }
+            .preset-btn { padding:8px 14px; font-size:14px; }
+        }
+    </style>
+    <link rel="apple-touch-icon" href="img/app_icon_192.png">
+</head>
+<body data-theme="dark">
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-bg-decor"></div>
+        <div class="splash-content">
+            <h2 class="splash-title">Рядом с вами</h2>
+            <div class="splash-logo-container">
+                <img src="img/app_icon_512.png" alt="Рядом с вами" class="splash-logo">
+                <div class="splash-glow"></div>
+            </div>
+            <div class="splash-loader-wrapper">
+                <span class="splash-loading-text">Загрузка...</span>
+                <div class="splash-loader"></div>
+            </div>
+            <p class="splash-text" id="splash-text"></p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                if (!sessionStorage.getItem('splashShown')) {
+                    const phrases = ["Вы — лучший родитель для своего ребёнка...","Вы не одни. Мы рядом с вами...","Каждая маленькая победа имеет значение..."];
+                    document.getElementById('splash-text').textContent = phrases[Math.floor(Math.random() * phrases.length)];
+                    setTimeout(() => { splash.classList.add('hidden'); sessionStorage.setItem('splashShown', 'true'); }, 3500);
+                } else { splash.style.display = 'none'; }
+            }
+        });
+    </script>
+
+    <header class="header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo"><img src="img/logo.webp" alt="Рядом с вами" height="40"></a>
+            <nav class="nav">
+                <div class="nav-dropdown" id="navDropdown">
+                    <button class="nav-dropdown-btn" id="navDropdownBtn" aria-expanded="false">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                        <span class="nav-dropdown-label">Инструменты</span>
+                        <svg class="nav-dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="nav-dropdown-overlay" id="navDropdownOverlay"></div>
+                    <div class="nav-dropdown-content" id="navDropdownContent">
+                        <div class="nav-dropdown-handle"></div>
+                        <a href="test.html" class="nav-dropdown-item"><span class="nav-dropdown-icon">🧩</span><div class="nav-dropdown-text"><span class="nav-dropdown-title">Тест M-CHAT-R</span><span class="nav-dropdown-sub">Скрининг развития ребёнка</span></div></a>
+                        <a href="diary.html" class="nav-dropdown-item"><span class="nav-dropdown-icon">📖</span><div class="nav-dropdown-text"><span class="nav-dropdown-title">Дневник побед</span><span class="nav-dropdown-sub">Учёт маленьких достижений</span></div></a>
+                        <a href="pecs.html" class="nav-dropdown-item"><span class="nav-dropdown-icon">🗣️</span><div class="nav-dropdown-text"><span class="nav-dropdown-title">PECS доска</span><span class="nav-dropdown-sub">Карточки для общения</span></div></a>
+                        <a href="timer.html" class="nav-dropdown-item"><span class="nav-dropdown-icon">⏱️</span><div class="nav-dropdown-text"><span class="nav-dropdown-title">Таймер дня</span><span class="nav-dropdown-sub">Расписание и визуальный таймер</span></div></a>
+                    </div>
+                </div>
+                <button id="installAppBtn" class="btn-primary header-btn" style="display: none; align-items: center; gap: 5px; padding: 6px 12px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span class="install-label">Скачать</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему" aria-label="Переключить тему">☀️</button>
+            </nav>
+            <script>
+            (function() {
+                const btn = document.getElementById('navDropdownBtn');
+                const content = document.getElementById('navDropdownContent');
+                const overlay = document.getElementById('navDropdownOverlay');
+                if (!btn || !content) return;
+                document.body.appendChild(overlay);
+                document.body.appendChild(content);
+                function open() {
+                    if (window.innerWidth > 768) { const r = btn.getBoundingClientRect(); content.style.top = (r.bottom + 10) + 'px'; content.style.right = (window.innerWidth - r.right) + 'px'; content.style.bottom = 'auto'; }
+                    else { content.style.top = ''; content.style.right = ''; content.style.bottom = '0'; document.body.style.overflow = 'hidden'; }
+                    content.classList.add('show'); overlay.classList.add('show'); btn.classList.add('active'); btn.setAttribute('aria-expanded', 'true');
+                }
+                function close() { content.classList.remove('show'); overlay.classList.remove('show'); btn.classList.remove('active'); btn.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
+                btn.addEventListener('click', (e) => { e.stopPropagation(); content.classList.contains('show') ? close() : open(); });
+                overlay.addEventListener('click', close);
+                document.addEventListener('click', (e) => { if (!btn.contains(e.target) && !content.contains(e.target)) close(); });
+                document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+            })();
+            </script>
+        </div>
+    </header>
+
+    <section class="timer-page">
+        <div class="container">
+            <div class="timer-header" style="animation:fadeInUp 0.6s ease both;">
+                <h1>⏱️ Таймер дня</h1>
+                <p>Визуальный таймер и расписание задач</p>
+            </div>
+
+            <!-- CIRCULAR TIMER -->
+            <div class="timer-circle-wrap">
+                <div class="timer-circle">
+                    <svg viewBox="0 0 200 200">
+                        <circle class="timer-track" cx="100" cy="100" r="88"></circle>
+                        <circle class="timer-progress" id="timerProgress" cx="100" cy="100" r="88"
+                            stroke-dasharray="553" stroke-dashoffset="0"></circle>
+                    </svg>
+                    <div class="timer-center">
+                        <div class="timer-digits" id="timerDigits">00:00</div>
+                        <div class="timer-label" id="timerLabel">Выберите время</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRESETS -->
+            <div class="timer-presets" id="timerPresets">
+                <button class="preset-btn" data-min="1">1 мин</button>
+                <button class="preset-btn" data-min="3">3 мин</button>
+                <button class="preset-btn" data-min="5">5 мин</button>
+                <button class="preset-btn" data-min="10">10 мин</button>
+                <button class="preset-btn" data-min="15">15 мин</button>
+                <button class="preset-btn" data-min="20">20 мин</button>
+                <button class="preset-btn" data-min="30">30 мин</button>
+                <button class="preset-btn" data-min="45">45 мин</button>
+                <button class="preset-btn" data-min="60">60 мин</button>
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="timer-controls">
+                <button class="timer-ctrl-btn btn-start" id="btnStart">▶ Старт</button>
+                <button class="timer-ctrl-btn btn-pause" id="btnPause" style="display:none;">⏸ Пауза</button>
+                <button class="timer-ctrl-btn btn-reset" id="btnReset">↺ Сброс</button>
+            </div>
+
+            <!-- SOUND -->
+            <div class="sound-toggle">
+                <button id="soundOn" class="active">🔔 Со звуком</button>
+                <button id="soundOff">🔇 Без звука</button>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- SCHEDULE -->
+            <div class="schedule-header">
+                <h2>📋 Расписание дня</h2>
+                <button class="add-task-btn" id="addTaskBtn">＋ Добавить</button>
+            </div>
+
+            <!-- PROGRESS -->
+            <div class="progress-wrap">
+                <div class="progress-text"><span id="progressLabel">Выполнено 0 из 0</span><span id="progressPct">0%</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+            </div>
+
+            <!-- TEMPLATE BUTTONS -->
+            <div class="template-btns" id="templateBtns">
+                <button class="tpl-btn" data-tpl="weekday">📅 Будний день</button>
+                <button class="tpl-btn" data-tpl="weekend">🌈 Выходной</button>
+                <button class="tpl-btn" data-tpl="therapy">🏥 Терапия</button>
+                <button class="tpl-btn" data-tpl="trip">🚗 Поездка</button>
+                <button class="tpl-btn" data-tpl="yesterday">🔄 Повторить вчера</button>
+            </div>
+
+            <!-- TASK LIST -->
+            <div class="task-list" id="taskList"></div>
+        </div>
+    </section>
+
+    <!-- ADD TASK MODAL -->
+    <div class="modal-overlay" id="addTaskModal">
+        <div class="modal-box">
+            <h3>Новая задача</h3>
+            <input class="modal-input" id="taskNameInput" placeholder="Название задачи..." maxlength="40" autocomplete="off">
+            <div class="emoji-picker" id="emojiPicker"></div>
+            <div class="modal-actions">
+                <button class="modal-cancel" id="modalCancel">Отмена</button>
+                <button class="modal-save" id="modalSave">Добавить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIMER DONE -->
+    <div class="timer-done-overlay" id="timerDone">
+        <div class="timer-done-box">
+            <div class="done-icon">🎉</div>
+            <h3>Время вышло!</h3>
+            <p>Отличная работа!</p>
+            <button id="timerDoneClose">Хорошо</button>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // ========== TIMER ==========
+        const CIRCUMFERENCE = 2 * Math.PI * 88; // ~553
+        const progress = document.getElementById('timerProgress');
+        const digits = document.getElementById('timerDigits');
+        const label = document.getElementById('timerLabel');
+        const btnStart = document.getElementById('btnStart');
+        const btnPause = document.getElementById('btnPause');
+        const btnReset = document.getElementById('btnReset');
+
+        let totalSeconds = 0, remainingSeconds = 0, timerInterval = null, isRunning = false;
+        let soundEnabled = true;
+
+        // Presets
+        document.getElementById('timerPresets').addEventListener('click', function(e) {
+            const btn = e.target.closest('.preset-btn');
+            if (!btn || isRunning) return;
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            totalSeconds = parseInt(btn.dataset.min) * 60;
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            label.textContent = 'Готов к запуску';
+        });
+
+        function updateDisplay() {
+            const m = Math.floor(remainingSeconds / 60);
+            const s = remainingSeconds % 60;
+            digits.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            const pct = totalSeconds > 0 ? (totalSeconds - remainingSeconds) / totalSeconds : 0;
+            progress.setAttribute('stroke-dashoffset', String(CIRCUMFERENCE * pct));
+            progress.classList.remove('warning','danger');
+            if (totalSeconds > 0) {
+                if (pct > 0.85) progress.classList.add('danger');
+                else if (pct > 0.7) progress.classList.add('warning');
+            }
+        }
+
+        btnStart.addEventListener('click', function() {
+            if (totalSeconds === 0) return;
+            if (!isRunning) startTimer();
+        });
+
+        btnPause.addEventListener('click', function() {
+            if (isRunning) pauseTimer();
+        });
+
+        btnReset.addEventListener('click', function() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            btnStart.style.display = '';
+            btnPause.style.display = 'none';
+            label.textContent = totalSeconds > 0 ? 'Готов к запуску' : 'Выберите время';
+        });
+
+        function startTimer() {
+            isRunning = true;
+            btnStart.style.display = 'none';
+            btnPause.style.display = '';
+            label.textContent = 'Идёт отсчёт...';
+            timerInterval = setInterval(function() {
+                remainingSeconds--;
+                updateDisplay();
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    btnStart.style.display = '';
+                    btnPause.style.display = 'none';
+                    label.textContent = 'Завершено!';
+                    timerDone();
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            btnStart.style.display = '';
+            btnPause.style.display = 'none';
+            label.textContent = 'На паузе';
+        }
+
+        function timerDone() {
+            if (soundEnabled) playSound();
+            document.getElementById('timerDone').classList.add('visible');
+        }
+
+        document.getElementById('timerDoneClose').addEventListener('click', function() {
+            document.getElementById('timerDone').classList.remove('visible');
+        });
+
+        function playSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                [0, 0.3, 0.6].forEach(function(t) {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.frequency.value = 523;
+                    osc.type = 'sine';
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime + t);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + t + 0.25);
+                    osc.start(ctx.currentTime + t);
+                    osc.stop(ctx.currentTime + t + 0.3);
+                });
+            } catch(e) {}
+        }
+
+        // Sound toggle
+        var soundOnBtn = document.getElementById('soundOn');
+        var soundOffBtn = document.getElementById('soundOff');
+        soundOnBtn.addEventListener('click', function() { soundEnabled = true; soundOnBtn.classList.add('active'); soundOffBtn.classList.remove('active'); });
+        soundOffBtn.addEventListener('click', function() { soundEnabled = false; soundOffBtn.classList.add('active'); soundOnBtn.classList.remove('active'); });
+
+        // ========== SCHEDULE ==========
+        const EMOJIS = ['🍽️','🚶','📚','😴','🛁','🧸','🚗','🏥','🎨','🎵','💊','👨‍👩‍👦','🏊','📺','🧹','✏️','🥛','🍎'];
+        const TEMPLATES = {
+            weekday: [{e:'🍽️',n:'Завтрак'},{e:'💊',n:'Лекарства'},{e:'📚',n:'Занятие'},{e:'🚶',n:'Прогулка'},{e:'🍽️',n:'Обед'},{e:'😴',n:'Дневной сон'},{e:'🧸',n:'Игра'},{e:'🛁',n:'Душ'},{e:'🍽️',n:'Ужин'},{e:'😴',n:'Сон'}],
+            weekend: [{e:'😴',n:'Поспать подольше'},{e:'🍽️',n:'Завтрак'},{e:'🧸',n:'Игра'},{e:'🚶',n:'Прогулка'},{e:'🍽️',n:'Обед'},{e:'🎨',n:'Творчество'},{e:'📺',n:'Мультики'},{e:'🛁',n:'Ванна'},{e:'🍽️',n:'Ужин'},{e:'😴',n:'Сон'}],
+            therapy: [{e:'🍽️',n:'Завтрак'},{e:'🚗',n:'Дорога'},{e:'🏥',n:'Терапия'},{e:'🚗',n:'Обратно'},{e:'🍽️',n:'Обед'},{e:'😴',n:'Отдых'},{e:'🧸',n:'Игра'},{e:'🍽️',n:'Ужин'},{e:'😴',n:'Сон'}],
+            trip: [{e:'🍽️',n:'Завтрак'},{e:'🧹',n:'Собраться'},{e:'🚗',n:'Поездка'},{e:'🍽️',n:'Обед в дороге'},{e:'🚗',n:'Обратно'},{e:'🛁',n:'Помыться'},{e:'🍽️',n:'Ужин'},{e:'😴',n:'Сон'}]
+        };
+
+        let tasks = JSON.parse(localStorage.getItem('dailyScheduleData') || '[]');
+        let selectedEmoji = '🍽️';
+        let editingIdx = -1;
+        let dragSrcIdx = null;
+
+        function saveTasks() {
+            localStorage.setItem('dailyScheduleData', JSON.stringify(tasks));
+            // Save copy for "yesterday"
+            localStorage.setItem('dailyScheduleYesterday', JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            var list = document.getElementById('taskList');
+            if (tasks.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>Создайте первое расписание дня 💛</p></div>';
+                document.getElementById('templateBtns').style.display = 'flex';
+            } else {
+                document.getElementById('templateBtns').style.display = 'none';
+                list.innerHTML = '';
+                tasks.forEach(function(t, i) {
+                    var card = document.createElement('div');
+                    card.className = 'task-card' + (t.done ? ' completed' : '');
+                    card.draggable = true;
+                    card.dataset.idx = i;
+                    card.innerHTML = '<div class="task-emoji">' + t.e + '</div>' +
+                        '<div class="task-info"><div class="task-name">' + escHtml(t.n) + '</div></div>' +
+                        '<div class="task-actions">' +
+                        '<button class="task-action-btn done-btn" title="Выполнено" data-act="done">' + (t.done ? '↩️' : '✅') + '</button>' +
+                        '<button class="task-action-btn" title="Редактировать" data-act="edit">✏️</button>' +
+                        '<button class="task-action-btn del-btn" title="Удалить" data-act="del">🗑️</button>' +
+                        '</div>';
+                    // Drag events
+                    card.addEventListener('dragstart', function(ev) { dragSrcIdx = i; card.classList.add('dragging'); ev.dataTransfer.effectAllowed = 'move'; });
+                    card.addEventListener('dragend', function() { card.classList.remove('dragging'); dragSrcIdx = null; });
+                    card.addEventListener('dragover', function(ev) { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; });
+                    card.addEventListener('drop', function(ev) {
+                        ev.preventDefault();
+                        if (dragSrcIdx !== null && dragSrcIdx !== i) {
+                            var item = tasks.splice(dragSrcIdx, 1)[0];
+                            tasks.splice(i, 0, item);
+                            saveTasks(); renderTasks();
+                        }
+                    });
+                    // Touch reorder
+                    var touchY = 0;
+                    card.addEventListener('touchstart', function(ev) { touchY = ev.touches[0].clientY; }, {passive:true});
+                    card.addEventListener('touchend', function(ev) {
+                        var dy = ev.changedTouches[0].clientY - touchY;
+                        if (Math.abs(dy) > 60) {
+                            var dir = dy > 0 ? 1 : -1;
+                            var newIdx = Math.max(0, Math.min(tasks.length-1, i + dir));
+                            if (newIdx !== i) { var item = tasks.splice(i,1)[0]; tasks.splice(newIdx,0,item); saveTasks(); renderTasks(); }
+                        }
+                    }, {passive:true});
+                    list.appendChild(card);
+                });
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            var total = tasks.length, done = tasks.filter(function(t){return t.done;}).length;
+            document.getElementById('progressLabel').textContent = 'Выполнено ' + done + ' из ' + total;
+            var pct = total > 0 ? Math.round(done/total*100) : 0;
+            document.getElementById('progressPct').textContent = pct + '%';
+            document.getElementById('progressFill').style.width = pct + '%';
+        }
+
+        // Task actions
+        document.getElementById('taskList').addEventListener('click', function(e) {
+            var btn = e.target.closest('[data-act]');
+            if (!btn) return;
+            var card = btn.closest('.task-card');
+            var idx = parseInt(card.dataset.idx);
+            var act = btn.dataset.act;
+            if (act === 'done') { tasks[idx].done = !tasks[idx].done; saveTasks(); renderTasks(); }
+            else if (act === 'del') { tasks.splice(idx, 1); saveTasks(); renderTasks(); }
+            else if (act === 'edit') { openEditModal(idx); }
+        });
+
+        // Modal
+        var modal = document.getElementById('addTaskModal');
+        var nameInput = document.getElementById('taskNameInput');
+        var emojiPicker = document.getElementById('emojiPicker');
+
+        EMOJIS.forEach(function(em) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'emoji-pick' + (em === selectedEmoji ? ' selected' : '');
+            btn.textContent = em;
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.emoji-pick').forEach(function(b){b.classList.remove('selected');});
+                btn.classList.add('selected');
+                selectedEmoji = em;
+            });
+            emojiPicker.appendChild(btn);
+        });
+
+        document.getElementById('addTaskBtn').addEventListener('click', function() {
+            editingIdx = -1;
+            nameInput.value = '';
+            selectedEmoji = '🍽️';
+            document.querySelectorAll('.emoji-pick').forEach(function(b){ b.classList.toggle('selected', b.textContent === selectedEmoji); });
+            modal.classList.add('visible');
+            setTimeout(function(){ nameInput.focus(); }, 100);
+        });
+
+        function openEditModal(idx) {
+            editingIdx = idx;
+            nameInput.value = tasks[idx].n;
+            selectedEmoji = tasks[idx].e;
+            document.querySelectorAll('.emoji-pick').forEach(function(b){ b.classList.toggle('selected', b.textContent === selectedEmoji); });
+            modal.classList.add('visible');
+            setTimeout(function(){ nameInput.focus(); }, 100);
+        }
+
+        document.getElementById('modalCancel').addEventListener('click', function() { modal.classList.remove('visible'); });
+        modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('visible'); });
+
+        document.getElementById('modalSave').addEventListener('click', function() {
+            var name = nameInput.value.trim();
+            if (!name) { nameInput.style.borderColor = '#ef4444'; return; }
+            if (editingIdx >= 0) { tasks[editingIdx].n = name; tasks[editingIdx].e = selectedEmoji; }
+            else { tasks.push({e: selectedEmoji, n: name, done: false}); }
+            saveTasks(); renderTasks();
+            modal.classList.remove('visible');
+        });
+
+        nameInput.addEventListener('input', function() { nameInput.style.borderColor = ''; });
+        nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('modalSave').click(); });
+
+        // Templates
+        document.getElementById('templateBtns').addEventListener('click', function(e) {
+            var btn = e.target.closest('.tpl-btn');
+            if (!btn) return;
+            var tpl = btn.dataset.tpl;
+            if (tpl === 'yesterday') {
+                var y = JSON.parse(localStorage.getItem('dailyScheduleYesterday') || '[]');
+                if (y.length > 0) { tasks = y.map(function(t){ return {e:t.e, n:t.n, done:false}; }); }
+                else { return; }
+            } else if (TEMPLATES[tpl]) {
+                tasks = TEMPLATES[tpl].map(function(t){ return {e:t.e, n:t.n, done:false}; });
+            }
+            saveTasks(); renderTasks();
+        });
+
+        function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+        renderTasks();
+    })();
+    </script>
+
+    <!-- Theme toggle -->
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+        });
+    </script>
+    <script>
+        // PWA Install Logic
+        let deferredPrompt;
+        const installBtn = document.getElementById('installAppBtn');
+
+        const isIos = () => {
+            const userAgent = window.navigator.userAgent.toLowerCase();
+            return /iphone|ipad|ipod/.test(userAgent);
+        };
+        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+        if (installBtn && isIos() && !isInStandaloneMode()) {
+            installBtn.style.display = 'inline-flex';
+            installBtn.addEventListener('click', () => {
+                alert('Чтобы установить приложение на iPhone:\n\n1. Нажмите кнопку "Поделиться" (квадрат со стрелочкой) внизу экрана браузера.\n2. Выберите "На экран Домой" (Add to Home Screen).');
+            });
+        } else {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault(); deferredPrompt = e;
+                if (installBtn) installBtn.style.display = 'inline-flex';
+            });
+            if (installBtn) {
+                installBtn.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') installBtn.style.display = 'none';
+                        deferredPrompt = null;
+                    }
+                });
+            }
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
