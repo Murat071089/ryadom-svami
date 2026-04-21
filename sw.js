@@ -1,4 +1,7 @@
-﻿// Service Worker — Рядом с вами
+// Service Worker — Рядом с вами
+// OneSignal push support
+importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
+
 const CACHE_NAME = 'ryadom-svami-v3';
 
 // Ресурсы для предварительного кэширования (App Shell)
