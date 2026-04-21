@@ -574,13 +574,16 @@
             localStorage.removeItem(DENY_KEY);
             hideModal();
             setTimeout(function() {
-                Notification.requestPermission().then(function(permission) {
-                    if (permission === 'granted' && window.OneSignalDeferred) {
-                        window.OneSignalDeferred.push(function(OneSignal) {
-                            OneSignal.User.PushSubscription.optIn();
-                        });
-                    }
-                });
+                if (window.OneSignalDeferred) {
+                    window.OneSignalDeferred.push(async function(OneSignal) {
+                        try {
+                            // Request permission via OneSignal (native browser dialog, no English slide)
+                            await OneSignal.Notifications.requestPermission();
+                            // Opt in to push subscription
+                            await OneSignal.User.PushSubscription.optIn();
+                        } catch(e) {}
+                    });
+                }
             }, 400);
         });
 
