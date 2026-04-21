@@ -1,8 +1,5 @@
-﻿// Service Worker — Рядом с вами
-// OneSignal push support
-importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
-
-const CACHE_NAME = 'ryadom-svami-v4';
+// Service Worker — Рядом с вами
+const CACHE_NAME = 'ryadom-svami-v5';
 
 // Ресурсы для предварительного кэширования (App Shell)
 const PRECACHE_URLS = [
@@ -13,8 +10,7 @@ const PRECACHE_URLS = [
   '/test.html',
   '/img/logo.png',
   '/manifest.json',
-  '/timer.html',
-  '/pecs.html'
+  '/timer.html'
 ];
 
 // Установка — кэшируем App Shell
@@ -72,3 +68,6 @@ self.addEventListener('fetch', event => {
       })
   );
 });
+
+// OneSignal push support — must be LAST to not override our handlers
+importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');

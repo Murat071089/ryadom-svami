@@ -185,8 +185,6 @@
         OneSignalDeferred.push(async function(OneSignal) {
             await OneSignal.init({
                 appId: "0009d238-be4d-4813-87bb-7026221769ed",
-                serviceWorkerParam: { scope: "/" },
-                serviceWorkerPath: "/sw.js",
                 notifyButton: { enable: false },
                 promptOptions: {
                     slidedown: { enabled: false, autoPrompt: false }
