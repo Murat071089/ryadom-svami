@@ -221,8 +221,9 @@
     function renderSlide(){
       var slide=document.getElementById('viewerSlide');
       if(curStep>=curStory.steps.length){
-        slide.innerHTML='<div class="viewer-done"><div class="vd-icon">🎉</div><h3>История завершена!</h3><p>Ваш ребёнок теперь знает, что его ждёт</p><button onclick="closeViewer()">Закрыть</button></div>';
+        slide.innerHTML='<div class="viewer-done"><div class="vd-icon">🎉</div><h3>История завершена!</h3><p>Ваш ребёнок теперь знает, что его ждёт</p><button id="doneCloseBtn">Закрыть</button></div>';
         document.getElementById('viewerNav').style.display='none';
+        document.getElementById('doneCloseBtn').addEventListener('click',function(){doClose()});
         return;
       }
       var st=curStory.steps[curStep];
@@ -233,10 +234,10 @@
 
     document.getElementById('vnNext').addEventListener('click',function(){curStep++;renderDots();renderSlide()});
     document.getElementById('vnPrev').addEventListener('click',function(){if(curStep>0){curStep--;renderDots();renderSlide()}});
-    document.getElementById('viewerClose').addEventListener('click',closeViewer);
-    viewer.addEventListener('click',function(e){if(e.target===viewer)closeViewer()});
-
-    window.closeViewer=function(){viewer.classList.remove('visible');document.body.style.overflow='';curStory=null};
+    function doClose(){viewer.classList.remove('visible');document.body.style.overflow='';curStory=null}
+    document.getElementById('viewerClose').addEventListener('click',function(){doClose()});
+    viewer.addEventListener('click',function(e){if(e.target===viewer)doClose()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')doClose()});
 
     // Swipe support
     var touchStartX=0;
