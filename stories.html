@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Социальные истории — Рядом с вами</title>
+    <meta name="description" content="Визуальные социальные истории для подготовки ребёнка к новым ситуациям. Поход к врачу, стрижка, магазин и другие.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="canonical" href="https://ryadom-svami.ru/stories.html">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <link rel="preload" href="style.css?v=7" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css?v=7">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="img/app_icon_192.png">
+    <style>
+    .stories-page{padding:10px 0 40px;min-height:100vh}
+    .stories-header{text-align:center;margin-bottom:24px}
+    .stories-header h1{font-family:'Philosopher',sans-serif;font-size:28px;color:var(--heading-color);margin-bottom:6px}
+    .stories-header p{color:var(--text-muted);font-size:14px}
+    .stories-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    @media(min-width:600px){.stories-grid{grid-template-columns:repeat(3,1fr)}}
+    .story-card{background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:20px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .25s;-webkit-tap-highlight-color:transparent}
+    .story-card:hover{border-color:rgba(208,174,139,.4);transform:translateY(-2px)}
+    .story-card .sc-icon{font-size:42px;margin-bottom:10px;display:block}
+    .story-card .sc-title{font-size:14px;font-weight:600;color:var(--text-main);line-height:1.3}
+    .story-card .sc-steps{font-size:12px;color:var(--text-muted);margin-top:6px}
+    .viewer-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center}
+    .viewer-overlay.visible{display:flex}
+    .viewer-box{background:var(--card-bg,#1a2535);border:1px solid rgba(208,174,139,.2);border-radius:28px;max-width:380px;width:94%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
+    .viewer-top{padding:18px 20px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(208,174,139,.1)}
+    .viewer-title{font-family:'Philosopher',sans-serif;font-size:18px;color:var(--text-main);font-weight:700}
+    .viewer-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-muted);padding:4px 8px}
+    .viewer-progress{display:flex;gap:4px;padding:12px 20px 0}
+    .viewer-dot{flex:1;height:4px;border-radius:4px;background:rgba(208,174,139,.15);transition:background .3s}
+    .viewer-dot.active{background:linear-gradient(90deg,#618296,#d0ae8b)}
+    .viewer-dot.done{background:rgba(97,130,150,.5)}
+    .viewer-slide{padding:20px;text-align:center;flex:1;overflow-y:auto}
+    .viewer-slide .vs-icon{font-size:72px;margin-bottom:16px;display:block}
+    .viewer-slide .vs-step{font-size:13px;color:#618296;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+    .viewer-slide .vs-text{font-size:17px;color:var(--text-main);line-height:1.6;font-weight:500}
+    .viewer-slide .vs-tip{font-size:13px;color:var(--text-muted);margin-top:12px;font-style:italic}
+    .viewer-nav{display:flex;gap:10px;padding:16px 20px;border-top:1px solid rgba(208,174,139,.1)}
+    .viewer-nav button{flex:1;padding:14px;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:none}
+    .vn-prev{background:rgba(208,174,139,.1);color:var(--text-main);border:1.5px solid rgba(208,174,139,.2)!important}
+    .vn-next{background:linear-gradient(135deg,#618296,#4d6f82);color:#fff}
+    .vn-next:disabled{opacity:.4;cursor:default}
+    .viewer-done{text-align:center;padding:30px 20px}
+    .viewer-done .vd-icon{font-size:64px;margin-bottom:16px}
+    .viewer-done h3{font-family:'Philosopher',sans-serif;font-size:22px;color:var(--text-main);margin-bottom:8px}
+    .viewer-done p{color:var(--text-muted);font-size:14px;margin-bottom:20px}
+    .viewer-done button{background:linear-gradient(135deg,#618296,#4d6f82);color:#fff;border:none;border-radius:16px;padding:14px 32px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+</head>
+<body data-theme="dark">
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-bg-decor"></div>
+        <div class="splash-content">
+            <h2 class="splash-title">Рядом с вами</h2>
+            <div class="splash-logo-container"><img src="img/app_icon_512.png" alt="Рядом с вами" class="splash-logo"><div class="splash-glow"></div></div>
+            <div class="splash-loader-wrapper"><span class="splash-loading-text">Загрузка...</span><div class="splash-loader"></div></div>
+            <p class="splash-text" id="splash-text"></p>
+        </div>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById('splash-screen');if(s){if(!sessionStorage.getItem('splashShown')){const p=["Вы — лучший родитель для своего ребёнка...","Вы не одни. Мы рядом с вами..."];document.getElementById('splash-text').textContent=p[Math.floor(Math.random()*p.length)];setTimeout(()=>{s.classList.add('hidden');sessionStorage.setItem('splashShown','true')},3500)}else{s.style.display='none'}}});
+    </script>
+
+    <header class="header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo"><img src="img/logo.webp" alt="Рядом с вами" height="40"></a>
+            <nav class="nav">
+                <div class="nav-dropdown" id="navDropdown">
+                    <button class="nav-dropdown-btn" id="navDropdownBtn" aria-expanded="false">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                        <span class="nav-dropdown-label">Инструменты</span>
+                        <svg class="nav-dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="nav-dropdown-overlay" id="navDropdownOverlay"></div>
+                    <div class="nav-dropdown-content" id="navDropdownContent">
+                        <div class="nav-dropdown-handle"></div>
+                        <a href="test.html" class="nav-dropdown-item"><span class="nav-dropdown-icon">🧩</span><div class="nav-dropdown-text"><span class="nav-dropdown-title">Тест M-CHAT-R</span><span class="nav-dropdown-sub">Скрининг развития ребёнка</span></div></a>
+                        <a href="diary.html" class="nav-dropdown-item"><span class="nav-dropdown-icon">📖</span><div class="nav-dropdown-text"><span class="nav-dropdown-title">Дневник побед</span><span class="nav-dropdown-sub">Учёт маленьких достижений</span></div></a>
+                    </div>
+                </div>
+                <button id="installAppBtn" class="btn-primary header-btn" style="display:none;align-items:center;gap:5px;padding:6px 12px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span class="install-label">Скачать</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему">☀️</button>
+            </nav>
+            <script>
+            (function(){const b=document.getElementById('navDropdownBtn'),c=document.getElementById('navDropdownContent'),o=document.getElementById('navDropdownOverlay');if(!b||!c)return;document.body.appendChild(o);document.body.appendChild(c);function op(){if(window.innerWidth>768){const r=b.getBoundingClientRect();c.style.top=(r.bottom+10)+'px';c.style.right=(window.innerWidth-r.right)+'px';c.style.bottom='auto'}else{c.style.top='';c.style.right='';c.style.bottom='0';document.body.style.overflow='hidden'}c.classList.add('show');o.classList.add('show');b.classList.add('active')}function cl(){c.classList.remove('show');o.classList.remove('show');b.classList.remove('active');document.body.style.overflow=''}b.addEventListener('click',e=>{e.stopPropagation();c.classList.contains('show')?cl():op()});o.addEventListener('click',cl);document.addEventListener('click',e=>{if(!b.contains(e.target)&&!c.contains(e.target))cl()});document.addEventListener('keydown',e=>{if(e.key==='Escape')cl()})})();
+            </script>
+        </div>
+    </header>
+
+    <section class="stories-page">
+        <div class="container">
+            <div class="stories-header" style="animation:fadeInUp .6s ease both">
+                <h1>📖 Социальные истории</h1>
+                <p>Подготовьте ребёнка к новой ситуации — покажите, что будет</p>
+            </div>
+            <div class="stories-grid" id="storiesGrid"></div>
+        </div>
+    </section>
+
+    <div class="viewer-overlay" id="viewer">
+        <div class="viewer-box">
+            <div class="viewer-top">
+                <span class="viewer-title" id="viewerTitle"></span>
+                <button class="viewer-close" id="viewerClose">✕</button>
+            </div>
+            <div class="viewer-progress" id="viewerProgress"></div>
+            <div class="viewer-slide" id="viewerSlide"></div>
+            <div class="viewer-nav" id="viewerNav">
+                <button class="vn-prev" id="vnPrev">← Назад</button>
+                <button class="vn-next" id="vnNext">Дальше →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+    var STORIES=[
+    {id:'doctor',icon:'🏥',title:'Поход к врачу',steps:[
+      {icon:'🚗',text:'Мы поедем к врачу на машине. Дорога будет короткой.',tip:'Возьмите любимую игрушку в дорогу'},
+      {icon:'🏥',text:'Мы придём в поликлинику. Там будет коридор и стулья. Мы немного подождём.',tip:'Можно посмотреть мультик на телефоне во время ожидания'},
+      {icon:'👨‍⚕️',text:'Доктор — добрый взрослый человек в белом халате. Он хочет помочь.',tip:'Покажите фото врача заранее, если есть'},
+      {icon:'👂',text:'Доктор посмотрит горло, послушает дыхание. Это не больно, просто немного необычно.',tip:'Потренируйтесь дома: откройте рот и скажите «А-а-а»'},
+      {icon:'⭐',text:'Когда врач закончит, мы поедем домой. Ты молодец, что сходил к врачу!',tip:'Подготовьте маленькую награду после визита'}
+    ]},
+    {id:'haircut',icon:'💇',title:'Стрижка',steps:[
+      {icon:'🚶',text:'Мы пойдём в парикмахерскую. Это место, где стригут волосы.',tip:'Покажите видео стрижки заранее'},
+      {icon:'💺',text:'Ты сядешь в специальное кресло. На тебя наденут накидку, чтобы волосы не попали на одежду.',tip:'Можно взять свою накидку, если ребёнок чувствителен к ткани'},
+      {icon:'✂️',text:'Парикмахер будет аккуратно стричь волосы ножницами или машинкой. Это не больно.',tip:'Если ребёнок боится машинки — попросите стричь только ножницами'},
+      {icon:'💧',text:'Потом волосы помоют или протрут. Будет приятно и прохладно.',tip:'Можно попросить не мыть, если ребёнку это неприятно'},
+      {icon:'🌟',text:'Готово! У тебя красивая новая стрижка. Ты отлично справился!',tip:'Сфотографируйте ребёнка — пусть увидит результат'}
+    ]},
+    {id:'shop',icon:'🛒',title:'Магазин',steps:[
+      {icon:'📝',text:'Мы идём в магазин. Нам нужно купить продукты. Мы пойдём по списку.',tip:'Составьте визуальный список с картинками продуктов'},
+      {icon:'🚪',text:'В магазине будет много людей, свет и звуки. Это нормально.',tip:'Наушники или беруши помогут при сенсорной чувствительности'},
+      {icon:'🛒',text:'Мы возьмём тележку или корзинку и будем класть туда продукты.',tip:'Дайте ребёнку задание — например, держать список'},
+      {icon:'💳',text:'На кассе мы заплатим за покупки. Нужно немного подождать в очереди.',tip:'Дайте ребёнку тихое занятие на время очереди'},
+      {icon:'🏠',text:'После магазина мы поедем домой. Ты помог маме/папе — молодец!',tip:'Позвольте ребёнку выбрать одну вещь для себя как награду'}
+    ]},
+    {id:'dentist',icon:'🦷',title:'Стоматолог',steps:[
+      {icon:'🚗',text:'Мы поедем к зубному врачу. Он поможет, чтобы зубки были здоровыми.',tip:'Поиграйте дома в «доктора зубов» с игрушками'},
+      {icon:'💺',text:'Ты сядешь в большое удобное кресло. Оно может двигаться вверх и вниз.',tip:'Видео с детским стоматологом на YouTube поможет подготовиться'},
+      {icon:'🔦',text:'Доктор посветит фонариком и посмотрит зубки. Нужно открыть рот.',tip:'Тренируйтесь дома: «Открой рот как бегемот»'},
+      {icon:'🪥',text:'Доктор может почистить зубки специальной щёточкой. Она жужжит, но не больно.',tip:'Дайте ребёнку послушать звук электрической зубной щётки'},
+      {icon:'🎉',text:'Всё готово! Зубки проверены. Ты был очень храбрым!',tip:'Многие стоматологи дают наклейку — это приятный бонус'}
+    ]},
+    {id:'school',icon:'🏫',title:'Школа / Сад',steps:[
+      {icon:'🌅',text:'Утром мы проснёмся, позавтракаем и оденемся.',tip:'Подготовьте одежду с вечера, чтобы утро было спокойнее'},
+      {icon:'🚗',text:'Мы поедем в школу (или садик). Там будут другие дети и учитель.',tip:'Покажите фото здания и учителя'},
+      {icon:'👋',text:'Мама/папа попрощается и уйдёт. Но обязательно вернётся!',tip:'Придумайте ритуал прощания — например, секретное рукопожатие'},
+      {icon:'📚',text:'В школе будут занятия, игры и обед. Учитель поможет, если что-то непонятно.',tip:'Расскажите ребёнку, к кому обратиться за помощью'},
+      {icon:'🤗',text:'После школы мама/папа приедет и заберёт тебя домой. Вы будете вместе!',tip:'Скажите точное время: «Я приду после обеда»'}
+    ]},
+    {id:'birthday',icon:'🎂',title:'День рождения',steps:[
+      {icon:'🎁',text:'Сегодня праздник — день рождения! Придут гости.',tip:'Покажите фото людей, которые придут'},
+      {icon:'👫',text:'Гости будут здороваться, дарить подарки и разговаривать.',tip:'Подготовьте тихое место, куда ребёнок сможет уйти отдохнуть'},
+      {icon:'🎮',text:'Будут игры и веселье. Можно играть вместе или наблюдать — как комфортно.',tip:'Не заставляйте участвовать во всех играх'},
+      {icon:'🎂',text:'Потом вынесут торт со свечками. Все споют песню. Нужно задуть свечи.',tip:'Потренируйтесь задувать свечи дома'},
+      {icon:'👋',text:'Гости уйдут домой. Праздник закончится. Можно отдохнуть.',tip:'После праздника дайте ребёнку время побыть в тишине'}
+    ]},
+    {id:'bath',icon:'🛁',title:'Купание',steps:[
+      {icon:'🚰',text:'Пора купаться! Мама/папа наберёт тёплую воду в ванну.',tip:'Дайте ребёнку потрогать воду, чтобы проверить температуру'},
+      {icon:'👕',text:'Нужно снять одежду и аккуратно залезть в ванну.',tip:'Нескользящий коврик сделает ванну безопаснее'},
+      {icon:'🧴',text:'Мы помоем тело мочалкой с мылом. Потом помоем голову шампунем.',tip:'Используйте козырёк, чтобы вода не попадала в глаза'},
+      {icon:'🧸',text:'Можно немного поиграть с игрушками в воде!',tip:'Водные игрушки делают купание приятнее'},
+      {icon:'🏠',text:'Теперь вылезаем, вытираемся полотенцем и надеваем пижаму. Чистый и уютный!',tip:'Тёплое полотенце из сушилки — приятный бонус'}
+    ]},
+    {id:'airplane',icon:'✈️',title:'Поездка / Самолёт',steps:[
+      {icon:'🧳',text:'Мы собираем чемодан. Берём одежду, игрушки и вкусняшки в дорогу.',tip:'Пусть ребёнок выберет 2-3 игрушки с собой'},
+      {icon:'🚗',text:'Мы поедем в аэропорт на машине или такси.',tip:'Объясните, сколько времени займёт дорога'},
+      {icon:'🏢',text:'В аэропорту мы пройдём проверку и подождём наш самолёт.',tip:'Покажите видео аэропорта заранее'},
+      {icon:'✈️',text:'Мы сядем в самолёт. Он поднимется в небо. В ушах может быть немного странно.',tip:'Жвачка или леденец помогут при взлёте'},
+      {icon:'🌍',text:'Мы прилетим! Новое место, новые впечатления. Это приключение!',tip:'Расскажите 2-3 интересных факта о месте назначения'}
+    ]}
+    ];
+
+    // Render grid
+    var grid=document.getElementById('storiesGrid');
+    STORIES.forEach(function(s,i){
+      var card=document.createElement('div');
+      card.className='story-card';
+      card.style.animation='fadeInUp .5s ease both';
+      card.style.animationDelay=(i*0.08)+'s';
+      card.innerHTML='<span class="sc-icon">'+s.icon+'</span><div class="sc-title">'+s.title+'</div><div class="sc-steps">'+s.steps.length+' шагов</div>';
+      card.addEventListener('click',function(){openStory(i)});
+      grid.appendChild(card);
+    });
+
+    // Viewer
+    var viewer=document.getElementById('viewer');
+    var curStory=null,curStep=0;
+
+    function openStory(idx){
+      curStory=STORIES[idx];curStep=0;
+      document.getElementById('viewerTitle').textContent=curStory.icon+' '+curStory.title;
+      renderDots();renderSlide();
+      document.getElementById('viewerNav').style.display='flex';
+      viewer.classList.add('visible');
+      document.body.style.overflow='hidden';
+    }
+
+    function renderDots(){
+      var wrap=document.getElementById('viewerProgress');
+      wrap.innerHTML='';
+      curStory.steps.forEach(function(_,i){
+        var d=document.createElement('div');
+        d.className='viewer-dot'+(i<curStep?' done':'')+(i===curStep?' active':'');
+        wrap.appendChild(d);
+      });
+    }
+
+    function renderSlide(){
+      var slide=document.getElementById('viewerSlide');
+      if(curStep>=curStory.steps.length){
+        slide.innerHTML='<div class="viewer-done"><div class="vd-icon">🎉</div><h3>История завершена!</h3><p>Ваш ребёнок теперь знает, что его ждёт</p><button onclick="closeViewer()">Закрыть</button></div>';
+        document.getElementById('viewerNav').style.display='none';
+        return;
+      }
+      var st=curStory.steps[curStep];
+      slide.innerHTML='<div class="vs-icon">'+st.icon+'</div><div class="vs-step">Шаг '+(curStep+1)+' из '+curStory.steps.length+'</div><div class="vs-text">'+st.text+'</div>'+(st.tip?'<div class="vs-tip">💡 '+st.tip+'</div>':'');
+      document.getElementById('vnPrev').style.visibility=curStep===0?'hidden':'visible';
+      document.getElementById('vnNext').textContent=curStep===curStory.steps.length-1?'Готово ✓':'Дальше →';
+    }
+
+    document.getElementById('vnNext').addEventListener('click',function(){curStep++;renderDots();renderSlide()});
+    document.getElementById('vnPrev').addEventListener('click',function(){if(curStep>0){curStep--;renderDots();renderSlide()}});
+    document.getElementById('viewerClose').addEventListener('click',closeViewer);
+    viewer.addEventListener('click',function(e){if(e.target===viewer)closeViewer()});
+
+    window.closeViewer=function(){viewer.classList.remove('visible');document.body.style.overflow='';curStory=null};
+
+    // Swipe support
+    var touchStartX=0;
+    document.getElementById('viewerSlide').addEventListener('touchstart',function(e){touchStartX=e.touches[0].clientX},{passive:true});
+    document.getElementById('viewerSlide').addEventListener('touchend',function(e){
+      var dx=e.changedTouches[0].clientX-touchStartX;
+      if(dx<-50&&curStory){curStep++;if(curStep>curStory.steps.length)curStep=curStory.steps.length;renderDots();renderSlide()}
+      if(dx>50&&curStep>0){curStep--;renderDots();renderSlide()}
+    },{passive:true});
+    })();
+    </script>
+
+    <!-- Theme toggle -->
+    <script>
+    const themeToggle=document.getElementById('themeToggle');
+    const savedTheme=localStorage.getItem('theme')||'dark';
+    document.body.setAttribute('data-theme',savedTheme);
+    themeToggle.textContent=savedTheme==='dark'?'☀️':'🌙';
+    themeToggle.addEventListener('click',()=>{const c=document.body.getAttribute('data-theme');const n=c==='dark'?'light':'dark';document.body.setAttribute('data-theme',n);localStorage.setItem('theme',n);themeToggle.textContent=n==='dark'?'☀️':'🌙'});
+    </script>
+</body>
+</html>
