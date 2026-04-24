@@ -1,5 +1,5 @@
 // Service Worker — Рядом с вами
-const CACHE_NAME = 'ryadom-svami-v5';
+const CACHE_NAME = 'ryadom-svami-v6';
 
 // Ресурсы для предварительного кэширования (App Shell)
 const PRECACHE_URLS = [
